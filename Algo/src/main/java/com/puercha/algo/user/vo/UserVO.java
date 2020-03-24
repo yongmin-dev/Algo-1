@@ -1,12 +1,23 @@
-package com.puretea.algo.app_user.vo;
+package com.puercha.algo.user.vo;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.puretea.algo.board_post.vo.JsonFormat;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Data;
+
+/**
+ * @author Yongmin
+ * 사용자 VO
+ * 
+ */
 @Data
-public class App_userVO {
+public class UserVO {
 
 	// =====================================
 	// NUMBER => long
@@ -40,7 +51,7 @@ public class App_userVO {
 	private String username;
 
 	// 성별
-	private String gender;
+	private char gender;
 
 	// 생년월일 yyyymmdd
 	private Date birth;
@@ -54,6 +65,6 @@ public class App_userVO {
 	private Timestamp updated_at;
 
 	// 유형(학습자, 튜터)
-	private String type;
+	private char type;
 
 }

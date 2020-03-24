@@ -1,9 +1,16 @@
-package com.puretea.algo.rboard.vo;
+package com.puercha.algo.board.vo;
 
 import java.sql.Timestamp;
 
+import lombok.Data;
+
+/**
+ * @author Yongmin
+ * 댓글 VO
+ * 
+ */
 @Data
-public class RboardVO {
+public class CommentVO {
 
 	// =====================================
 	// NUMBER => long
@@ -14,13 +21,13 @@ public class RboardVO {
 	// =====================================
 	
 	//댓글번호
-	private long comment_num;
+	private long commentNum;
 	
 	//게시글 번호
-	private long post_num;
+	private long postNum;
 	
 	//작성자ID
-	private	String user_num;
+	private	String userNum;
 	
 	//작성자이름(별칭)
 	private	String username;
@@ -35,7 +42,7 @@ public class RboardVO {
 	private String content;
 	
 	//답글그룹
-	private long comment_group;
+	private long commentGroup;
 	
 	//답변글 단계
 	private long comment_step;
@@ -47,7 +54,7 @@ public class RboardVO {
 	private long prnum;
 	
 	//부모댓글번호
-	private long target_user_num;
+	private long target_userNum;
 	
 	//답글대상이름
 	private String Target_username;

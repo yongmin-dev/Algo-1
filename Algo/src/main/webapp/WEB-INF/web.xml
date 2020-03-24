@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -66,4 +65,3 @@
 	</servlet-mapping>
 
 </web-app>
->>>>>>> branch 'develop' of https://github.com/team-puertea/Algo.git

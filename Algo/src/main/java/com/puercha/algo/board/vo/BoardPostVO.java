@@ -1,4 +1,4 @@
-package com.puretea.algo.board_post.vo;
+package com.puercha.algo.board.vo;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -7,11 +7,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.puretea.algo.app_user.vo.Data;
-import com.puretea.algo.app_user.vo.Entity;
+
+import lombok.Data;
+/**
+ * 
+ * @author Yongmin
+ * 게시글 VO
+ */
 
 @Data
-public class Board_PostVO {
+public class BoardPostVO {
 
 	// =====================================
 	// NUMBER => long
@@ -22,10 +27,10 @@ public class Board_PostVO {
 	// =====================================
 
 	// 게시글 번호
-	private long post_num;
+	private long postNum;
 
 	// 분류 카테고리
-	private long category_num;
+	private long categoryNum;
 
 	// 제목
 	@NotNull
@@ -33,7 +38,7 @@ public class Board_PostVO {
 	private String title;
 
 	// 사용자 번호
-	private long user_num;
+	private long userNum;
 
 	// 작성자 이름
 	private String username;
@@ -55,7 +60,7 @@ public class Board_PostVO {
 	private String content;
 
 	// 답글그룹
-	private long post_group;
+	private long postGroup;
 
 	// 답변글의 단계
 	private long post_step;

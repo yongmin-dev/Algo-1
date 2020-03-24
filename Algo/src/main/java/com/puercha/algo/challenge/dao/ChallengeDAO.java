@@ -4,6 +4,7 @@ package com.puercha.algo.challenge.dao;
  * @author Hyeonuk
  *
  */
+
 public interface ChallengeDAO {
 
 }
