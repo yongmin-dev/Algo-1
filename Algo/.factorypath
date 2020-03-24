@@ -72,5 +72,4 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/webjars/bootstrap/4.4.1-1/bootstrap-4.4.1-1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/webjars/popper.js/2.0.2/popper.js-2.0.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/webjars/font-awesome/5.12.0/font-awesome-5.12.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="PLUGIN" id="net.harawata.mybatipse" enabled="false" runInBatchMode="false"/>
 </factorypath>
