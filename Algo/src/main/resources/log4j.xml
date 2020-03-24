@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.puretea.algo">
+	<logger name="com.puercha.algo">
 		<level value="info" />
 	</logger>
 	

@@ -1,2 +1,116 @@
+# database 접속정보
 Algo/src/main/resources/config/database.properties
-Algo/target
+
+
+
+# Created by https://www.gitignore.io/api/java,maven,eclipse
+# Edit at https://www.gitignore.io/?templates=java,maven,eclipse
+
+### Eclipse ###
+Algo/.metadata
+Algo/bin/
+Algo/tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+Algo/.settings/
+Algo/.loadpath
+Algo/.recommenders
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+Algo/.cproject
+
+# CDT- autotools
+.autotools
+
+# Java annotation processor (APT)
+Algo/.factorypath
+
+# PDT-specific (PHP Development Tools)
+Algo/.buildpath
+
+# sbteclipse plugin
+Algo/.target
+
+# Tern plugin
+Algo/.tern-project
+
+# TeXlipse plugin
+Algo/.texlipse
+
+# STS (Spring Tool Suite)
+Algo/.springBeans
+
+# Code Recommenders
+Algo/.recommenders/
+
+# Annotation Processing
+Algo/.apt_generated/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+Algo/.cache-main
+Algo/.scala_dependencies
+Algo/.worksheet
+
+### Eclipse Patch ###
+# Eclipse Core
+Algo/.project
+
+# JDT-specific (Eclipse Java Development Tools)
+Algo/.classpath
+
+# Annotation Processing
+Algo/.apt_generated
+
+Algo/.sts4-cache/
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+Algo/hs_err_pid*
+
+### Maven ###
+Algo/target/
+Algo/pom.xml.tag
+Algo/pom.xml.releaseBackup
+Algo/pom.xml.versionsBackup
+Algo/pom.xml.next
+Algo/release.properties
+Algo/dependency-reduced-pom.xml
+Algo/buildNumber.properties
+Algo/.mvn/timing.properties
+Algo/.mvn/wrapper/maven-wrapper.jar
+Algo/.flattened-pom.xml
+
+# End of https://www.gitignore.io/api/java,maven,eclipse
