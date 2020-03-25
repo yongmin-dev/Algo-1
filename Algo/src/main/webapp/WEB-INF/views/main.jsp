@@ -7,13 +7,11 @@
 	<title>메인화면</title>
 	<meta charset="UTF-8">
 	<!-- 절대경로 사용 -->
-	<%@include file="/WEB-INF/views/include/meta.jsp" %>
-	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css"/>" />
-	<script type="text/javascript" src="<c:url value="/resources/js/main.js"/>"></script>
+	<%@include file="/WEB-INF/views/include/meta.jsp" %>	
 </head>
 <body>
 <%@include file="/WEB-INF/views/include/header.jsp" %>
-	<main>
+	<main class="container">
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 		<h1>
 			Welcome to puer-tea's Algo Service!  
