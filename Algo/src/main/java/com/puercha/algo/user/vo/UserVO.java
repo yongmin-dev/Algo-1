@@ -27,7 +27,7 @@ public class UserVO {
 	// =====================================
 
 	// 유저번호
-	private long number;
+	private long userNum;
 
 	// 이메일 정규식 포함
 	@NotNull
