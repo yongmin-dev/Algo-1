@@ -3,10 +3,33 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<typeAliases>
-<!-- 		<typeAlias type="com.kh.portfolio.member.vo.MemberVO" -->
-<!-- 			alias="MemberVO" /> -->
+		<typeAliases>
+		
+		<!-- BoardVO 5개 -->
+		<typeAlias type="com.puercha.algo.board.vo.BoardCategoryVO" alias="BoardCategoryVO"/>
+		<typeAlias type="com.puercha.algo.board.vo.AttachmentVO" alias="AttachmentVO"/>
+		<typeAlias type="com.puercha.algo.board.vo.BoardPostVO" alias="BoardPostVO"/>
+		<typeAlias type="com.puercha.algo.board.vo.CommentPreferenceVO" alias="CommentPreferenceVO"/>
+		<typeAlias type="com.puercha.algo.board.vo.CommentVO" alias="CommentVO"/>
+		
+		<!-- ChallengeVO 3개 -->		
+		<typeAlias type="com.puercha.algo.challenge.vo.ChallengeCaseVO" alias="ChallengeCaseVO"/>
+		<typeAlias type="com.puercha.algo.challenge.vo.ChallengeResultVO" alias="ChallengeResultVO"/>
+		<typeAlias type="com.puercha.algo.challenge.vo.ChallengeVO" alias="ChallengeVO"/>
+		
+		<!-- Learning 6개 -->
+		<typeAlias type="com.puercha.algo.learning.vo.QuizAnswerVO" alias="QuizAnswerVO"/>
+		<typeAlias type="com.puercha.algo.learning.vo.QuizResultVO" alias="QuizResultVO"/>
+		<typeAlias type="com.puercha.algo.learning.vo.QuizVO" alias="QuizVO"/>
+		<typeAlias type="com.puercha.algo.learning.vo.SubjectVO" alias="SubjectVO"/>
+		<typeAlias type="com.puercha.algo.learning.vo.UnitCompletionVO" alias="UnitCompletionVO"/>
+		<typeAlias type="com.puercha.algo.learning.vo.UnitVO" alias="UnitVO"/>
+		
+		<!-- user 2개 -->
+		<typeAlias type="com.puercha.algo.user.vo.TutorApplicationVO" alias="TutorApplicationVO"/>
+		<typeAlias type="com.puercha.algo.user.vo.UserVO" alias="UserVO"/>
+
 		
 		
-	</typeAliases>
+</typeAliases>
 </configuration>
