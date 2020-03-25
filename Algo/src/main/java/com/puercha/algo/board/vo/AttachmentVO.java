@@ -1,6 +1,6 @@
 package com.puercha.algo.board.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -31,8 +31,8 @@ public class AttachmentVO {
 	private byte[] fdata;
 	
 	//작성일
-	private Timestamp createdAt;
+	private Date createdAt;
 	
 	//수정일
-	private Timestamp updatedAt;
+	private Date updatedAt;
 }

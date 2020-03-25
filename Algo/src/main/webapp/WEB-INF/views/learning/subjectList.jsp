@@ -1,6 +1,7 @@
 <!-- 과목목록 화면 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,10 +13,21 @@
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
-	<main>
-		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
-	</main>	
+	<div class="container">
+  		
+	
+
+
+
+	</div>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
+	
+	
+	
+	
+	
+	
+	
 </body>
 </html>
 
