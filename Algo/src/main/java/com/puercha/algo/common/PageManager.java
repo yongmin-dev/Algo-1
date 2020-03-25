@@ -7,7 +7,7 @@ package com.puercha.algo.common;
  * 현재 페이지에 보여줄 페이지 계산
  * 시작, 종료, 다음, 이전,  마지막 페이지, 처음페이지
  */
-public class PageCriteria implements PagingService {
+public class PageManager implements PagingService {
 	
 	//한 페이지에 보여줄 페이지수
 	private int pageNumPerPage;
@@ -31,11 +31,11 @@ public class PageCriteria implements PagingService {
 	private boolean next;
 	
 	//한페이지에 보여줄 레코드 수
-	private RecordCriteria rc;
+	private RowCriteria rc;
 	
 	private final int PAGE_NUM_PER_PAGE = 10;
 	
-	public PageCriteria(RecordCriteria rc, int totalRec) {
+	public PageManager(RowCriteria rc, int totalRec) {
 		this.rc = rc;
 		this.totalRec = totalRec;
 		this.pageNumPerPage = PAGE_NUM_PER_PAGE;
@@ -80,7 +80,7 @@ public class PageCriteria implements PagingService {
 		return this.totalRec > this.getEndPage() * rc.getNumPerPage() ? true:false;
 	}
 	
-	public RecordCriteria getRc() {
+	public RowCriteria getRc() {
 		return rc;
 	}
 	

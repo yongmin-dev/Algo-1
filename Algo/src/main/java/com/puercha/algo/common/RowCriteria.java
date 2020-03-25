@@ -7,7 +7,7 @@ package com.puercha.algo.common;
  *
  * 
  */
-public class RecordCriteria {
+public class RowCriteria {
 	
 	//요청페이지
 	private int reqPage;
@@ -17,7 +17,7 @@ public class RecordCriteria {
 	
 	private final int NUM_PER_PAGE = 10;
 	
-	public RecordCriteria(int reqPage) {
+	public RowCriteria(int reqPage) {
 		this.reqPage = reqPage;
 		this.numPerPage = NUM_PER_PAGE;
 	}
