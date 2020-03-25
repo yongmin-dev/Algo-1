@@ -28,7 +28,7 @@ public class BoardPostVO {
 	private long postNum;
 
 	// 분류 카테고리
-	private long categoryNum;
+	private BoardCategoryVO boardCategoryVO;
 
 	// 제목
 	@NotNull
@@ -39,7 +39,7 @@ public class BoardPostVO {
 	private long userNum;
 
 	// 작성자 이름
-	private String username;
+	private String userName;
 
 	// 작성일
 	@JsonFormat(pattern = "yyyyMMdd")
