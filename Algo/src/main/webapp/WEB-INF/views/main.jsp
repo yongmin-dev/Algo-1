@@ -11,6 +11,15 @@
 </head>
 <body>
 <%@include file="/WEB-INF/views/include/header.jsp" %>
+
+<!-- 슬라이드 start-->
+<div class="slider">
+<img src="<c:url value="/resources/images/main_img.jpg"/>" alt="" />
+<img src="<c:url value="/resources/images/main_img2.jpg"/>" alt="" />
+<img src="<c:url value="/resources/images/main_img3.png"/>" alt="" />
+</div> 
+<!-- 슬라이드 end-->
+
 	<main class="container">
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 		<h1>

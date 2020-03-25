@@ -1,6 +1,6 @@
 package com.puercha.algo.learning.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -28,16 +28,16 @@ public class QuizVO {
 	private long difficulty;
 	
 	//정답
-	private String correct_answer;
+	private String correctAnswer;
 	
 	//풀이
 	private String solution;
 	
 	//생성일시
-	private Timestamp created_at;
+	private Date createdAt;
 	
 	//수정일시
-	private Timestamp updated_at;
+	private Date updatedAt;
 	
 	//출제자
 	private long userNum;

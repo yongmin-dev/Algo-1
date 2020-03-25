@@ -1,6 +1,6 @@
 package com.puercha.algo.challenge.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -19,7 +19,7 @@ public class ChallengeResultVO {
 	private String code;
 	
 	//메모리 사용량
-	private long using_memory;
+	private long usingMemory;
 	
 	//수행시간
 	private long processing_time;
@@ -34,12 +34,12 @@ public class ChallengeResultVO {
 	private char status;
 	
 	//결과에 대한 코멘트
-	private String result_comment;
+	private String resultComment;
 	
 	//생성 일시
-	private Timestamp created_at;
+	private Date createdAt;
 	
 	//수정 일시
-	private Timestamp updated_at;
+	private Date updatedAt;
 	
 }

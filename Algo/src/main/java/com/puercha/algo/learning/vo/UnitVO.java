@@ -1,6 +1,6 @@
 package com.puercha.algo.learning.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author Yongmin
@@ -22,12 +22,12 @@ public class UnitVO {
 	private String title;
 	
 	//과목 내 챕터 번호
-	private String chapter_depth;
+	private String chapterDepth;
 	
 	//생성 일시
-	private Timestamp created_at;
+	private Date createdAt;
 	
 	//수정 일시
-	private Timestamp updated_at;
+	private Date updatedAt;
 
 }

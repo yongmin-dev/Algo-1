@@ -1,6 +1,6 @@
 package com.puercha.algo.learning.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -22,12 +22,12 @@ public class QuizAnswerVO {
 	private String content;
 	
 	//정답여부
-	private char is_correct;
+	private char isCorrect;
 	
 	//생성일시
-	private Timestamp created_at;
+	private Date createdAt;
 	
 	//수정일시
-	private Timestamp updated_at;
+	private Date updatedAt;
 	
 }

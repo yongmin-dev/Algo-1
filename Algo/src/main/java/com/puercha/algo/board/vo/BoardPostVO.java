@@ -1,8 +1,6 @@
 package com.puercha.algo.board.vo;
 
-import java.sql.Timestamp;
 import java.util.Date;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,7 +21,7 @@ public class BoardPostVO {
 	// VARCHAR2 => String
 	// CHAR => String
 	// DATE => import java.util.Date
-	// TIMESTAMP => import java.sql.Timestamp;
+	// Date => import java.util.Date;
 	// =====================================
 
 	// 게시글 번호
@@ -45,11 +43,11 @@ public class BoardPostVO {
 
 	// 작성일
 	@JsonFormat(pattern = "yyyyMMdd")
-	private Timestamp created_at;
+	private Date createdAt;
 
 	// 수정일
 	@JsonFormat(pattern = "yyyyMMdd")
-	private Timestamp updated_at;
+	private Date updatedAt;
 
 	// 조회수
 	private long hit;
@@ -63,7 +61,7 @@ public class BoardPostVO {
 	private long postGroup;
 
 	// 답변글의 단계
-	private long post_step;
+	private long postStep;
 
 	// 답변글 들여쓰기
 	private long indent;
