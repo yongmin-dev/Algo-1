@@ -52,6 +52,9 @@ public class UserVO {
 	// 성별
 	private char gender;
 
+	//주소
+	private String address;
+	
 	// 생년월일 yyyymmdd
 	private Date birth;
 
@@ -65,5 +68,7 @@ public class UserVO {
 
 	// 유형(학습자, 튜터)
 	private char type;
+	
+
 
 }
