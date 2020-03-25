@@ -1,6 +1,6 @@
 package com.puercha.algo.user.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -31,8 +31,8 @@ public class TutorApplicationVO {
 	private char approval;
 	
 	//생성일시
-	private Timestamp created_at;
+	private Date createdAt;
 	
 	//변경일시
-	private Timestamp updated_at;
+	private Date updatedAt;
 }

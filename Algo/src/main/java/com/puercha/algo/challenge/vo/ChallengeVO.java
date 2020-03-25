@@ -1,6 +1,6 @@
 package com.puercha.algo.challenge.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * 도전문제 VO
  */
 @Data
-public class ChanllengeVO {
+public class ChallengeVO {
 
 	// 도전과제번호
 	private long cNum;
@@ -21,10 +21,10 @@ public class ChanllengeVO {
 	private String content;
 
 	// 제한메모리사용량
-	private long limit_memory;
+	private long limitMemory;
 
 	// 제한시간
-	private long limit_time;
+	private long limitTime;
 
 	// 제목
 	private String title;
@@ -33,9 +33,9 @@ public class ChanllengeVO {
 	private long passNum;
 
 	// 생성 일시
-	private Timestamp created_at;
+	private Date createdAt;
 
 	// 수정일시
-	private Timestamp updated_at;
+	private Date updatedAt;
 
 }

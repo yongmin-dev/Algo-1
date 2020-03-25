@@ -1,6 +1,6 @@
 package com.puercha.algo.board.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class CommentVO {
 	// VARCHAR2 => String
 	// CHAR => String
 	// DATE => import java.util.Date
-	// TIMESTAMP => import java.sql.Timestamp;
+	// Date => import java.util.Date;
 	// =====================================
 	
 	//댓글번호
@@ -33,10 +33,10 @@ public class CommentVO {
 	private	String username;
 	
 	//작성일
-	private Timestamp created_at;
+	private Date createdAt;
 	
 	//수정일
-	private Timestamp updated_at;
+	private Date updatedAt;
 	
 	//본문내용
 	private String content;
@@ -45,7 +45,7 @@ public class CommentVO {
 	private long commentGroup;
 	
 	//답변글 단계
-	private long comment_step;
+	private long commentStep;
 	
 	//답변글의 들여쓰기
 	private long indent;
@@ -54,9 +54,9 @@ public class CommentVO {
 	private long prnum;
 	
 	//부모댓글번호
-	private long target_userNum;
+	private long targetUserNum;
 	
 	//답글대상이름
-	private String Target_username;
+	private String TargetUsername;
 	
 }

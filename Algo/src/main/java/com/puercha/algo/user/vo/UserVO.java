@@ -1,6 +1,5 @@
 package com.puercha.algo.user.vo;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -24,7 +23,7 @@ public class UserVO {
 	// VARCHAR2 => String
 	// CHAR => String
 	// DATE => import java.util.Date
-	// TIMESTAMP => import java.sql.Timestamp;
+	// Date => import java.util.Date;
 	// =====================================
 
 	// 유저번호
@@ -58,11 +57,11 @@ public class UserVO {
 
 	// 생성일시
 	@JsonFormat(pattern = "yyyyMMdd")
-	private Timestamp created_at; // (setmethod따로 만들어?)
+	private Date createdAt; // (setmethod따로 만들어?)
 
 	// 수정 일시
 	@JsonFormat(pattern = "yyyyMMdd")
-	private Timestamp updated_at;
+	private Date updatedAt;
 
 	// 유형(학습자, 튜터)
 	private char type;
