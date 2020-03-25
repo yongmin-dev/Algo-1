@@ -1,3 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mappers.UserDAO-mapper"></mapper>
+<mapper namespace="mappers.UserDAO-mapper">
+
+	<!-- 사용자 생성 -->
+	<insert id="insertUser" 
+					parameterType="UserVO">
+		INSERT INTO APP_USER 
+		( user_num, 
+		email, 
+		pw, 
+		tel, 
+		username, 
+		gender, 
+		address, 
+		birth,
+		type)
+		
+		VALUES
+		 
+		(
+		user_num_seq.nextval,
+		#{email},
+		#{pw},
+		#{tel},
+		#{username},
+		#{gender},
+		#{address},
+		#{birth},
+		'S')
+		<selectKey keyProperty="userNum" order="AFTER" resultType="long">
+			select user_num_seq.currval from dual;
+		</selectKey>	
+	</insert>
+<!-- 사용자 전체조회 -->
+<select id="selectAllUser"
+				resultType="UserVO">
+		SELECT user_num as "uesrNum", email, pw, tel, username, 
+		       gender,  address,  birth, created_at AS "createdAt", updated_at AS "updatedAt" 
+		FROM APP_USER 
+</select>
+
+<!-- 사용자 개별조회 -->
+<select id="selectUser" 
+				parameterType="hashmap"
+				resultType="UserVO">
+		SELECT user_num as "uesrNum", email, pw, tel, nsername, 
+		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
+		  FROM APP_USER    
+		 where email = #{email} 
+		 <if test="pw != null">
+		 	AND pw = #{pw}
+		 </if> 
+</select>
+<!-- 사용자 수정 -->
+<update id="updateUser"
+				parameterType="UserVO">
+		update APP_USER
+		   set tel = #{tel},
+		       nsername = #{nsername},
+					 gender = #{gender},
+					 region = #{region},
+					 birth = #{birth},
+					 updated_at = systimestamp
+		 where email = #{email}
+</update>
+<!-- 비밀번호 변경 -->
+<update id="changePW"
+				parameterType="hashmap">
+		update APP_USER 
+		   set pw = #{pw} 
+		 where email=#{email} 
+</update>
+<!-- 사용자 삭제 -->
+<delete id="deleteUser" 
+				parameterType="hashmap">
+		delete from member 
+		where
+		<choose>
+			<when test="email !=null and pw != null">
+				email=#{email} and pw=#{pw}
+			</when>
+			<when test="userNum !=null">
+				user_num = #{userNum}
+			</when>
+			<otherwise>
+				1 = 0
+			</otherwise>		
+		</choose> 
+</delete>
+
+</mapper>
