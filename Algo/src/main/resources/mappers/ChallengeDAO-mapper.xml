@@ -1,3 +1,305 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mappers.ChallengeDAO-mapper"></mapper>
+<mapper namespace="mappers.ChallengeDAO-mapper">
+	<!-- 도전과제 생성 -->
+	<insert id="insertChallenge" parameterType="ChallengeVO">
+		INSERT INTO CHALLENGE
+		(C_NUM, CONTENT, TITLE, LIMIT_MEMORY, LIMIT_TIME, USER_NUM)
+		VALUES 
+		(CHALLENGE_NUM_SEQ.nextval, #{content}, #{title}, #{limitMemory}, #{limitTime}, #{userNum})
+		<selectKey order="AFTER" keyProperty="cNum" resultType="long">
+			SELECT CHALLENGE_NUM_SEQ.nextval FROM dual
+		</selectKey>
+	</insert>
+	
+	<!-- 도전과제 결과 생성	 -->
+	<insert id="insertChallengeResult" parameterType="ChallengeResultVO">
+		INSERT INTO challenge_result
+			(result_num, 
+			c_num, 
+			user_num, 
+			result_comment, 
+			status, 
+			code, 
+			used_memory, 
+			processing_time)
+		VALUES
+			(RESULT_NUM_SEQ.nextval,  
+			#{cNum}, 
+			#{userNum}, 
+			#{resultComment}, 
+			#{status}, 
+			#{code}, 
+			#{usedMemory}, 
+			#{processingTime} )
+		<selectKey order="BEFORE" keyColumn="resultNum" resultType="long">
+			SELECT RESULT_NUM_SEQ.currval FROM dual
+		</selectKey>
+	</insert>
+<!-- 도전과제 테스트 케이스 생성	 -->
+	<insert id="insertTestCase">
+		INSERT INTO challenge_case
+	    	(case_num, 
+	    	c_num, 
+	    	input, 
+	    	output, 
+	    	user_num)
+		VALUES
+	    	(CASE_NUM_SEQ.nextval, 
+	    	#{cNum}, 
+	    	#{input}, 
+	    	#{output}, 
+	    	#{userNum} )
+    	<selectKey order="AFTER" keyColumn="caseNum" resultType="long">
+    		SELECT CASE_NUM_SEQ.currval FROM dual
+    	</selectKey>
+	</insert>
+	<!-- 도전과제 row 1개 열람	 -->
+	<select id="selectOne" parameterType="hashmap" resultType="ChallengeVO">
+		SELECT 
+		    c_num AS "cNum",
+		    content,
+		    title,
+		    limit_memory AS "limitMemory",
+		    limit_time AS "limitTime" ,
+		    user_num AS "userNum",
+		    pass_num AS "passNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt"   
+		FROM challenge
+		WHERE c_num = #{cNum}
+	</select>
+	<!-- 도전과제 목록 검색	 -->
+	<select id="selectAllChallenge" parameterType="hashmap" resultType="ChallengeVO">
+		SELECT *
+			FROM (SELECT 
+			    ROW_NUMBER() OVER (ORDER BY title asc) as "num" ,
+			    c_num as "cNum" ,
+			    content as "content",
+			    title as "title",
+			    limit_memory as "limitMemory",
+			    limit_time as "limitTime",
+			    challenge.user_num as "userNum",
+			    app_user.username as "username",
+			    pass_num as "passNum",
+			    challenge.created_at as "createdAt",
+			    challenge.updated_at as "updatedAt"
+			FROM challenge, app_user
+			WHERE challenge.user_num  = app_user.user_num
+				<if test="types != null and keywords != null and types.length() > 0 and keywords.length() )>0">
+					AND (
+					<foreach collection="types" item="type" index="i">
+						<if test="i>0">
+							OR
+						</if>
+						<foreach collection="keywords" item="keyword">
+							<choose>
+								<when test="type=='T'.toString()">
+								    challenge.title like  '%' || #{keyword} || '%'					
+								</when>
+								<when test="type=='C'.toString()">
+									challenge.content like  '%' || #{keyword} || '%'
+								</when>
+								<when test="type=='N'.toString()">
+									app_user.username like  '%' || #{keyword} || '%'
+								</when>
+								<otherwise>
+									1 = 0
+								</otherwise>
+							</choose>							 
+						</foreach>
+					</foreach>				
+					)					
+				</if>
+			)
+			WHERE "num" <![CDATA[ >= ]]>  startRowNum 
+			AND "num" <![CDATA[ <= ]]> endRowNum
+	</select>
+	<!-- 도전과제 결과 보기 -->
+	<select id="selectAllChallenge" parameterType="long" resultType="ChallengeResultVO">
+		SELECT 
+		    result_num AS "resultNum",
+		    user_num AS "userNum" ,
+		    result_comment AS "resultComment",
+		    status ,
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt",
+		    code,
+		    c_num AS "cNum",
+		    used_memory AS "usedMemory",
+		    processing_time AS "processingTime"
+		FROM challenge_result
+		WHERE result_num = #{resultNum}
+	</select>
+	
+	<!-- 1. 전체 도전과제 결과 보기 -->
+	<!-- 2. 문제 내 전체 도전과제 결과 보기 -->
+	<!-- 3. 문제에서 내가 제출한 도전과제 결과 보기 -->
+	<select id="selectAllResult" parameterType="hashmap" resultType="ChallengeResultVO">
+		SELECT *
+			FROM (SELECT 
+			        ROW_NUMBER() OVER(ORDER BY  created_at DESC) as num,
+			        result_num AS "resultNum",
+			        user_num AS "userNum" ,
+			        result_comment AS "resultComment",
+			        status ,
+			        created_at AS "createdAt",
+			        updated_at AS "updatedAt",
+			        code,
+			        c_num AS "cNum",
+			        used_memory AS "usedMemory",
+			        processing_time AS "processingTime"
+			    FROM challenge_result
+			    WHERE
+			    	<if test="cNum != null">
+			            challenge_result.c_num = #{cNum}
+			            <if test="userNum != null">
+					        AND challenge_result.user_num = #{userNum}
+			            </if> 
+			    	</if>
+			    	 
+			    )
+			WHERE num <![CDATA[ >= ]]> 1 
+			    AND num <![CDATA[ <= ]]> 10
+	</select>
+	
+	<!-- 도전과제의 결과 중 가장 최근 과제 결과를 가져옴 -->
+	<select id="getLastResult" parameterType="hashmap" resultType="ChallengeResultVO">
+		SELECT *
+		FROM (SELECT 
+		        ROW_NUMBER() OVER(ORDER BY  created_at DESC) as num,
+		        result_num AS "resultNum",
+		        user_num AS "userNum" ,
+		        result_comment AS "resultComment",
+		        status ,
+		        created_at AS "createdAt",
+		        updated_at AS "updatedAt",
+		        code,
+		        c_num AS "cNum",
+		        used_memory AS "usedMemory",
+		        processing_time AS "processingTime"
+		    FROM challenge_result   
+		    WHERE challenge_result.c_num = #{cNum}
+		    AND challenge_result.user_num = #{userNum}
+		    )
+		WHERE num = 1 ;
+	</select>
+	
+	<!-- 1. 모든 도전과제의 모든 결과 개수를 가져옴 -->
+	<!-- 2. 도전과제의 모든 결과 개수를 가져옴	 -->
+	<select id="getCountTotalResult" parameterType="long" resultType="long">
+		SELECT COUNT(*)
+		FROM challenge_result
+		WHERE c_num = #{cNum}
+	</select>
+	
+	<!-- 도전과제 내 모든 케이스를 가져옴	 -->
+	<select id="selectAllCase" parameterType="long" resultType="ChallengeCaseVO">
+		SELECT 
+		    case_num AS "caseNum",
+		    c_num AS "cNum",
+		    input,
+		    output,
+		    user_num AS "userNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt"
+		FROM  challenge_case
+		WHERE c_num = #{cNum}
+	</select>
+
+	<!-- 케이스 번호로 케이스 데이터 하나 열람 -->
+	<select id="selectOneCase" parameterType="long" resultType="ChallengeCaseVO">
+		SELECT 
+		    case_num AS "caseNum",
+		    c_num AS "cNum",
+		    input,
+		    output,
+		    user_num AS "userNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt"
+		FROM  challenge_case
+		WHERE case_num = #{caseNum}
+	</select>
+	
+<!-- Update -->
+	<!-- 도전과제 변경 -->
+	<update id="updateChallenge" parameterType="ChallengeVO">
+		UPDATE challenge
+		SET 
+		    content = #{content},
+		    title = #{title},
+		    limit_memory = #{limitMemory},
+		    limit_time = #{limitTime},
+		    updated_at = SYSTIMESTAMP,
+		    user_num = #{userNum}
+		WHERE c_num = #{cNum}
+	</update>
+	
+	
+	<!-- 도전과제 통과 수 증가 -->
+	<update id="increaseChallengePassNum" parameterType="long">
+		UPDATE challenge
+		SET pass_num = pass_num +1
+		WHERE c_num = #{cNum}
+	</update>
+	
+	<!-- 도전과제 통과 수 갱신 -->
+	<update id="updatedPassNum" parameterType="hashmap">
+		UPDATE challenge
+		SET pass_num = #{passNum},
+		updated_at = SYSTIMESTAMP
+		WHERE c_num = #{cNum}
+	</update>
+	
+	<!-- 도전과제 결과 변경 -->
+	<update id="updateChallengeResult" parameterType="ChallengeResultVO">
+		UPDATE  challenge_result 
+		SET 
+		    user_num = #{userNum},
+		    result_comment = #{resultComment},
+		    status = #{status},
+		    updated_at = SYSTIMESTAMP,
+		    c_num = #{cNum},
+		    used_memory = #{userMemory},
+		    processing_time = #{processingTime}
+		WHERE result_num = #{resultNum};
+	</update>
+	<!-- 도전과제 테스트케이스 변경 -->
+	<update id="updateChallengeCase" parameterType="ChallengeCaseVO">
+		UPDATE challenge_case
+		SET 
+			c_num = #{cNum},
+			input = #{input},
+			output = #{output},
+			user_num = #{userNum},
+			updated_at = SYSTIMESTAMP
+		WHERE case_num = #{caseNum}
+	</update>
+
+	<!-- Delete -->
+	<!-- 도전과제 삭제 -->
+	<delete id="deleteChallenge" parameterType="long">
+		DELETE FROM challenge 
+		WHERE c_num = #{cNum};
+	</delete>
+	
+	<!-- 도전과제 결과 삭제 -->
+	<delete id="deleteChallengeReseult" parameterType="long">
+		DELETE FROM challenge_result
+		WHERE result_num = #{resultNum};
+	</delete>
+	
+	<!-- 도전과제 테스트케이스 삭제 -->
+	<delete id="deleteChallengeCase" parameterType="long">
+		DELETE FROM challenge_case
+		WHERE case_num = #{caseNum}
+	</delete>
+	
+<!-- 도전과제에 포함된 모든 테스트케이스삭제 -->
+	<delete id="deleteAllCase" parameterType="long">
+		DELETE FROM challenge_case
+		WHERE c_num = #{cNum} 
+	</delete>
+</mapper>
+
+
