@@ -79,7 +79,7 @@ public interface ChallengeDAO {
 	
 	 
 	/**
-	 * 문제의 내가 제출한 도전과제 결과 보기
+	 * 문제에서 내가 제출한 도전과제 결과 보기
 	 * @param startRowNum 시작 행
 	 * @param endRowNum 끝 행
 	 * @param cNum 도전과제 번호
@@ -134,6 +134,20 @@ public interface ChallengeDAO {
 	 */
 	int updateChallenge(ChallengeVO challenge);
 	
+	/**
+	 * 도전과제 통과 수 증가
+	 * @param cNum 도전과제 번호
+	 * @return 성공시 1
+	 */
+	int increaseChallengePassNum(long cNum);
+	
+	/**
+	 * 도전과제 통과 수 변경
+	 * @param cNum 도전과제 번호
+	 * @param passNum 갱신할 통과 수
+	 * @return 성공 시 1
+	 */
+	int updatedPassNum(long cNum, long passNum);
 	/**
 	 * 도전과제 결과 변경
 	 * @param result

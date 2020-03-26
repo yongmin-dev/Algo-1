@@ -1,5 +1,6 @@
 package com.puercha.algo.challenge.dao;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +93,13 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 		logger.info("selectAllChallenge(long startRowNum, long endRowNum, String type, String keyword):"+startRowNum+", "+endRowNum+", "+ type+", "+keyword);
 		Map<String,Object> params = new HashMap<>();
 		params.put("startRowNum", startRowNum);
-		params.put("endRowNum", endRowNum);
-		params.put("type", type);
-		params.put("keyword", keyword);
+		params.put("endRowNum", endRowNum);		
+		if(keyword != null) {
+			params.put("types",Arrays.asList(type.split("\\s+")));
+		}
+		if(keyword != null) {
+			params.put("keywords",Arrays.asList(keyword.split("\\s+")));
+		}
 		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectAllChallenge", params);
 	}
 	
@@ -149,7 +154,7 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 
 
 	/**
-	 * 문제의 내가 제출한 도전과제 결과 보기
+	 * 문제에서 내가 제출한 도전과제 결과 보기
 	 * @param startRowNum 시작 행
 	 * @param endRowNum 끝 행
 	 * @param cNum 도전과제 번호
@@ -247,6 +252,34 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 		logger.info("updateChallenge(ChallengeVO challenge): "+challenge);		
 		return sqlSession.update("mappers.ChallengeDAO-mapper.updateChallenge",challenge);
 	}
+	
+	/**
+	 * 도전과제 통과 수 증가
+	 * @param cNum 도전과제 번호
+	 * @return 성공시 1
+	 */
+	@Override
+	public int increaseChallengePassNum(long cNum) {
+		logger.info("increaseChallengePassNum(long cNum): "+ cNum );
+		return sqlSession.update("mappers.ChallengeDAO-mapper.increaseChallengePassNum",cNum);
+	}
+
+	/**
+	 * 도전과제 통과 수 갱신
+	 * @param cNum 도전과제 번호
+	 * @param passNum 갱신할 통과 수
+	 * @return 성공 시 1
+	 */
+	@Override
+	public int updatedPassNum(long cNum, long passNum) {		
+		logger.info("updatedPassNum(long cNum, long passNum): "+ cNum + ", " + passNum );
+		Map<String, Object> params = new HashMap<>();
+		params.put("cNum", cNum);
+		params.put("passNum", passNum);
+		return sqlSession.update("mappers.ChallengeDAO-mapper.updatedPassNum",params);
+	}
+
+
 
 	/**
 	 * 도전과제 결과 변경
