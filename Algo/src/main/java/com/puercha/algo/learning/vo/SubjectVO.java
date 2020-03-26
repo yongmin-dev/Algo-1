@@ -30,4 +30,16 @@ public class SubjectVO {
 	//출제자
 	private long userNum;
 	
+	//사진데이터
+	private byte[] imageData;
+	
+	//사진 크기
+	private long imageSize;
+	
+	//사진 타입
+	private String imageType;
+	
+	//사진 이름
+	private String imageName;
+	
 }
