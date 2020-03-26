@@ -1,3 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mappers.PostingDAO-mapper"></mapper>
+<mapper namespace="mappers.PostingDAO-mapper">
+
+	<!-- 카테고리 읽기 -->
+
+	<select id="getCategory" resultType="BoardCategoryVO">
+		SELECT category_num AS "categoryNum", name
+		FROM
+		board_category
+	</select>
+
+
+	<!-- 게시글 작성 -->
+	<insert id="write" parameterType="BoardPostVO">
+		INSERT INTO  board_post(
+		post_num,
+		CATEGORY_NUM,
+		TITLE,
+		user_num,
+		USERNAME,
+		CONTENT,
+		POST_GROUP
+		)values(
+		board_post_num.nextval,
+		#{category.categoryNum},
+		#{title},
+		#{userNum}
+		#{userName},
+		#{content},
+		#{postGroup},
+		board_post_num.currval
+		)
+		<selectKey keyProperty="postNum" resultType="long" order="AFTER">
+		select BOARD_POST_NUM.currval from dual
+		</selectKey>
+	
+	</insert>
+
+
+</mapper>
+
