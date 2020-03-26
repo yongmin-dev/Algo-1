@@ -44,7 +44,7 @@
 <select id="selectUser" 
 				parameterType="hashmap"
 				resultType="UserVO">
-		SELECT user_num as "uesrNum", email, pw, tel, nsername, 
+		SELECT user_num as "uesrNum", email, pw, tel, username, 
 		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
 		  FROM APP_USER    
 		 where email = #{email} 
@@ -57,9 +57,9 @@
 				parameterType="UserVO">
 		update APP_USER
 		   set tel = #{tel},
-		       nsername = #{nsername},
+		       username = #{username},
 					 gender = #{gender},
-					 region = #{region},
+					 address = #{address},
 					 birth = #{birth},
 					 updated_at = systimestamp
 		 where email = #{email}
@@ -68,13 +68,14 @@
 <update id="changePW"
 				parameterType="hashmap">
 		update APP_USER 
-		   set pw = #{pw} 
-		 where email=#{email} 
+		   set pw = #{newPw} 
+		 where email=#{email}
+		 AND pw =#{oldPw} 
 </update>
 <!-- 사용자 삭제 -->
 <delete id="deleteUser" 
 				parameterType="hashmap">
-		delete from member 
+		delete from APP_USER 
 		where
 		<choose>
 			<when test="email !=null and pw != null">
