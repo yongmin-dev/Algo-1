@@ -5,7 +5,8 @@
 	<!-- 카테고리 읽기 -->
 
 	<select id="getCategory" resultType="BoardCategoryVO">
-		SELECT category_num AS "categoryNum", name
+		SELECT category_num AS
+		"categoryNum", name
 		FROM
 		board_category
 	</select>
@@ -13,7 +14,7 @@
 
 	<!-- 게시글 작성 -->
 	<insert id="write" parameterType="BoardPostVO">
-		INSERT INTO  board_post(
+		INSERT INTO board_post(
 		post_num,
 		CATEGORY_NUM,
 		TITLE,
@@ -22,21 +23,282 @@
 		CONTENT,
 		POST_GROUP
 		)values(
-		board_post_num.nextval,
+		board_post_num_seq.nextval,
 		#{category.categoryNum},
 		#{title},
-		#{userNum}
+		#{userNum},
+		#{userName},
+		#{content},
+		board_post_num_seq.currval
+		)
+		<selectKey keyProperty="postNum" resultType="long"
+			order="AFTER">
+			select BOARD_POST_NUM_SEQ.currval from dual
+		</selectKey>
+
+	</insert>
+
+	<!-- 첨부파일 저장 -->
+	<insert id="insertFile" parameterType="AttachmentVO">
+
+		INSERT INTO
+		post_attachment(
+		fid, post_num, fname, fsize, ftype, fdata)
+		VALUES(
+		attachment_fid_seq.nextval, #{postNum}, #{fname}, #{fsize}, #{ftype},
+		#{fdata})
+		
+	</insert>
+
+	<!-- 게시글 수정 -->
+	<update id="update" parameterType="BoardPostVO">
+		UPDATE board
+		SET category_num =
+		{#boardCategoryVO.categoryNum},
+		title = #{title},
+		content = #{content},
+		updated_at = systimestamp
+		where post_num = #{postNum}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="delete" parameterType="long">
+		DELETE FROM board_post WHERE
+		post_num = ${postNum}
+	</delete>
+
+	<!-- 첨부파일 1건 삭제 -->
+	<delete id="deleteFile" parameterType="long">
+		DELETE FROM
+		post_attachment WHERE fid = #{fid}
+	</delete>
+
+	<!-- 게시글 첨부파일 전체 삭제 -->
+	<delete id="deleteFiles" parameterType="long">
+		DELETE FROM
+		post_attachment WHERE post_num = #{postNum}
+	</delete>
+
+
+	<!-- 게시글보기 -->
+	<select id="select" parameterType="long" resultType="BoardPostVO">
+		SELECT
+		post_num as "postNum",
+		t2.category_num as "categoryNum",
+		title,
+		user_num
+		as "userNum",
+		created_at as "createdAt",
+		updated_at as "updatedAt",
+		hit,
+		content,
+		post_group as "postGroup",
+		post_step as "postStep",
+		indent
+		FROM
+		board_post t1, board_category t2
+		where t1.category_num =
+		t2.category_num
+		and t1.post_num = #{postNum}
+
+	</select>
+
+
+	<!-- 첨부파일 가져오기 -->
+	<select id="selectFile" parameterType="long"
+		resultType="AttachmentVO">
+		SELECT fid, post_num as "postNum", fname, fsize, ftype,
+		fdata, created_at as "createdAt", updated_at as "updatedAt"
+		FROM
+		post_attachment
+		WHERE post_num = #{postNum}
+		order by fid desc
+
+	</select>
+
+	<!-- 조회수 1 증가 -->
+	<update id="updateHit" parameterType="long">
+
+		UPDATE board_post
+		SET hit =
+		hit + 1
+		WHERE post_num = #{postNum}
+
+	</update>
+
+	<!-- 게시글목록 -->
+	<!-- 1) 전체목록 -->
+	<select id="selectList" resultType="BoardPostVO">
+		SELECT
+		post_num as "postNum",
+		t2.category_num as
+		"boardCategoryVO.categoryNum",
+		t2.name as
+		"boardCategoryVO.name",
+		title,
+		username as "userName",
+		created_at as
+		"createdAt",
+		updated_at as
+		"updatedAt",
+		hit,
+		content,
+		post_group as
+		"postGroup",
+		post_step as
+		"postStep",
+		indent
+		FROM
+		board_post t1,
+		board_category t2
+		where
+		t1.category_num = t2.category_num
+		order by
+		t1.post_group desc,
+		t1.post_step asc
+	</select>
+
+	<!-- 3) 검색어 있는 게시글 검색 -->
+	<select id="selectList3" parameterType="map"
+		resultType="BoardPostVO">
+		SELECT
+		post_num as "postNum",
+		t2.category_num as
+		"boardCategoryVO.categoryNum",
+		t2.name as "boardCategoryVO.name",
+		title,
+		username as "userName",
+		created_at as "createdAt",
+		updated_at as
+		"updatedAt",
+		hit,
+		content,
+		post_group as "postGroup",
+		post_step as
+		"postStep",
+		indent
+		FROM(select row_number() over(order by post_group
+		desc, post_step asc) as num,
+		t1.post_num,
+		t2.category_num,
+		t2.name,
+		t1.title,
+		t1.user_num,
+		t1.username,
+		t1.created_at,
+		t1.updated_at,
+		t1.hit,
+		t1.indent
+		from board_post t1, board_category t2
+		where t1.category_num =
+		t2.category_num
+		<if test="searchType != null and list != null">
+			and
+			<foreach item="item" collection="list" open="("
+				separator="or" close=")">
+				<choose>
+					<!-- 제목 -->
+					<when test="searchType == 'T'.toString()">
+						title like '%'||#{item}||'%'
+					</when>
+					<!-- 내용 -->
+					<when test="searchType == 'C',toString()">
+						content like '%'||#{item}||'%'
+					</when>
+					<!-- 작성자 -->
+					<when test="searchType == 'N'.toString()">
+						username like '%'||#{item}||'%'
+					</when>
+					<otherwise>
+						title like '%'||#{item}||'%'
+						or content like
+						'%'||#{item}||'%'
+						or username like '%'||#{item}||'%'
+						or post_num
+						like '%'||#{item}||'%'
+					</otherwise>
+				</choose>
+			</foreach>
+		</if>
+		)
+		where num between #{startRec} and #{endRec}
+	</select>
+
+
+	<!-- 게시글 답글 작성 -->
+	<insert id="insertReply" parameterType="BoardPostVO">
+		INSERT INTO board_post(
+		post_num,
+		category_num,
+		title,
+		user_num,
+		username,
+		content,
+		post_group,
+		post_step,
+		indent
+		) VALUES(
+		board_post_num_seq.nextval,
+		#{boardCategory.categoryNum},
+		#{title},
+		#{userNum},
 		#{userName},
 		#{content},
 		#{postGroup},
-		board_post_num.currval
+		#{postStep} + 1,
+		#{indent} + 1
 		)
-		<selectKey keyProperty="postNum" resultType="long" order="AFTER">
-		select BOARD_POST_NUM.currval from dual
+		<selectKey keyProperty="postNum" resultType="long"
+			order="AFTER">
+			select board_post_num_seq.currval from dual
 		</selectKey>
-	
 	</insert>
 
+	<!-- 이전 답글step 업데이트 -->
+	<!-- 이전 답글중 원글의 bstep보다 큰값이 있는경우 bstep + 1증가 -->
+	<update id="updateStep" parameterType="map">
+		update board_post
+		set
+		post_step = post_step + 1
+		where post_group = #{postGroup} and post_step
+		> #{postStep}
+	</update>
 
+	<!-- 총 레코드 수 -->
+	<select id="countTotalRecord" parameterType="map"
+		resultType="int">
+		select count(t1.post_num) as countTotal
+		from board_post t1,
+		board_category t2
+		where t1.category_num = t2.category_num
+		<if test="searchType != null and list !=null">
+		<foreach item="item" collection="list" open="(" separator="or"
+			close=")">
+			<choose>
+				<!-- 제목 -->
+				<when test="searchType == 'T'.toString()">
+					title like '%'||#{item}||'%'
+				</when>
+				<!-- 내용 -->
+				<when test="searchType == 'C',toString()">
+					content like '%'||#{item}||'%'
+				</when>
+				<!-- 작성자 -->
+				<when test="searchType == 'N'.toString()">
+					username like '%'||#{item}||'%'
+				</when>
+				<otherwise>
+					title like '%'||#{item}||'%'
+					or content like
+					'%'||#{item}||'%'
+					or username like '%'||#{item}||'%'
+					or post_num
+					like
+					'%'||#{item}||'%'
+				</otherwise>
+			</choose>
+		</foreach>
+		</if>
+	</select>
 </mapper>
 
