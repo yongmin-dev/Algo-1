@@ -28,6 +28,8 @@ public class LoginManager implements LoginService{
 		if(user!=null) {
 			//세션에 로그인된 사용자 정보 넣기 
 			session.setAttribute("userInfo", user);
+		}else {
+			session.invalidate();
 		}
 		return user;
 	}
