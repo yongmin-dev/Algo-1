@@ -28,7 +28,7 @@ public class BoardPostVO {
 	private long postNum;
 
 	// 분류 카테고리
-	private BoardCategoryVO boardCategoryVO;
+	private BoardCategoryVO category;
 
 	// 제목
 	@NotNull

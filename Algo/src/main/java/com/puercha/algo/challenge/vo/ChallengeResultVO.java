@@ -19,10 +19,10 @@ public class ChallengeResultVO {
 	private String code;
 	
 	//메모리 사용량
-	private long usingMemory;
+	private long usedMemory;
 	
 	//수행시간
-	private long processing_time;
+	private long processingTime;
 	
 	//도전과제번호
 	private long cNum;

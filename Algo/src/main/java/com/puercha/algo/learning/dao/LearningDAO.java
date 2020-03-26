@@ -5,5 +5,15 @@ package com.puercha.algo.learning.dao;
  *
  */
 public interface LearningDAO {
-
+	/* Create */
+	
+	
+	/* Read */
+	
+	
+	/* Update */
+	
+	
+	/* Delete */
+	
 }
