@@ -1,8 +1,72 @@
 package com.puercha.algo.user.controller;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.puercha.algo.user.service.LoginService;
+import com.puercha.algo.user.vo.UserVO;
 
 @Controller
+@RequestMapping("/user")
 public class LoginController {
+	
+	private static final Logger logger
+	= LoggerFactory.getLogger(LoginController.class);
 
+	
+	
+	@Inject
+	LoginService loginService;	
+	
+	//로그인 양식
+	@GetMapping("/loginForm")
+	public String getLoginForm(
+			@RequestParam(value="next",required=false)String next,
+			Model model) {
+		logger.info("next:"+next);
+		if(next == null) {
+			next="/";
+		}
+		return "user/signin";
+	}
+	//로그인 처리
+	@PostMapping("/login")
+	public String login(
+			@ModelAttribute @RequestParam("email") String email,
+			@RequestParam("pw") String pw,
+			@RequestParam("next") String next,
+			HttpSession session,
+			Model model) {
+		
+		logger.info("email="+email);
+		logger.info("pw="+pw);
+		logger.info("next="+next);
+		
+		UserVO user = loginService.loginUser(email, pw, session);
+		
+		if(user == null) {
+			model.addAttribute("svr_msg","가입된 사용자정보가 없습니다. 비밀번호와 이메일을 확인해주세요");
+			return "/User/loginForm";			
+		}else {
+			return "redirect:"+next;
+		}
+	}
+	//로그아웃
+	@GetMapping("logout")
+	public String logout(HttpSession session) {
+		
+		session.invalidate();
+		return "redirect:/";
+	}
+	
 }

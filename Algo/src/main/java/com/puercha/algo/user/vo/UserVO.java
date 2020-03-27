@@ -50,7 +50,7 @@ public class UserVO {
 	private String username;
 
 	// 성별
-	private char gender;
+	private String gender;
 
 	//주소
 	private String address;
