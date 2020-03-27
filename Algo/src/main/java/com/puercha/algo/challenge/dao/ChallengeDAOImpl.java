@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.persistence.QueryHint;
 
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
@@ -24,7 +26,7 @@ import com.puercha.algo.challenge.vo.ChallengeVO;
 @Repository
 public class ChallengeDAOImpl implements ChallengeDAO {
 	private static final Logger logger = LoggerFactory.getLogger(ChallengeDAOImpl.class);
-	
+	  
 	@Inject
 	SqlSession sqlSession;
 	/* Create */	
@@ -113,7 +115,7 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	@Override
 	public ChallengeResultVO selectOneResult(long resultNum) {
 		logger.info("selectOneResult(long resultNum):"+resultNum);
-		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectAllChallenge",resultNum);
+		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectOneResult",resultNum);
 	}
 	
 
