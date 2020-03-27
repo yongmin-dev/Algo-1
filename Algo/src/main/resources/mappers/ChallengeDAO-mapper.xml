@@ -87,12 +87,9 @@
 			FROM challenge, app_user
 			WHERE challenge.user_num  = app_user.user_num
 				<if test="types != null and keywords != null and types.length() > 0 and keywords.length() )>0">
-					AND (
-					<foreach collection="types" item="type" index="i">
-						<if test="i>0">
-							OR
-						</if>
-						<foreach collection="keywords" item="keyword">
+					
+					<foreach collection="types" item="type" index="i" open="AND (" separator="OR" close=")">						
+						<foreach collection="keywords" item="keyword" >
 							<choose>
 								<when test="type=='T'.toString()">
 								    challenge.title like  '%' || #{keyword} || '%'					
@@ -109,14 +106,14 @@
 							</choose>							 
 						</foreach>
 					</foreach>				
-					)					
+										
 				</if>
 			)
 			WHERE "num" <![CDATA[ >= ]]>  startRowNum 
 			AND "num" <![CDATA[ <= ]]> endRowNum
 	</select>
 	<!-- 도전과제 결과 보기 -->
-	<select id="selectAllChallenge" parameterType="long" resultType="ChallengeResultVO">
+	<select id="selectOneResult" parameterType="long" resultType="ChallengeResultVO">
 		SELECT 
 		    result_num AS "resultNum",
 		    user_num AS "userNum" ,
