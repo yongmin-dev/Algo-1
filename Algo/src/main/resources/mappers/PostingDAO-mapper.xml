@@ -169,8 +169,7 @@
 		title,
 		username as "userName",
 		created_at as "createdAt",
-		updated_at as
-		"updatedAt",
+		updated_at as "updatedAt",
 		hit,
 		content,
 		post_group as "postGroup",
