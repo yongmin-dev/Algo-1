@@ -57,4 +57,7 @@ public interface PostingDAO {
 	//첨부파일 조회
 	AttachmentVO selectFile(String fid);
 	
+	//답글 스텝 올려주기
+	int updateStep(long postGroup, long postStep);
+	
 }
