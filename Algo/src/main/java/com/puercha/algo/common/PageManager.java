@@ -7,7 +7,7 @@ package com.puercha.algo.common;
  * 현재 페이지에 보여줄 페이지 계산
  * 시작, 종료, 다음, 이전,  마지막 페이지, 처음페이지
  */
-public class PageManager implements PagingService {
+public class PageManager{
 	
 	//한 페이지에 보여줄 페이지수
 	private int pageNumPerPage;
