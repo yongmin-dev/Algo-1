@@ -131,10 +131,8 @@
 	<select id="selectList" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as
-		"boardCategoryVO.categoryNum",
-		t2.name as
-		"boardCategoryVO.name",
+		t2.category_num as "boardCategoryVO.categoryNum",
+		t2.name as "boardCategoryVO.name",
 		title,
 		username as "userName",
 		created_at as
@@ -163,9 +161,9 @@
 		resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as
+		category_num as
 		"boardCategoryVO.categoryNum",
-		t2.name as "boardCategoryVO.name",
+		name as "boardCategoryVO.name",
 		title,
 		username as "userName",
 		created_at as "createdAt",
@@ -186,6 +184,9 @@
 		t1.username,
 		t1.created_at,
 		t1.updated_at,
+		t1.content,
+		t1.post_group,
+		t1.post_step,
 		t1.hit,
 		t1.indent
 		from board_post t1, board_category t2
@@ -269,7 +270,7 @@
 		select count(t1.post_num) as countTotal
 		from board_post t1,
 		board_category t2
-		where t1.category_num = t2.category_num
+		where t1.category_num = t2.category_num and
 		<if test="searchType != null and list !=null">
 		<foreach item="item" collection="list" open="(" separator="or"
 			close=")">
