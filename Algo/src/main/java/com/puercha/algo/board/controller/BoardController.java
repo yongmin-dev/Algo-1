@@ -87,7 +87,7 @@ public class BoardController {
 		final HttpHeaders headers = new HttpHeaders();
 		String[] mtypes = attachmentVO.getFtype().split("/");
 		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
-		headers.setContentLength(attachmentVO.getFsize());
+		headers.setContentLength(Integer.parseInt(attachmentVO.getFsize()));
 
 		// 첨부파일이 한글일 경우 깨짐 방지
 		String fileName = null;

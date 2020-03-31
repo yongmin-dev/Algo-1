@@ -39,7 +39,7 @@ public class PostingDAOImplXML implements PostingDAO {
 	//파일 첨부
 	@Override
 	public int insertFile(AttachmentVO attachmentVO) {
-		return sqlSession.insert("mappers.PostingDAO-mapper.fileInsert", attachmentVO);
+		return sqlSession.insert("mappers.PostingDAO-mapper.insertFile", attachmentVO);
 	}
 
 	//글수정
@@ -74,7 +74,7 @@ public class PostingDAOImplXML implements PostingDAO {
 	//파일 전체 보기
 	@Override
 	public List<AttachmentVO> selectFiles(String postNum) {
-		return sqlSession.selectList("mappers.PostingDAO-mapper.readFiles");
+		return sqlSession.selectList("mappers.PostingDAO-mapper.selectFiles", Long.valueOf(postNum));
 	}
 
 	//조회수 증가
@@ -112,7 +112,8 @@ public class PostingDAOImplXML implements PostingDAO {
 		map.put("andor", "or");
 		return sqlSession.selectList("mappers.PostingDAO-mapper.selectList3", map);
 	}
-
+	
+	//총 리코드 수 
 	@Override
 	public int countTotalRecord(String searchType, String keyword) {
 		logger.info("keyword:" + keyword);
@@ -153,5 +154,6 @@ public class PostingDAOImplXML implements PostingDAO {
 		return sqlSession.selectOne("mappers.PostingDAO-mapper.selectFile", Long.valueOf(fid));
 	}
 
+	
 
 }
