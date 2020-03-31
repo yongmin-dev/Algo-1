@@ -29,7 +29,7 @@
 		#{birth},
 		'S')
 		<selectKey keyProperty="userNum" order="AFTER" resultType="long">
-			select user_num_seq.currval from dual;
+			select user_num_seq.currval from dual
 		</selectKey>	
 	</insert>
 <!-- 사용자 전체조회 -->
@@ -41,6 +41,7 @@
 </select>
 
 <!-- 사용자 개별조회 -->
+<!-- 이메일 및 비밀번호로 조회 -->
 <select id="selectUser" 
 				parameterType="hashmap"
 				resultType="UserVO">
@@ -52,6 +53,15 @@
 		 	AND pw = #{pw}
 		 </if> 
 </select>
+<!-- 유저번호로 조회 -->
+<select id="selectUser2" 
+				parameterType="hashmap"
+				resultType="UserVO">
+		SELECT user_num as "uesrNum", email, pw, tel, username, 
+		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
+		  FROM APP_USER    
+		 where user_Num = #{userNum} 
+</select>
 <!-- 사용자 수정 -->
 <update id="updateUser"
 				parameterType="UserVO">
@@ -61,15 +71,23 @@
 					 gender = #{gender},
 					 address = #{address},
 					 birth = #{birth},
+					 email = #{email},
 					 updated_at = systimestamp
-		 where email = #{email}
+		 where user_num = #{userNum}
 </update>
 <!-- 비밀번호 변경 -->
-<update id="changePW"
+<update id="changePW2"
 				parameterType="hashmap">
 		update APP_USER 
 		   set pw = #{newPw} 
 		 where email=#{email}
+		 AND pw =#{oldPw} 
+</update>
+<update id="changePW"
+				parameterType="hashmap">
+		update APP_USER 
+		   set pw = #{newPw} 
+		 where user_num=#{userNum}
 		 AND pw =#{oldPw} 
 </update>
 <!-- 사용자 삭제 -->
