@@ -56,12 +56,19 @@ public class UserDAOImpl implements UserDAO {
 		paras.put("pw",pw);
 		return sqlSession.selectOne("mappers.UserDAO-mapper.selectUser",paras);
 	}
+	@Override
+	public UserVO selectUser(long userNum) {
+		logger.info("UserDAOImpl.selectUser(long userNum)");
+		Map<String,Object> para = new HashMap<>();
+		para.put("userNum",userNum);
+		return sqlSession.selectOne("mappers.UserDAO-mapper.selectUser2",para);
+	}
 	/* Update */
 	// 사용자 수정
 	@Override
 	public int updateUser(UserVO userVO) {
 		logger.info("UserDAOImpl.updateUser(UserVO userVO) 호출됨!");
-		return sqlSession.update("mappers.UserDAO-mapper.updateUser",userVO);
+		return sqlSession	.update("mappers.UserDAO-mapper.updateUser",userVO);
 	}
 	//사용자 비밀번호변경
 	@Override
@@ -72,6 +79,15 @@ public class UserDAOImpl implements UserDAO {
 		pass.put("oldPw",oldPw);
 		pass.put("newPw",newPw);
 		return sqlSession.update("mappers.UserDAO-mapper.changePW",pass);
+	}
+	@Override
+	public int changePW(String email, String oldPw, String newPw) {
+		logger.info("UserDAOImpl.changePW(String email, String oldPw, String newPw) 호출됨!");
+		Map<String,Object> pass = new HashMap<>();
+		pass.put("email",email);
+		pass.put("oldPw",oldPw);
+		pass.put("newPw",newPw);
+		return sqlSession.update("mappers.UserDAO-mapper.changePW2",pass);
 	}
 	/* Delete */
 	// 사용자 삭제
@@ -91,5 +107,7 @@ public class UserDAOImpl implements UserDAO {
 		params.put("userNum", userNum);
 		return sqlSession.delete("mappers.UserDAO-mapper.deleteUser",params);
 	}
+	
+
 
 }
