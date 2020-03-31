@@ -39,7 +39,7 @@ public class PostingDAOImplXML implements PostingDAO {
 	//파일 첨부
 	@Override
 	public int insertFile(AttachmentVO attachmentVO) {
-		return sqlSession.insert("mappers.PostingDAO-mapper.fileInsert", attachmentVO);
+		return sqlSession.insert("mappers.PostingDAO-mapper.insertFile", attachmentVO);
 	}
 
 	//글수정

@@ -3,6 +3,7 @@ package com.puercha.algo.board.vo;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,6 +18,7 @@ import lombok.Data;
  * 게시글 VO
  */
 
+@Entity
 @Data
 public class BoardPostVO {
 
@@ -33,7 +35,10 @@ public class BoardPostVO {
 
 	// 분류 카테고리
 	private BoardCategoryVO category;
-
+	
+//	private long categoryNum;
+		
+	
 	// 제목
 	@NotNull
 	@Size(min = 4, max = 50, message = "5~50자 이내로 작성하세요")

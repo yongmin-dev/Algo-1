@@ -41,8 +41,7 @@
 	<!-- 첨부파일 저장 -->
 	<insert id="insertFile" parameterType="AttachmentVO">
 
-		INSERT INTO
-		post_attachment(
+		INSERT INTO post_attachment(
 		fid, post_num, fname, fsize, ftype, fdata)
 		VALUES(
 		attachment_fid_seq.nextval, #{postNum}, #{fname}, #{fsize}, #{ftype},
@@ -52,9 +51,9 @@
 
 	<!-- 게시글 수정 -->
 	<update id="update" parameterType="BoardPostVO">
-		UPDATE board
+		UPDATE board_POST
 		SET category_num =
-		{#boardCategoryVO.categoryNum},
+		#{category.categoryNum},
 		title = #{title},
 		content = #{content},
 		updated_at = systimestamp
@@ -86,8 +85,8 @@
 		post_num as "postNum",
 		t2.category_num as "categoryNum",
 		title,
-		user_num
-		as "userNum",
+		user_num as "userNum",
+		username as "userName",
 		created_at as "createdAt",
 		updated_at as "updatedAt",
 		hit,
@@ -239,7 +238,7 @@
 		indent
 		) VALUES(
 		board_post_num_seq.nextval,
-		#{boardCategory.categoryNum},
+		#{category.categoryNum},
 		#{title},
 		#{userNum},
 		#{userName},

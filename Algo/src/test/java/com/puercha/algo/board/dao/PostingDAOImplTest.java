@@ -1,5 +1,6 @@
 package com.puercha.algo.board.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
@@ -15,19 +16,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.puercha.algo.board.vo.AttachmentVO;
+import com.puercha.algo.board.vo.BoardCategoryVO;
 import com.puercha.algo.board.vo.BoardPostVO;
 import com.puercha.algo.common.RowCriteria;
 import com.puercha.algo.board.dao.PostingDAO;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations ="file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
 public class PostingDAOImplTest {
 	private final static Logger logger = LoggerFactory.getLogger(PostingDAOImplTest.class);
-	
+
 	@Inject
 	PostingDAO postingDAO;
-	
-	//게시글목록
+
+	// 게시글목록
 	@Test
 	@Named("게시글목록")
 	@Disabled
@@ -35,48 +38,182 @@ public class PostingDAOImplTest {
 		List<BoardPostVO> list = postingDAO.selectList();
 		assertNotNull(list);
 		logger.info(list.toString());
-		
+
 	}
-	
-	//게시글 목록(검색어, 페이지)
+
+	// 게시글 목록(검색어, 페이지)
 	@Test
 	@Named("게시글 목록(페이징)")
 	@Disabled
 	public void list3() {
-		
+
 		int reqPage = 1;
 		RowCriteria rowCriteria = new RowCriteria(reqPage);
-		logger.info(""+rowCriteria.getStartRec());
-		logger.info(""+rowCriteria.getEndRec());
+		logger.info("" + rowCriteria.getStartRec());
+		logger.info("" + rowCriteria.getEndRec());
 		List<BoardPostVO> list = postingDAO.selectList(rowCriteria.getStartRec(), rowCriteria.getEndRec(), "T", "답글");
 		logger.info("검색 결과" + list.size());
-		for(BoardPostVO boardPostVO : list) {
+		for (BoardPostVO boardPostVO : list) {
 			logger.info(boardPostVO.toString());
 		}
 	}
-	
-	//총 레코드수 카운트
+
+	// 총 레코드수 카운트
 	@Test
 	@Named("총 레코드 카운트")
 	@Disabled
 	public void totalRecordCount() {
 		int cnt = postingDAO.countTotalRecord("T", "test");
-		
+
 		logger.info("총레코드수" + cnt);
+	}
+
+	@Test
+	@Named("게시글 작성 // 첨부 없음")
+	@Disabled
+	public void write() {
+		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
+		BoardPostVO boardPostVO = new BoardPostVO();
+		
+		boardCategoryVO.setCategoryNum(1);
+		boardCategoryVO.setName("test");
+
+		boardPostVO.setCategory(boardCategoryVO);
+		boardPostVO.setTitle("Junit테스트");
+		boardPostVO.setUserNum(1);
+		boardPostVO.setUserName("테스트");
+		boardPostVO.setContent("테스트 본문");
+
+		int cnt = postingDAO.insert(boardPostVO);
+		
+		
+		
+		
+		assertEquals(1, cnt);
+	}
+
+	@Test
+	@Named("파일첨부")
+	@Disabled
+	public void writeFile() {
+		AttachmentVO attachmentVO = new AttachmentVO();
+		BoardPostVO boardPostVO = new BoardPostVO();
+		
+		boardPostVO.setPostNum(1);
+		byte[] file = new byte[1024];
+		attachmentVO.setPostNum(boardPostVO.getPostNum());
+		attachmentVO.setFname("file첨부");
+		attachmentVO.setFsize("100");
+		attachmentVO.setFtype("file 첨부 test");
+		attachmentVO.setFdata(file);
+		
+		int cnt = postingDAO.insertFile(attachmentVO);
+		assertEquals(1, cnt);
 	}
 	
 	@Test
-	@Named("게시글 보기")
-	public void view() {
+	@Named("파일 삭제")
+	@Disabled
+	public void deleteFile() {
+		int cnt = postingDAO.deleteFile("21");
 		
-		BoardPostVO boardPostVO = new BoardPostVO();
-		boardPostVO = postingDAO.select("1");
-		logger.info(boardPostVO.toString());
+		assertEquals(1, cnt);
+				
+	}
+
+	@Test
+	@Named("파일 삭제 전체")
+	@Disabled
+	public void deleteFiles() {
+		int cnt = postingDAO.deleteFiles("1");
 		
+		assertEquals(2, cnt);
+				
 	}
 	
 	
+	@Test
+	@Named("게시글 보기")
+	@Disabled
+	public void view() {
+
+		BoardPostVO boardPostVO = new BoardPostVO();
+		boardPostVO = postingDAO.select("22");
+		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
+
+		logger.info("" + boardCategoryVO.getCategoryNum());
+		assertEquals(22, boardPostVO.getPostNum());
+		logger.info(boardPostVO.toString());
+
+	}
+
+	@Test
+	@Named("게시글 수정")
+	@Disabled
+	public void modify() {
+
+		BoardPostVO boardPostVO = new BoardPostVO();
+		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
+		boardPostVO = postingDAO.select("22");
+		logger.info(boardPostVO.toString());
+
+		boardCategoryVO.setCategoryNum(1);
+		boardCategoryVO.setName("질문게시글");
+		boardPostVO.setCategory(boardCategoryVO);
+
+		boardPostVO.setPostNum(22);
+		boardPostVO.setTitle("수정테스트");
+		boardPostVO.setContent("수정테스트");
+
+		int cnt = postingDAO.update(boardPostVO);
+		assertEquals(1, cnt);
+		logger.info(boardPostVO.toString());
+
+	}
+
+	@Test
+	@Named("게시글 삭제")
+	@Disabled
+	public void delete() {
+
+		int cnt = postingDAO.delete("22");
+		assertEquals(1, cnt);		
+
+	}
 	
+	@Test
+	@Named("답글달기")
+	@Disabled
+	public void insertReply() {
+		
+		BoardPostVO boardPostVO = new BoardPostVO();
+		boardPostVO = postingDAO.select("23");
+		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
+		logger.info(boardPostVO.toString());
+		
+		boardCategoryVO.setCategoryNum(1);
+		boardCategoryVO.setName("질문게시글");
+		boardPostVO.setCategory(boardCategoryVO);
+		boardPostVO.setTitle("답글테스트");
+		boardPostVO.setUserNum(1);
+		boardPostVO.setUserName("답글테스트");
+		boardPostVO.setContent("답글테스트");
+		
+		int cnt = postingDAO.insertReply(boardPostVO);
+		
+	}
 	
+	@Test
+	@Named("조회수 증가")
+	@Disabled
+	public void hit() {
+		
+		BoardPostVO boardPostVO = new BoardPostVO();
+		int cnt =postingDAO.updateHit("23");
+		boardPostVO = postingDAO.select("23");
+			
+		logger.info("hit :"+boardPostVO.getHit());
+		assertEquals(1, cnt);
+	}
 
 }

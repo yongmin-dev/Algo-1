@@ -62,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
 				attachmentVO.setPostNum(postNum);
 				// 첨부파일 이름
 				attachmentVO.setFname(file.getOriginalFilename());
-				attachmentVO.setFsize(file.getSize());
+				attachmentVO.setFsize(""+file.getSize());
 				attachmentVO.setFtype(file.getContentType());
 				attachmentVO.setFdata(file.getBytes());
 
