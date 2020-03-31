@@ -243,6 +243,7 @@ public class PostingDAOImplTest {
 
 	@Test
 	@Named("답글 스텝 올려주기")
+	@Disabled
 	public void updateStep() {
 		BoardPostVO boardPostVO = new BoardPostVO();
 		
