@@ -30,42 +30,13 @@ public class PostingDAOImplTest {
 	@Inject
 	PostingDAO postingDAO;
 
-	// 게시글목록
 	@Test
-	@Named("게시글목록")
+	@Named("카테고리 읽어오기")
 	@Disabled
-	public void list() {
-		List<BoardPostVO> list = postingDAO.selectList();
+	public void getCategory() {
+		List<BoardCategoryVO> list = postingDAO.getCategory();
 		assertNotNull(list);
 		logger.info(list.toString());
-
-	}
-
-	// 게시글 목록(검색어, 페이지)
-	@Test
-	@Named("게시글 목록(페이징)")
-	@Disabled
-	public void list3() {
-
-		int reqPage = 1;
-		RowCriteria rowCriteria = new RowCriteria(reqPage);
-		logger.info("" + rowCriteria.getStartRec());
-		logger.info("" + rowCriteria.getEndRec());
-		List<BoardPostVO> list = postingDAO.selectList(rowCriteria.getStartRec(), rowCriteria.getEndRec(), "T", "답글");
-		logger.info("검색 결과" + list.size());
-		for (BoardPostVO boardPostVO : list) {
-			logger.info(boardPostVO.toString());
-		}
-	}
-
-	// 총 레코드수 카운트
-	@Test
-	@Named("총 레코드 카운트")
-	@Disabled
-	public void totalRecordCount() {
-		int cnt = postingDAO.countTotalRecord("T", "test");
-
-		logger.info("총레코드수" + cnt);
 	}
 
 	@Test
@@ -74,7 +45,7 @@ public class PostingDAOImplTest {
 	public void write() {
 		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
 		BoardPostVO boardPostVO = new BoardPostVO();
-		
+
 		boardCategoryVO.setCategoryNum(1);
 		boardCategoryVO.setName("test");
 
@@ -85,10 +56,7 @@ public class PostingDAOImplTest {
 		boardPostVO.setContent("테스트 본문");
 
 		int cnt = postingDAO.insert(boardPostVO);
-		
-		
-		
-		
+
 		assertEquals(1, cnt);
 	}
 
@@ -98,7 +66,7 @@ public class PostingDAOImplTest {
 	public void writeFile() {
 		AttachmentVO attachmentVO = new AttachmentVO();
 		BoardPostVO boardPostVO = new BoardPostVO();
-		
+
 		boardPostVO.setPostNum(1);
 		byte[] file = new byte[1024];
 		attachmentVO.setPostNum(boardPostVO.getPostNum());
@@ -106,45 +74,9 @@ public class PostingDAOImplTest {
 		attachmentVO.setFsize("100");
 		attachmentVO.setFtype("file 첨부 test");
 		attachmentVO.setFdata(file);
-		
+
 		int cnt = postingDAO.insertFile(attachmentVO);
 		assertEquals(1, cnt);
-	}
-	
-	@Test
-	@Named("파일 삭제")
-	@Disabled
-	public void deleteFile() {
-		int cnt = postingDAO.deleteFile("21");
-		
-		assertEquals(1, cnt);
-				
-	}
-
-	@Test
-	@Named("파일 삭제 전체")
-	@Disabled
-	public void deleteFiles() {
-		int cnt = postingDAO.deleteFiles("1");
-		
-		assertEquals(2, cnt);
-				
-	}
-	
-	
-	@Test
-	@Named("게시글 보기")
-	@Disabled
-	public void view() {
-
-		BoardPostVO boardPostVO = new BoardPostVO();
-		boardPostVO = postingDAO.select("22");
-		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
-
-		logger.info("" + boardCategoryVO.getCategoryNum());
-		assertEquals(22, boardPostVO.getPostNum());
-		logger.info(boardPostVO.toString());
-
 	}
 
 	@Test
@@ -177,20 +109,102 @@ public class PostingDAOImplTest {
 	public void delete() {
 
 		int cnt = postingDAO.delete("22");
-		assertEquals(1, cnt);		
+		assertEquals(1, cnt);
+
+	}
+
+	@Test
+	@Named("파일 삭제")
+	@Disabled
+	public void deleteFile() {
+		int cnt = postingDAO.deleteFile("21");
+
+		assertEquals(1, cnt);
+
+	}
+
+	@Test
+	@Named("파일 삭제 전체")
+	@Disabled
+	public void deleteFiles() {
+		int cnt = postingDAO.deleteFiles("1");
+
+		assertEquals(2, cnt);
+	}
+	
+	@Test
+	@Named("게시글 보기")
+	@Disabled
+	public void view() {
+
+		BoardPostVO boardPostVO = new BoardPostVO();
+		boardPostVO = postingDAO.select("22");
+		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
+
+		logger.info("" + boardCategoryVO.getCategoryNum());
+		assertEquals(22, boardPostVO.getPostNum());
+		logger.info(boardPostVO.toString());
 
 	}
 	
 	@Test
+	@Named("조회수 증가")
+	@Disabled
+	public void hit() {
+
+		BoardPostVO boardPostVO = new BoardPostVO();
+		int cnt = postingDAO.updateHit("23");
+		boardPostVO = postingDAO.select("23");
+
+		logger.info("hit :" + boardPostVO.getHit());
+		assertEquals(1, cnt);
+	}
+	
+	@Test
+	@Named("게시글목록")
+	@Disabled
+	public void list() {
+		List<BoardPostVO> list = postingDAO.selectList();
+		assertNotNull(list);
+		logger.info(list.toString());
+
+	}
+
+	@Test
+	@Named("게시글 목록(페이징 + 제목, 내용)")
+	@Disabled
+	public void list3() {
+
+		int reqPage = 1;
+		RowCriteria rowCriteria = new RowCriteria(reqPage);
+		logger.info("" + rowCriteria.getStartRec());
+		logger.info("" + rowCriteria.getEndRec());
+		List<BoardPostVO> list = postingDAO.selectList(rowCriteria.getStartRec(), rowCriteria.getEndRec(), "T", "답글");
+		logger.info("검색 결과" + list.size());
+		for (BoardPostVO boardPostVO : list) {
+			logger.info(boardPostVO.toString());
+		}
+	}
+	
+	@Test
+	@Named("총 레코드 카운트")
+	@Disabled
+	public void totalRecordCount() {
+		int cnt = postingDAO.countTotalRecord("T", "test");
+
+		logger.info("총레코드수" + cnt);
+	}
+
+	@Test
 	@Named("답글달기")
 	@Disabled
 	public void insertReply() {
-		
+
 		BoardPostVO boardPostVO = new BoardPostVO();
 		boardPostVO = postingDAO.select("23");
 		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
 		logger.info(boardPostVO.toString());
-		
+
 		boardCategoryVO.setCategoryNum(1);
 		boardCategoryVO.setName("질문게시글");
 		boardPostVO.setCategory(boardCategoryVO);
@@ -198,21 +212,43 @@ public class PostingDAOImplTest {
 		boardPostVO.setUserNum(1);
 		boardPostVO.setUserName("답글테스트");
 		boardPostVO.setContent("답글테스트");
-		
+
 		int cnt = postingDAO.insertReply(boardPostVO);
-		
+
 	}
 	
 	@Test
-	@Named("조회수 증가")
+	@Named("첨부파일 1개 조회")
 	@Disabled
-	public void hit() {
+	public void selectFile() {
+		AttachmentVO attachmentVO = new AttachmentVO();
 		
-		BoardPostVO boardPostVO = new BoardPostVO();
-		int cnt =postingDAO.updateHit("23");
-		boardPostVO = postingDAO.select("23");
+		attachmentVO = postingDAO.selectFile("26");
+		assertNotNull(attachmentVO);
+		logger.info("selectFile :" +attachmentVO.toString());
 			
-		logger.info("hit :"+boardPostVO.getHit());
+	}
+	@Test
+	@Named("첨부파일 전체 조회")
+	@Disabled
+	public void selectFiles() {
+		
+		List<AttachmentVO> list = postingDAO.selectFiles("1");
+		
+		assertNotNull(list);
+		logger.info("selectFiles :" + list.toString());
+		
+	}
+
+
+	@Test
+	@Named("답글 스텝 올려주기")
+	public void updateStep() {
+		BoardPostVO boardPostVO = new BoardPostVO();
+		
+		boardPostVO = postingDAO.select("1");
+		int cnt = postingDAO.updateStep(boardPostVO.getPostGroup(), boardPostVO.getPostStep());
+		
 		assertEquals(1, cnt);
 	}
 
