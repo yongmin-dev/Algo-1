@@ -37,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Transactional
 	@Override
-	public int insert(BoardPostVO boardPostVO) {
+	public int write(BoardPostVO boardPostVO) {
 
 		// 1) 게시글 작성
 		int cnt = postingDAO.insert(boardPostVO);
@@ -46,13 +46,13 @@ public class BoardServiceImpl implements BoardService {
 		logger.info("첨부파일: " + boardPostVO.getFiles().size());
 
 		if (boardPostVO.getFiles() != null && boardPostVO.getFiles().size() > 0) {
-			insertFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
+			writeFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
 		}
 		return cnt;
 	}
 
 	// 첨부파일 저장하기
-	private void insertFile(List<MultipartFile> files, long postNum) {
+	private void writeFile(List<MultipartFile> files, long postNum) {
 		for (MultipartFile file : files) {
 			try {
 				logger.info("파일 첨부 : " + file.getOriginalFilename());
@@ -67,7 +67,7 @@ public class BoardServiceImpl implements BoardService {
 				attachmentVO.setFdata(file.getBytes());
 
 				if (file.getSize() > 0) {
-					postingDAO.fileInsert(attachmentVO);
+					postingDAO.insertFile(attachmentVO);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -78,12 +78,12 @@ public class BoardServiceImpl implements BoardService {
 	// 게시글 수정
 	@Transactional
 	@Override
-	public int update(BoardPostVO boardPostVO) {
+	public int modify(BoardPostVO boardPostVO) {
 		// 1) 게시글 수정
 		int cnt = postingDAO.update(boardPostVO);
 		// 2) 첨부파일 추가
 		if (boardPostVO.getFiles() != null && boardPostVO.getFiles().size() > 0) {
-			insertFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
+			writeFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
 		}
 		return cnt;
 	}
@@ -119,9 +119,11 @@ public class BoardServiceImpl implements BoardService {
 		return cnt;
 	}
 
+	
+	//게시글 읽기
 	@Transactional
 	@Override
-	public Map<String, Object> select(String postNum) {
+	public Map<String, Object> view(String postNum) {
 		// 1) 게시글 가져오기
 		BoardPostVO boardPostVO = postingDAO.select(postNum);
 
@@ -130,7 +132,7 @@ public class BoardServiceImpl implements BoardService {
 		postingDAO.updateHit(postNum);
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("boardPostVO", boardPostVO);
+		map.put("board", boardPostVO);
 		if (files != null && files.size() > 0) {
 			map.put("files", files);
 		}
@@ -141,17 +143,17 @@ public class BoardServiceImpl implements BoardService {
 	// 게시글 목록
 	// 1) 전체
 	@Override
-	public List<BoardPostVO> selectList() {
+	public List<BoardPostVO> list() {
 		return postingDAO.selectList();
 	}
 
 	@Override
-	public List<BoardPostVO> selectList(int startRec, int endRec) {
+	public List<BoardPostVO> list(int startRec, int endRec) {
 		return null;
 	}
 
 	@Override
-	public List<BoardPostVO> selectList(String reqPage, String searchType, String keyword) {
+	public List<BoardPostVO> list(String reqPage, String searchType, String keyword) {
 
 		logger.info("list param :" + reqPage + " "+ searchType);
 		int l_reqPage = 0;
@@ -194,19 +196,19 @@ public class BoardServiceImpl implements BoardService {
 	//답글 작성
 	@Transactional
 	@Override
-	public int insertReply(BoardPostVO boardPostVO) {
+	public int reply(BoardPostVO boardPostVO) {
 		//1) 게시글 답글 작성
 		int cnt = postingDAO.insertReply(boardPostVO);
 		
 		if(boardPostVO.getFiles()!= null && boardPostVO.getFiles().size() > 0) {
-			insertFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
+			writeFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
 		}
 		return cnt;
 	}
 
 	//첨부파일 보기
 	@Override
-	public AttachmentVO selectFile(String fid) {
+	public AttachmentVO viewFile(String fid) {
 		return postingDAO.selectFile(fid);
 	}
 

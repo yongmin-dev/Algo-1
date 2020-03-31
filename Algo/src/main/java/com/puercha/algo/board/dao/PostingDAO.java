@@ -18,7 +18,7 @@ public interface PostingDAO {
 	
 	//게시글 작성
 	int insert(BoardPostVO boardPostVO);
-	int fileInsert(AttachmentVO attachmentVO);
+	int insertFile(AttachmentVO attachmentVO);
 	
 	//게시글 수정
 	int update(BoardPostVO boardPostVO);
