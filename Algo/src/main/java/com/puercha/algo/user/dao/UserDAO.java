@@ -19,6 +19,7 @@ public interface UserDAO {
 	//사용자 전체조회
 	List<UserVO> selectAllUser();
 	//사용자 개별조회
+	UserVO selectUser(long userNum);	
 	UserVO selectUser(String email);	
 	UserVO selectUser(String email, String pw);
 	
@@ -26,6 +27,7 @@ public interface UserDAO {
 	// 사용자 수정
 	int updateUser (UserVO userVO);
 	int changePW(long userNum,String oldPw,String newPw);
+	int changePW(String email,String oldPw,String newPw);
 	
 	/* Delete */
 	// 사용자 삭제
