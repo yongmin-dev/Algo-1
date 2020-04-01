@@ -21,12 +21,12 @@
 		<!-- 게시글번호 -->
 		${boardPostVO.postNum}
 
-		<!-- 게시글카테고리번호 <form:select> -->
+<%-- 		<!-- 게시글카테고리번호 <form:select> -->
 		${boardCategoryVO.cagetoryNum}
 
 		<!-- 게시글카테고리이름 <form:select>-->
 		${boardCategoryVO.name}
-
+ --%>
 		<!-- 유저번호 -->
 		${boardPostVO.userNum}
 		
@@ -45,7 +45,7 @@
 		
 		<!-- @attachmentVOs : 첨부파일  -->
 		<c:if test="${!empty attachmentVOs }">
-			<c:forEach var="attachment" items="attachmentLists" >			
+			<c:forEach var="attachment" items="attachmentVOs" >			
 			${attachment.fid}
 			${attachment.fname}
 			${attachment.fsize/1000}kb

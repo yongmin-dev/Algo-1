@@ -141,8 +141,8 @@
 	<select id="selectList" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "boardCategoryVO.categoryNum",
-		t2.name as "boardCategoryVO.name",
+		t2.category_num as "category.categoryNum",
+		t2.name as "category.name",
 		title,
 		username as "userName",
 		created_at as
@@ -172,8 +172,8 @@
 		SELECT
 		post_num as "postNum",
 		category_num as
-		"boardCategoryVO.categoryNum",
-		name as "boardCategoryVO.name",
+		"category.categoryNum",
+		name as "category.name",
 		title,
 		username as "userName",
 		created_at as "createdAt",
@@ -278,10 +278,10 @@
 	<select id="countTotalRecord" parameterType="map"
 		resultType="int">
 		select count(t1.post_num) as countTotal
-		from board_post t1,
-		board_category t2
-		where t1.category_num = t2.category_num and
+		from board_post t1, board_category t2
+		where t1.category_num = t2.category_num
 		<if test="searchType != null and list !=null">
+		 and
 		<foreach item="item" collection="list" open="(" separator="or"
 			close=")">
 			<choose>
