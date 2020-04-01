@@ -71,7 +71,7 @@ public class BoardController {
 		model.addAttribute("boardPostVO", boardPostVO);
 		if (map.get("attachmentVO") != null) {
 			attachmentVO = (List<AttachmentVO>) map.get("attachmentVO");
-			model.addAttribute("attachmentVO", attachmentVO);
+			model.addAttribute("attachmentVOs", attachmentVO);
 		}
 		return "/board/postView";
 	}
