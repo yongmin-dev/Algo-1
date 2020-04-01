@@ -1,7 +1,7 @@
-<!-- 게시글 보기 화면 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,17 +15,58 @@
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
-	<main>
-		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
+	<fmt:formatDate value="${boardPostVO.createdAt}" var="createdDate" pattern="yyyy-MM-dd"/>
+ <div class="container">
+<div class="board_wrap">
+	
+	<h2>질문게시판</h2>
+		
+    <form action="">
+    <div class="board_list_header">
+      <h3>긴급한 공지사항입니다.여러분</h3>
+    </div>
+    <div class="board_summary">
+      <div>
+        <div class="write">${boardPostVO.userName}</div>
+        <a href="#">질문게시판</a>
+        <span>${createdDate }</span>
+        <span>조회수 ${boardPostVO.hit}</span>
+      </div>
+    </div>
+    <div class="board_text">
+		${boardPostVO.content}
+    </div>
+    
+      <div class="board_reply">
+        <div class="board_summary">
+          <div>
+            <div class="write">${boardPostVO.userName}</div>
+            <span>${createdDate }</span>
+          </div>
+          <div class="reply_text">
+           <p>테스트 확인.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>     
+  </div>
+
+
+
+
+
+<%-- 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 
 		<!-- 게시글번호 -->
 		${boardPostVO.postNum}
 
-		<!-- 게시글카테고리번호 <form:select> -->
-		${boardCategoryVO.cagetoryNum}
+		
+		${boardPostVO.category.categoryNum}
 
-		<!-- 게시글카테고리이름 <form:select>-->
-		${boardCategoryVO.name}
+		
+		${boardPostVO.category.name}
 
 		<!-- 유저번호 -->
 		${boardPostVO.userNum}
@@ -34,25 +75,35 @@
 		 ${boardPostVO.userName}
 		 <!-- 생성일 -->
 		${boardPostVO.createdAt}
-		
+		${createdDate }
 		<!-- 수정일 -->		
 		${boardPostVO.updatedAt}
 		<!-- 조회수 -->
 		 ${boardPostVO.hit}
 		 
 		 <!-- 내용 -->
-		${boardPostVO.content}
+		${boardPostVO.content} --%>
 		
 		<!-- @attachmentVOs : 첨부파일  -->
 		<c:if test="${!empty attachmentVOs }">
-			<c:forEach var="attachment" items="attachmentLists" >			
+			<c:forEach var="attachment" items="attachmentVOs" >			
 			${attachment.fid}
 			${attachment.fname}
 			${attachment.fsize/1000}kb
-		</c:forEach>
+			</c:forEach>
 
 		</c:if>
-	</main>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
 	<!-- 댓글 -->
 	<%@include file="/WEB-INF/views/board/comment.jsp"%>
 
