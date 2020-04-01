@@ -57,7 +57,7 @@ public class BoardController {
 		model.addAttribute("list", boardService.list(reqPage, searchType, keyword));
 		// 페이지제어
 		model.addAttribute("pm", boardService.getPageManager(reqPage, searchType, keyword));
-		return "board/list";
+		return "board/board";
 	}
 
 	// 게시글보기

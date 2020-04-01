@@ -188,8 +188,8 @@ public class BoardServiceImpl implements BoardService {
 		
 		totalRec = postingDAO.countTotalRecord(searchType, keyword);
 		
-		pm = new PageManager(fc, totalRec);
 		fc = new FindCriteria(l_reqPage, searchType, keyword);
+		pm = new PageManager(fc, totalRec);
 		
 		return pm;
 	}
