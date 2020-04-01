@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ public class LoginController {
 	
 	
 	@Inject
+//	@Qualifier("loginManager")
 	LoginService loginService;	
 	
 	//로그인 양식
@@ -44,7 +46,7 @@ public class LoginController {
 	public String login(
 			@ModelAttribute @RequestParam("email") String email,
 			@RequestParam("pw") String pw,
-			@RequestParam("next") String next,
+			@RequestParam(value="next",defaultValue = "/") String next,
 			HttpSession session,
 			Model model) {
 		
@@ -64,8 +66,8 @@ public class LoginController {
 	//로그아웃
 	@GetMapping("logout")
 	public String logout(HttpSession session) {
-		
-		session.invalidate();
+		loginService.logoutUser(session);
+//		session.invalidate();
 		return "redirect:/";
 	}
 	
