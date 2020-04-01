@@ -23,9 +23,23 @@
 
 /* container */
 
-.container{width:1280px;height: 700px;background: #eeeeee;margin: 0 auto;}
-.container .cont01{width:50%;height: 500px;background:#777777;float: left;}
-.container .cont02{width:50%;height: 500px;background: #999999;float: right;}
+.container{width:1280px;height: 700px;margin: 0 auto;}
+
+/* board_list */
+
+
+.container .board_wrap ul li{display: inline-block;}
+
+
+.board_wrap h2{font-size:20px;padding:20px 0;}
+.board_list_header{font-size:20px;}
+.board_list_header h3{font-size:20px;}
+.board_summary{color:#999;padding:20px 0;}
+.board_summary a{color:#999;}
+.board_summary .write{color:#000;font-weight: bold;}
+.board_text{padding:20px 0;font-size: 13px;border-top: 1px solid #e1e1e1;border-bottom: 1px solid #e1e1e1;color:#363636;line-height:40px;}
+
+.reply_text{padding:10px 0;}
 
 /* footer */
 .footer{width: 1280px;margin: 0 auto;}
