@@ -127,14 +127,14 @@ public class BoardServiceImpl implements BoardService {
 		// 1) 게시글 가져오기
 		BoardPostVO boardPostVO = postingDAO.select(postNum);
 
-		List<AttachmentVO> files = postingDAO.selectFiles(postNum);
+		List<AttachmentVO> attachmentVO = postingDAO.selectFiles(postNum);
 
 		postingDAO.updateHit(postNum);
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("board", boardPostVO);
-		if (files != null && files.size() > 0) {
-			map.put("files", files);
+		map.put("boardPostVO", boardPostVO);
+		if (attachmentVO != null && attachmentVO.size() > 0) {
+			map.put("attachmentVO", attachmentVO);
 		}
 
 		return map;
