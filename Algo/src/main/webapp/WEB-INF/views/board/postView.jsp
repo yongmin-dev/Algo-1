@@ -15,8 +15,49 @@
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
-	<main>
-		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
+	<fmt:formatDate value="${boardPostVO.createdAt}" var="createdDate" pattern="yyyy-MM-dd"/>
+ <div class="container">
+<div class="board_wrap">
+	
+	<h2>질문게시판</h2>
+		
+    <form action="">
+    <div class="board_list_header">
+      <h3>긴급한 공지사항입니다.여러분</h3>
+    </div>
+    <div class="board_summary">
+      <div>
+        <div class="write">${boardPostVO.userName}</div>
+        <a href="#">질문게시판</a>
+        <span>${createdDate }</span>
+        <span>조회수 ${boardPostVO.hit}</span>
+      </div>
+    </div>
+    <div class="board_text">
+		${boardPostVO.content}
+    </div>
+    
+      <div class="board_reply">
+        <div class="board_summary">
+          <div>
+            <div class="write">${boardPostVO.userName}</div>
+            <span>${createdDate }</span>
+          </div>
+          <div class="reply_text">
+           <p>테스트 확인.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>     
+  </div>
+
+
+
+
+
+<%-- 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 
 		<!-- 게시글번호 -->
 		${boardPostVO.postNum}
