@@ -61,21 +61,19 @@ public class BoardController {
 	}
 
 	// 게시글보기
-	@GetMapping("/view/{returnPage}/{postNum}")
+	@GetMapping("/post/{postNum}/{returnPage}")
 	public String view(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum, Model model) {
 
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get("boardPostVO");
 		logger.info(boardPostVO.toString());
-		List<AttachmentVO> files = null;
-		if (map.get("files") != null) {
-			files = (List<AttachmentVO>) map.get("files");
-
-			model.addAttribute("boardPostVO", boardPostVO);
-			model.addAttribute("files", files);
-
+		List<AttachmentVO> attachmentVO = null;
+		model.addAttribute("boardPostVO", boardPostVO);
+		if (map.get("attachmentVO") != null) {
+			attachmentVO = (List<AttachmentVO>) map.get("attachmentVO");
+			model.addAttribute("attachmentVO", attachmentVO);
 		}
-		return "/board/readForm";
+		return "/board/postView";
 	}
 
 	// 첨부파일 다운로드
