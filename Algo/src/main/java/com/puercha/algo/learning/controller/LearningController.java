@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.puercha.algo.learning.service.LearningService;
 import com.puercha.algo.learning.vo.SubjectVO;
 
-//@Controller
+@Controller
 public class LearningController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LearningController.class);

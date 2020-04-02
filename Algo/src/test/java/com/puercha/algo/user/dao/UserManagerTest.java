@@ -101,11 +101,5 @@ public class UserManagerTest {
 		assertNotEquals(oldPw,userVO.getPw());
 		assertEquals(newPw,userVO.getPw());
 	}
-	@Test
-	@DisplayName("계정삭제")
-	@Disabled
-	void outUser() {
-		int cnt = userService.outUser("skyslask@naver.com", "112233");
-		assertEquals(1,cnt);
-	}
+	
 }

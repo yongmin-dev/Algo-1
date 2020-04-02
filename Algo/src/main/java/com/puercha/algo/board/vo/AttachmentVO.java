@@ -22,7 +22,7 @@ public class AttachmentVO {
 	private String fname;
 	
 	//파일크기
-	private String fsize;
+	private long fsize;
 	
 	//파일유형
 	private String ftype;

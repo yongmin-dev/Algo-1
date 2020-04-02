@@ -14,10 +14,4 @@ public interface LoginService {
 	UserVO loginUser(String email, String pw, HttpSession session);
 	// 로그아웃
 	int logoutUser(HttpSession session);
-	/**
-	 *  로그인 된 세션 가져오기 
-	 * @param session 현재 세션
-	 * @return 실패시 null
-	 */
-	UserVO getLoggedInUser(HttpSession session);
 }

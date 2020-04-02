@@ -8,7 +8,7 @@
 		VALUES 
 		(CHALLENGE_NUM_SEQ.nextval, #{content}, #{title}, #{limitMemory}, #{limitTime}, #{userNum})
 		<selectKey order="AFTER" keyProperty="cNum" resultType="long">
-			SELECT CHALLENGE_NUM_SEQ.nextval FROM dual
+			SELECT CHALLENGE_NUM_SEQ.currval FROM dual
 		</selectKey>
 	</insert>
 	
@@ -32,7 +32,7 @@
 			#{code}, 
 			#{usedMemory}, 
 			#{processingTime} )
-		<selectKey order="BEFORE" keyColumn="resultNum" resultType="long">
+		<selectKey order="AFTER" keyProperty="resultNum" resultType="long">
 			SELECT RESULT_NUM_SEQ.currval FROM dual
 		</selectKey>
 	</insert>
@@ -50,7 +50,7 @@
 	    	#{input}, 
 	    	#{output}, 
 	    	#{userNum} )
-    	<selectKey order="AFTER" keyColumn="caseNum" resultType="long">
+    	<selectKey order="AFTER" keyProperty="caseNum" resultType="long">
     		SELECT CASE_NUM_SEQ.currval FROM dual
     	</selectKey>
 	</insert>
@@ -189,21 +189,6 @@
 		FROM challenge_result
 		WHERE c_num = #{cNum}
 	</select>
-	
-	<!-- 도전과제 내 모든 케이스를 가져옴	 -->
-	<select id="selectAllCase" parameterType="long" resultType="ChallengeCaseVO">
-		SELECT 
-		    case_num AS "caseNum",
-		    c_num AS "cNum",
-		    input,
-		    output,
-		    user_num AS "userNum",
-		    created_at AS "createdAt",
-		    updated_at AS "updatedAt"
-		FROM  challenge_case
-		WHERE c_num = #{cNum}
-	</select>
-
 	<!-- 케이스 번호로 케이스 데이터 하나 열람 -->
 	<select id="selectOneCase" parameterType="long" resultType="ChallengeCaseVO">
 		SELECT 
@@ -217,8 +202,34 @@
 		FROM  challenge_case
 		WHERE case_num = #{caseNum}
 	</select>
+	<!-- 도전과제 내 모든 케이스를 가져옴	 -->
+	<select id="selectAllCase" parameterType="long" resultType="ChallengeCaseVO">
+		SELECT 
+		    case_num AS "caseNum",
+		    c_num AS "cNum",
+		    input,
+		    output,
+		    user_num AS "userNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt"
+		FROM  challenge_case
+		WHERE c_num = #{cNum}
+	</select>
+	<!-- 도전과제 내 모든 케이스를 가져옴(input,output제외) -->
+	<select id="selectAllCaseMetaDatas" parameterType="long" resultType="ChallengeCaseVO">
+		SELECT 
+		    case_num AS "caseNum",
+		    c_num AS "cNum",
+		    user_num AS "userNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt"
+		FROM  challenge_case
+		WHERE c_num = #{cNum}
+	</select>
+
 	
-<!-- Update -->
+	
+	<!-- Update -->
 	<!-- 도전과제 변경 -->
 	<update id="updateChallenge" parameterType="ChallengeVO">
 		UPDATE challenge
@@ -257,9 +268,9 @@
 		    status = #{status},
 		    updated_at = SYSTIMESTAMP,
 		    c_num = #{cNum},
-		    used_memory = #{userMemory},
+		    used_memory = #{usedMemory},
 		    processing_time = #{processingTime}
-		WHERE result_num = #{resultNum};
+		WHERE result_num = #{resultNum}
 	</update>
 	<!-- 도전과제 테스트케이스 변경 -->
 	<update id="updateChallengeCase" parameterType="ChallengeCaseVO">
@@ -292,7 +303,7 @@
 		WHERE case_num = #{caseNum}
 	</delete>
 	
-<!-- 도전과제에 포함된 모든 테스트케이스삭제 -->
+	<!-- 도전과제에 포함된 모든 테스트케이스삭제 -->
 	<delete id="deleteAllCase" parameterType="long">
 		DELETE FROM challenge_case
 		WHERE c_num = #{cNum} 

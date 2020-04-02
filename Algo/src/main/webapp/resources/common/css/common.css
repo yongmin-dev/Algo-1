@@ -23,6 +23,9 @@
 
 /* container */
 
+.container{width:1280px;height: 700px;background: #eeeeee;margin: 0 auto;}
+.container .cont01{width:50%;height: 500px;background:#777777;float: left;}
+.container .cont02{width:50%;height: 500px;background: #999999;float: right;}
 .container{width:1280px;height: 700px;margin: 0 auto;}
 
 /* board_list */

@@ -45,7 +45,7 @@
 <select id="selectUser" 
 				parameterType="hashmap"
 				resultType="UserVO">
-		SELECT user_num as "userNum", email, pw, tel, username, 
+		SELECT user_num as "uesrNum", email, pw, tel, username, 
 		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
 		  FROM APP_USER    
 		 where email = #{email} 

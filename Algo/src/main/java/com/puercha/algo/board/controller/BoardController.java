@@ -51,9 +51,7 @@ public class BoardController {
 	}
 
 	// 목록보기
-	@GetMapping({ "/list", 
-		"/list/{reqPage}", 
-		"/list/{reqPage}/{searchType}/{keyword}" })
+	@GetMapping({ "/list", "/list/{reqPage}", "/list/{reqPage}/{searchType}/{keyword}" })
 	public String list(@PathVariable(required = false) String reqPage,
 			@PathVariable(required = false) String searchType, @PathVariable(required = false) String keyword,
 			HttpSession session, Model model) {
@@ -62,11 +60,11 @@ public class BoardController {
 		model.addAttribute("list", boardService.list(reqPage, searchType, keyword));
 		// 페이지제어
 		model.addAttribute("pm", boardService.getPageManager(reqPage, searchType, keyword));
-		return "board/board";
+		return "board/list";
 	}
 
 	// 게시글보기
-	@GetMapping("/post/{postNum}/{returnPage}")
+	@GetMapping("/view/{returnPage}/{postNum}")
 	public String view(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum, Model model) {
 
 		Map<String, Object> map = boardService.view(postNum);
@@ -74,13 +72,15 @@ public class BoardController {
 		
 		
 		logger.info(boardPostVO.toString());
-		List<AttachmentVO> attachmentVO = null;
-		model.addAttribute("boardPostVO", boardPostVO);
-		if (map.get("attachmentVO") != null) {
-			attachmentVO = (List<AttachmentVO>) map.get("attachmentVO");
-			model.addAttribute("attachmentVOs", attachmentVO);
+		List<AttachmentVO> files = null;
+		if (map.get("files") != null) {
+			files = (List<AttachmentVO>) map.get("files");
+
+			model.addAttribute("boardPostVO", boardPostVO);
+			model.addAttribute("files", files);
+
 		}
-		return "/board/postView";
+		return "/board/readForm";
 	}
 
 	// 첨부파일 다운로드
@@ -92,7 +92,7 @@ public class BoardController {
 		final HttpHeaders headers = new HttpHeaders();
 		String[] mtypes = attachmentVO.getFtype().split("/");
 		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
-		headers.setContentLength(Integer.parseInt(attachmentVO.getFsize()));
+		headers.setContentLength(attachmentVO.getFsize());
 
 		// 첨부파일이 한글일 경우 깨짐 방지
 		String fileName = null;
