@@ -108,10 +108,10 @@ public class BoardController {
 
 	// 게시글 작성양식
 	@GetMapping("/posting/{returnPage}")
-	public String writeForm(@ModelAttribute @PathVariable String returnPage, Model model, HttpServletRequest request) {
+	public String posting(@ModelAttribute @PathVariable String returnPage, Model model, HttpServletRequest request) {
 
 		BoardPostVO boardPostVO = new BoardPostVO();
-//		UserVO userVO = (UserVO)request.getSession().getAttribute("userInfo");
+	//	UserVO userVO = (UserVO)request.getSession().getAttribute("userInfo");
 		UserVO userVO = loginService.getLoggedInUser(request.getSession());
 
 		boardPostVO.setUserName(userVO.getUsername());

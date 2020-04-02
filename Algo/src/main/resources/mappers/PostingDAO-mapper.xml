@@ -203,9 +203,9 @@
 		from board_post t1, board_category t2
 		where t1.category_num =
 		t2.category_num
-		<if test="searchType != null and list != null">
+		<if test="searchType != null and keywords != null">
 			and
-			<foreach item="item" collection="list" open="("
+			<foreach item="item" collection="keywords" open="("
 				separator="or" close=")">
 				<choose>
 					<!-- 제목 -->
