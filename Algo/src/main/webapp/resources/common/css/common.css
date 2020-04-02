@@ -1,7 +1,7 @@
 /* header */
 .header{position:relative;}
 .header_inner {width:1280px;margin: 0 auto;}
-.header .logo a{position:absolute;display:inline-block;width: 100px;height: 50px;font-size: 0;}
+.header .logo a{position:absolute;display:inline-block;width: 126px;font-size: 0;}
 .header .logo a img{width: 100%;}
 .header .upper_menu{float: right;height: 50px;line-height: 3;}
 .header .upper_menu ul li{display:inline-block;font-size: 11px;color: #7c8082;}
@@ -26,6 +26,56 @@
 .container{width:1280px;height: 700px;background: #eeeeee;margin: 0 auto;}
 .container .cont01{width:50%;height: 500px;background:#777777;float: left;}
 .container .cont02{width:50%;height: 500px;background: #999999;float: right;}
+.container{width:1280px;height: 700px;margin: 0 auto;}
+
+/* board_list */
+
+
+.container .board_wrap ul li{display: inline-block;}
+.board_wrap .board_header{font-size:15px;}
+.board_wrap .board_header h3{float: left;}
+.container .search_wrap{width: 282px;float: right;padding:14px 0;}
+.container .search_wrap input{display: inline-block;width: 60%;}
+.container .search_wrap i{display: inline-block;font-size: 18px;}
+.board_list{clear: both;}
+
+.board_list_header{font-size:20px;}
+.board_list_header h3{font-size:20px;padding:14px 0;}
+.board_header h3{font-size:20px;padding:14px 0;}
+
+.board_summary{color:#999;padding:20px 0;}
+.board_summary a{color:#999;}
+.board_summary .write{color:#000;font-weight: bold;}
+.board_text{padding:20px 0;font-size: 13px;border-top: 1px solid #e1e1e1;color:#363636;line-height:40px;}
+.reply_text{padding:10px 0;}
+
+.board_list ul:nth-child(1){border-top: 1px solid #000;}
+.board_list ul{border-bottom: 1px solid #dadada;}
+
+.board_list li{padding:20px 7px;color:#363636;font-size:13px;}
+.board_list li a{font-weight: bold;color: #363636;}
+.board_list li:nth-child(1){width: 5%;}
+.board_list li:nth-child(2){width: 55%;}
+.board_list li:nth-child(3){width: 10%;}
+.board_list li:nth-child(4){width: 12%;}
+.board_list li:nth-child(5){width: 10%;}
+
+.btn_write{display: block;}
+.btn_write input{ cursor: pointer;padding:10px 30px;float: right;}
+
+/* paging */
+#paging{display:inline-block;}
+.paging{font-size: 14px;text-align: center;}
+
+
+.paging i{display: inline-block;cursor: pointer;}
+.paging ul{display: inline-block;}
+.paging ul li{display: inline-block;}
+.paging ul a{padding:10px;display:inline-block;}
+.paging a:hover{font-weight: bold;}
+#searchType{float:left;}
+#searchBtn{ float:left;cursor:pointer;height: 30px; padding: 0 15px;}
+#keyword{float:left;}
 
 /* footer */
 .footer{width: 1280px;margin: 0 auto;}
