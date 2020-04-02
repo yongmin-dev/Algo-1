@@ -146,6 +146,7 @@
 		t2.name as "category.name",
 		title,
 		username as "userName",
+		user_num as "userNum",
 		created_at as
 		"createdAt",
 		updated_at as
@@ -177,6 +178,7 @@
 		name as "category.name",
 		title,
 		username as "userName",
+		user_num as "userNum",
 		created_at as "createdAt",
 		updated_at as "updatedAt",
 		hit,
