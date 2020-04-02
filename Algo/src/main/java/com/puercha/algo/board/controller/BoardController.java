@@ -69,6 +69,8 @@ public class BoardController {
 
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get("boardPostVO");
+		
+		
 		logger.info(boardPostVO.toString());
 		List<AttachmentVO> attachmentVO = null;
 		model.addAttribute("boardPostVO", boardPostVO);
@@ -116,6 +118,7 @@ public class BoardController {
 		boardPostVO.setUserNum(userVO.getUserNum());
 
 		model.addAttribute("boardPostVO", boardPostVO);
+		model.addAttribute("userVO", userVO);
 
 		return "/board/posting";
 	}
@@ -180,17 +183,17 @@ public class BoardController {
 		}
 		logger.info("게시글 수정 내용: " + boardPostVO.toString());
 		boardService.modify(boardPostVO);
-		return "redirect:/board/list/" + returnPage + "/" + boardPostVO.getPostNum();
+		return "redirect:/board/list/" + returnPage;
 	}
 
 	// 답글달기 양식
-	@GetMapping("replyForm/{postNum}/{returnPage}")
+	@GetMapping("reply/{postNum}/{returnPage}")
 	public String replyForm(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum,
 			Model model) {
 
 		Map<String, Object> map = boardService.view(postNum);
-		BoardPostVO boardPostVO = (BoardPostVO) map.get("board");
-
+		BoardPostVO boardPostVO = (BoardPostVO) map.get(BoardService.KEY_BOARD_VO);
+		
 		boardPostVO.setTitle("->[답글]" + boardPostVO.getTitle());
 		boardPostVO.setContent("->[본문] " + boardPostVO.getContent());
 		model.addAttribute("boardPostVO", boardPostVO);

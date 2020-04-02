@@ -15,6 +15,7 @@ import com.puercha.algo.common.PageManager;
 
 public interface BoardService {
 	
+	public static final String KEY_BOARD_VO = "boardPostVO";
 	List<BoardCategoryVO> getCategory();
 	
 	//게시글 작성

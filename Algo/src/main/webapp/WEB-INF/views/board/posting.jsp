@@ -23,7 +23,27 @@
 		게시글카테고리이름
 		${boardCategoryVO.name} --%>
 
-		회원 이름 ${boardPostVO.userName} 회원 번호 ${boardPostVO.userNum}
+		<br> 회원 이름: ${userVO.username} 
+		<br> 회원 번호: ${userVO.userNum}
+		<br>
+		카테고리번호 : ${boardPostVO.category.categoryNum }
+		<br>
+		카테고리이름 : ${boardPostVO.category.name }
+		<br>
+		제목: ${boardPostVO.title }
+		<br>
+		사용자 번호 : ${boardPostVO.userNum }
+		<br>
+		사용자 이름 : ${boardPostVO.userName }
+		<br>
+		생성일 : ${boardPostVO.createdAt }
+		<br>
+		수정일 : ${boardPostVO.updatedAt }
+		<br>
+		조회수 : ${boardPostVO.hit }
+		<br>
+		내용 : ${boardPostVO.content }
+		
 
 
 

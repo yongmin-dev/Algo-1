@@ -132,7 +132,7 @@ public class BoardServiceImpl implements BoardService {
 		postingDAO.updateHit(postNum);
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("boardPostVO", boardPostVO);
+		map.put(KEY_BOARD_VO, boardPostVO);
 		if (attachmentVO != null && attachmentVO.size() > 0) {
 			map.put("attachmentVO", attachmentVO);
 		}

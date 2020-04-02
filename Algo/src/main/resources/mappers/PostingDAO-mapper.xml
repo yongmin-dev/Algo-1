@@ -83,7 +83,8 @@
 	<select id="select" parameterType="long" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "categoryNum",
+		t2.category_num as "category.categoryNum",
+		t2.name as "category.name",
 		title,
 		user_num as "userNum",
 		username as "userName",
