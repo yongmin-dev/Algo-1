@@ -1,7 +1,7 @@
+<!-- 게시글 보기 화면 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,12 +62,12 @@
 		<!-- 게시글번호 -->
 		${boardPostVO.postNum}
 
-		
-		${boardPostVO.category.categoryNum}
+<%-- 		<!-- 게시글카테고리번호 <form:select> -->
+		${boardCategoryVO.cagetoryNum}
 
-		
-		${boardPostVO.category.name}
-
+		<!-- 게시글카테고리이름 <form:select>-->
+		${boardCategoryVO.name}
+ --%>
 		<!-- 유저번호 -->
 		${boardPostVO.userNum}
 		
@@ -75,14 +75,14 @@
 		 ${boardPostVO.userName}
 		 <!-- 생성일 -->
 		${boardPostVO.createdAt}
-		${createdDate }
+		
 		<!-- 수정일 -->		
 		${boardPostVO.updatedAt}
 		<!-- 조회수 -->
 		 ${boardPostVO.hit}
 		 
 		 <!-- 내용 -->
-		${boardPostVO.content} --%>
+		${boardPostVO.content}
 		
 		<!-- @attachmentVOs : 첨부파일  -->
 		<c:if test="${!empty attachmentVOs }">
@@ -90,20 +90,10 @@
 			${attachment.fid}
 			${attachment.fname}
 			${attachment.fsize/1000}kb
-			</c:forEach>
+		</c:forEach>
 
 		</c:if>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
+	</main>
 	<!-- 댓글 -->
 	<%@include file="/WEB-INF/views/board/comment.jsp"%>
 

@@ -83,7 +83,8 @@
 	<select id="select" parameterType="long" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "categoryNum",
+		t2.category_num as "category.categoryNum",
+		t2.name as "category.name",
 		title,
 		user_num as "userNum",
 		username as "userName",
@@ -141,10 +142,11 @@
 	<select id="selectList" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "boardCategoryVO.categoryNum",
-		t2.name as "boardCategoryVO.name",
+		t2.category_num as "category.categoryNum",
+		t2.name as "category.name",
 		title,
 		username as "userName",
+		user_num as "userNum",
 		created_at as
 		"createdAt",
 		updated_at as
@@ -172,10 +174,11 @@
 		SELECT
 		post_num as "postNum",
 		category_num as
-		"boardCategoryVO.categoryNum",
-		name as "boardCategoryVO.name",
+		"category.categoryNum",
+		name as "category.name",
 		title,
 		username as "userName",
+		user_num as "userNum",
 		created_at as "createdAt",
 		updated_at as "updatedAt",
 		hit,
@@ -202,9 +205,9 @@
 		from board_post t1, board_category t2
 		where t1.category_num =
 		t2.category_num
-		<if test="searchType != null and list != null">
+		<if test="searchType != null and keywords != null">
 			and
-			<foreach item="item" collection="list" open="("
+			<foreach item="item" collection="keywords" open="("
 				separator="or" close=")">
 				<choose>
 					<!-- 제목 -->
@@ -278,10 +281,10 @@
 	<select id="countTotalRecord" parameterType="map"
 		resultType="int">
 		select count(t1.post_num) as countTotal
-		from board_post t1,
-		board_category t2
-		where t1.category_num = t2.category_num and
+		from board_post t1, board_category t2
+		where t1.category_num = t2.category_num
 		<if test="searchType != null and list !=null">
+		 and
 		<foreach item="item" collection="list" open="(" separator="or"
 			close=")">
 			<choose>

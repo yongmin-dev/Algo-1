@@ -138,11 +138,11 @@ public class PostingDAOImplTest {
 	public void view() {
 
 		BoardPostVO boardPostVO = new BoardPostVO();
-		boardPostVO = postingDAO.select("22");
+		boardPostVO = postingDAO.select("23");
 		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
 
 		logger.info("" + boardCategoryVO.getCategoryNum());
-		assertEquals(22, boardPostVO.getPostNum());
+		assertEquals(23, boardPostVO.getPostNum());
 		logger.info(boardPostVO.toString());
 
 	}
@@ -197,7 +197,7 @@ public class PostingDAOImplTest {
 
 	@Test
 	@Named("답글달기")
-	@Disabled
+//	@Disabled
 	public void insertReply() {
 
 		BoardPostVO boardPostVO = new BoardPostVO();
@@ -207,6 +207,7 @@ public class PostingDAOImplTest {
 
 		boardCategoryVO.setCategoryNum(1);
 		boardCategoryVO.setName("질문게시글");
+		
 		boardPostVO.setCategory(boardCategoryVO);
 		boardPostVO.setTitle("답글테스트");
 		boardPostVO.setUserNum(1);
