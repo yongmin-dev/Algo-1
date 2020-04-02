@@ -21,17 +21,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.puercha.algo.common.Code;
+import com.puercha.algo.user.service.LoginService;
 import com.puercha.algo.user.service.UserService;
 import com.puercha.algo.user.vo.UserVO;
 
 @Controller
-@RequestMapping("/userNum")
+@RequestMapping("/user")
 public class UserController {
 
 	private static final Logger logger
@@ -40,9 +40,11 @@ public class UserController {
 	@Inject
 	UserService userService;
 	
+	@Inject
+	LoginService loginService;
 	@ModelAttribute
 	public void UserData(Model model) {
-	//지역
+	
 	
 	//성별
 	List<Code> gender = new ArrayList<>();
@@ -51,13 +53,13 @@ public class UserController {
 	model.addAttribute("gender",gender);
 	}
 	//사용자생성 양식
-	@RequestMapping("/signupForm")
+	@GetMapping("/signing-up")
 	public String UserJoinForm(Model model) {
 		model.addAttribute("uvo",new UserVO());
-		return "user/signupForm";
+		return "user/signup";
 	}
 	//사용자등록
-	@RequestMapping("/join")
+	@PostMapping("/sign-up")
 	public String userJoin(
 			@Valid @ModelAttribute("uvo") UserVO userVO,
 			BindingResult result,
@@ -66,36 +68,37 @@ public class UserController {
 		
 		//1)유효성 오류체크 중 오류가 발견되면 회원가입 페이지로 이동
 		if(result.hasErrors()) {
-			return "user/signupForm";
+			return "user/signup";
 		}
 		//2)회원 중복체크
 		if(userService.selectUser(userVO.getEmail()) != null) {
 			model.addAttribute("svr_msg","중복된 아이디입니다!");
-			return "user/signupForm";
+			return "user/signup";
 		}
 		//3)회원 가입처리
 		int cnt = userService.joinUser(userVO);
 		if(cnt == 1) {
-			return "user/siginForm";
+			return "user/signin";
 		}else {
 			return "redirect:/";
 		}
 	}
 	//사용자수정 양식
-	@GetMapping("/profileForm")
-	public String profileForm(@PathVariable String email, Model model) {
+	@GetMapping("/updating")
+	public String profileForm(Model model, HttpSession session) {
 		
 		//1) 현재 로그인한 사용자정보 읽어오기
-		UserVO userVO = userService.selectUser(email);
+//		UserVO userVO = userService.selectUser(email);
+		UserVO userVO = loginService.getLoggedInUser(session);
 		logger.info("userVO:" + userVO);
 		//비밀번호 제거
 		userVO.setPw(null);
 		model.addAttribute("uvo",userVO);
 	
-		return "user/profileForm";
+		return "user/profile";
 	}
 	//사용자수정
-	@PostMapping("/profile")
+	@PostMapping("/update")
 	public String profile(
 			@Valid @ModelAttribute("uvo") UserVO userVO,
 			BindingResult result,
@@ -107,19 +110,27 @@ public class UserController {
 			logger.info(result.getAllErrors().toString());
 			//비밀번호 제거
 			userVO.setPw(null);
-			return "user/profileForm";
+			return "user/profile";
 		}		
 		//사용자정보 수정
-		int cnt = userService.modifyUser(userVO);
-		logger.info("수정처리결과 :"+ cnt);
+		UserVO sessionUser = loginService.getLoggedInUser(session);
+		logger.info("sessionUser:"+sessionUser);
+		if(sessionUser.getUserNum() == userVO.getUserNum()) {
+			int cnt = userService.modifyUser(userVO);
+			logger.info("수정처리결과 :"+ cnt);
+			
+			//세션정보 수정
+			session.removeAttribute("user");
+			session.setAttribute("user",userVO);
+			return "redirect:/user/updating";			
+		}else {
+			model.addAttribute("svr_msg", "다른 사용자는 수정할 수 없습니다!");
+			return "user/profile";
+		}
 		
-		//세션정보 수정
-		session.removeAttribute("user");
-		session.setAttribute("user",userVO);
-		return "redirect:/user/profileForm"+userVO.getEmail();
 	}
 	//사용자 탈퇴 처리
-	@PostMapping("/out")
+	@PostMapping("/withdrawal")
 	public String out(
 			@RequestParam("email") String email,
 			@RequestParam("pw") String pw,
@@ -130,7 +141,7 @@ public class UserController {
 			return "redirect:/";
 		}
 		model.addAttribute("svr_msg", "비밀번호가 잘못되었습니다!");
-		return "user/outForm";
+		return "user/profile";
 	}
 	//비밀번호변경 화면
 	@GetMapping("/findPWForm")
