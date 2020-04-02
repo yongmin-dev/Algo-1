@@ -44,7 +44,7 @@ public class LoginController {
 	//로그인 처리
 	@PostMapping("/login")
 	public String login(
-			@ModelAttribute @RequestParam("email") String email,
+			@RequestParam("email") String email,
 			@RequestParam("pw") String pw,
 			@RequestParam(value="next",defaultValue = "/") String next,
 			HttpSession session,
@@ -58,7 +58,7 @@ public class LoginController {
 		
 		if(user == null) {
 			model.addAttribute("svr_msg","가입된 사용자정보가 없습니다. 비밀번호와 이메일을 확인해주세요");
-			return "/User/loginForm";			
+			return "/user/signin";			
 		}else {
 			return "redirect:"+next;
 		}

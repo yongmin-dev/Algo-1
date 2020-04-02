@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
@@ -46,7 +48,7 @@ public class UserVO {
 
 	// 별명 정규식 포함
 	@NotNull
-	@Pattern(regexp = "^[0-9a-zA-Z가-힣]{4,20}$", message = "한글,영문,숫자  // 한글 10자, 영문 20자 이내로 사용해주세요")
+	@Pattern(regexp = "^[0-9a-zA-Z가-힣]{2,20}$", message = "한글,영문,숫자  // 한글 10자, 영문 20자 이내로 사용해주세요")
 	private String username;
 
 	// 성별
@@ -56,14 +58,14 @@ public class UserVO {
 	private String address;
 	
 	// 생년월일 yyyymmdd
+//	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;
 
 	// 생성일시
-	@JsonFormat(pattern = "yyyyMMdd")
 	private Date createdAt; // (setmethod따로 만들어?)
 
 	// 수정 일시
-	@JsonFormat(pattern = "yyyyMMdd")
 	private Date updatedAt;
 
 	// 유형(학습자, 튜터)
