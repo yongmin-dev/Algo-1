@@ -50,7 +50,8 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	 */
 	@Override
 	public int insertChallengeResult(ChallengeResultVO result) {
-		logger.info("insertChallengeResult(ChallengeResultVO result):"+result.toString());
+//		logger.info("insertChallengeResult(ChallengeResultVO result):"+result.toString());
+		logger.info("insertChallengeResult(ChallengeResultVO result)");
 		return sqlSession.insert("mappers.ChallengeDAO-mapper.insertChallengeResult",result);
 	}
 
@@ -61,7 +62,8 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	 */
 	@Override
 	public int insertTestCase(ChallengeCaseVO testCase) {
-		logger.info("insertTestCase(ChallengeCaseVO testCase):"+testCase.toString());
+//		logger.info("insertTestCase(ChallengeCaseVO testCase):"+testCase.toString());
+		logger.info("insertTestCase(ChallengeCaseVO testCase)");
 		return sqlSession.insert("mappers.ChallengeDAO-mapper.insertTestCase", testCase);
 	}
 
@@ -214,18 +216,6 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	}
 
 
-	/**
-	 * 도전과제내 모든 케이스를 가져옴 
-	 * @param cNum 도전과제 번호
-	 * @return 테스트케이스 VO의 리스트
-	 */
-	@Override
-	public List<ChallengeCaseVO> selectAllCase(long cNum) {
-		logger.info("selectAllCase(long cNum): "+ cNum);
-		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectAllCase",cNum);
-	}
-
-
 
 	/**
 	 * 케이스 번호로 케이스 데이터 하나 열람 
@@ -238,9 +228,29 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectOneCase",caseNum);
 	}
 
+	/**
+	 * 도전과제내 모든 케이스를 가져옴 
+	 * @param cNum 도전과제 번호
+	 * @return 테스트케이스 VO의 리스트
+	 */
+	@Override
+	public List<ChallengeCaseVO> selectAllCase(long cNum) {
+		logger.info("selectAllCase(long cNum): "+ cNum);
+		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectAllCase",cNum);
+	}
 
 
-	
+	/**
+	 * 도전과제 내 모든 케이스를 메타 정보만 가져옴(input,output제외)
+	 * @param cNum 도전과제 번호
+	 * @return 테스트케이스 VO의 리스트
+	 */
+	@Override
+	public List<ChallengeCaseVO> selectAllCaseMetaDatas(long cNum) {
+		logger.info("selectAllCaseMetaDatas(long cNum): "+ cNum);
+		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectAllCaseMetaDatas",cNum);
+	}
+
 
 
 	/* Update */
@@ -290,7 +300,8 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	 */
 	@Override
 	public int updateChallengeResult(ChallengeResultVO result) {
-		logger.info("updateChallengeResult(ChallengeResultVO result): "+result);
+//		logger.info("updateChallengeResult(ChallengeResultVO result): "+result);
+		logger.info("updateChallengeResult(ChallengeResultVO result)");
 		return sqlSession.update("mappers.ChallengeDAO-mapper.updateChallengeResult",result);
 	}
 	

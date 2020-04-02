@@ -2,37 +2,70 @@ package com.puercha.algo.challenge.service.codelauncher;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.ProcessBuilder.Redirect;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import com.puercha.algo.challenge.dao.ChallengeDAO;
+import com.puercha.algo.challenge.vo.ChallengeCaseVO;
+import com.puercha.algo.challenge.vo.ChallengeResultVO;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 
-//@Service
+@Service
 public class JavaCodeTester implements CodeTester {
+	private static final Logger logger = LoggerFactory.getLogger(JavaCodeTester.class);
+	static final String DIR_NAME_RESULTS="results";
+	
+	public static final String KEY_PROCESSING_NANO_TIME = "nanoTime";
+	public static final String KEY_MEMORY_USAGE= "memoryUsage";
+	public static final String KEY_PASSES_LIMIT_MEMORY = "passesLimitMemory";
+	public static final String KEY_PASSES_LIMIT_TIME = "passesLimitTime";
+	public static final String KEY_MATCHED = "matched";
+	public static final String KEY_PASSES_CASE = "passes";
 //	MemoryMonitor memoryMonitor = new MemoryMonitor();
 	@Inject
 	MemoryMonitor memoryMonitor ;
-	public JavaCodeTester(long timeLimit, long memoryLimit) {
-		this.timeLimit = timeLimit;
-		this.memoryLimit = memoryLimit;
-	}
-	private long timeLimit; // 시간 제한
-	private long memoryLimit; // 메모리 제한
-	private String code;
-	private File compiledProgram;
+	
+	@Inject
+	CaseFileService caseFileManager;
+	
+	@Inject
+	ChallengeDAO challengeDAO;
+	
+//	public JavaCodeTester(long timeLimit, long memoryLimit) {
+//		this.timeLimit = timeLimit;
+//		this.memoryLimit = memoryLimit;
+//	}
+//	private long timeLimit; // 시간 제한
+//	private long memoryLimit; // 메모리 제한
+//	private String code;
+//	private File compiledProgram;
 	// 초기화
 	@Override
 	public void init () {
@@ -48,19 +81,141 @@ public class JavaCodeTester implements CodeTester {
 
 
 	// 코드 컴파일
-	private void complie() {
+	public File compile(long resultNum, File dir, String code) {
 		
+		// 소스코드 쓰기
+		String sourceCodePath = null;
+		if(dir==null) {
+			dir = new File(caseFileManager.getRootDir(),DIR_NAME_RESULTS);
+		}
+		File sourceCodeDir = new File(dir,String.valueOf(resultNum));
+		if(!sourceCodeDir.exists()) {
+			sourceCodeDir.mkdirs();
+		}
+		File sourceCodeFile = new File(sourceCodeDir,"Main.java");
+		try {
+			FileWriter fileWriter = new FileWriter(sourceCodeFile);
+			fileWriter.write(code);
+			fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sourceCodePath = sourceCodeFile.getAbsolutePath();		
+		
+		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+		StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
+		Iterable<? extends JavaFileObject> compilationUnits = fileManager
+		.getJavaFileObjectsFromStrings(Arrays.asList(sourceCodePath));
+		JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null,
+				compilationUnits);
+		Boolean success = task.call();
+		StringBuilder sb = new StringBuilder();
+		// 컴파일 관련 메시지
+		for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+			sb.append(String.format("Code: %s%n" + "Kind: %s%n" + "Position: %s%n" + "Start Position: %s%n"
+							+ "End Position: %s%n" + "Source: %s%n" + "Message:  %s%n", diagnostic.getCode(),
+							diagnostic.getKind(), diagnostic.getPosition(), diagnostic.getStartPosition(),
+							diagnostic.getEndPosition(), diagnostic.getSource(), diagnostic.getMessage(null)
+			));
+		}
+		try {
+			fileManager.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		logger.info(String.format("result(%d): %b",resultNum,success ));		
+		return sourceCodeDir;
 	}
+	
+	
+	@Async
+	@Override
+	public void doTest(ChallengeResultVO result) {
+		// 컴파일 시작
+		// 상태 변경
+		logger.info("doTest(ChallengeResultVO result) ");
+		result.setStatus('C');
+		result.setResultComment("Compiling");
+		challengeDAO.updateChallengeResult(result);
+		
+		File sourceDir = compile(result.getResultNum(),null,result.getCode());
+		
+		File challengeDir = caseFileManager.getChallengeDir(result.getCNum());
+		
+		// 테스트 시작
+		List<ChallengeCaseVO> list = challengeDAO.selectAllCaseMetaDatas(result.getCNum());
+		logger.info("ChallengeCaseVO list:"+list.toString());
+		Map<String,Object> failedResult = null;
+		
+		for(int i=0;i<list.size();i++) {
+			ChallengeCaseVO caseMeta = list.get(i);
+			// 출력 파일 만들기
+			File output = new File(sourceDir,CaseFileService.NAME_OUTPUT_FILE);
+			
+			// case파일을 가져옴
+			Map<String, File> caseFiles = 
+					caseFileManager.getCaseFile(challengeDir,caseMeta.getCaseNum());
+			File expected = caseFiles.get(CaseFileService.KEY_EXPECTED_OUTPUT_FILE);
+			File input = caseFiles.get(CaseFileService.KEY_REGULAR_INPUT_FILE);
+			// command 설정하기
+			List<String> commandList = new ArrayList<String>();
+			commandList.add("java");
+			commandList.add("-classpath");
+			commandList.add("\""+sourceDir.getAbsolutePath()+"\"");
+			commandList.add("Main");
+			
+			logger.info("input exists:"+input.exists()+" "+input);
+			Map<String,Object> caseResult = testOneCase(commandList,input, output, expected);
+			 
+			boolean isPassed = (caseResult.get(KEY_PASSES_CASE)!=null) ? (boolean)caseResult.get(KEY_PASSES_CASE) : false;
+			if(!isPassed) {
+				failedResult  = caseResult;
+				break;
+			}
+			result.setStatus('T');
+			result.setResultComment(String.format("%d %%", (i+1)/list.size()));
+			challengeDAO.updateChallengeResult(result);
+			
+			logger.info(String.format(
+					"Matched: %b, Passes case: %b, "
+					+ "Passes LimitTime: %b, Passes Limit Memory: %b, "
+					+ "Memory Usage: %d %n", 
+					caseResult.get(KEY_MATCHED),
+					caseResult.get(KEY_PASSES_CASE),
+					caseResult.get(KEY_PASSES_LIMIT_TIME),
+					caseResult.get(KEY_PASSES_LIMIT_MEMORY),
+					caseResult.get(KEY_MEMORY_USAGE)
+					));
+			
+		}
+		if(failedResult!=null) {
+			result.setStatus('F');
+			result.setResultComment("실패하였습니다~");
+			logger.info(failedResult.toString());
+		}else {
+			result.setStatus('S');
+			result.setResultComment("성공");
+		}
+		challengeDAO.updateChallengeResult(result);		
+		logger.info("완료");
+	}
+
+
 	// case하나를 테스트함
 	@Override
-	public Map<String,Object> testOneCase(File input, File output, File expected) {
+	public Map<String,Object> testOneCase(List<String> commandList,File input, File output, File expected) {
+		long memoryLimit = 500000; // 임시
+		long timeLimit = 2000; // 임시
 		
 		Map<String,Object> result = new HashMap<String, Object>();// 결과 저장
 		long startNano = System.currentTimeMillis();// 시작 시간
-		List<String> list = new LinkedList<String>(); // 명령어
-		ProcessBuilder pb = new ProcessBuilder();
-		list.add("java");
-		pb.command(list);		
+		ProcessBuilder pb = new ProcessBuilder();		
+		pb.command(commandList);		
+		logger.info("command list:"+pb.command());
 		pb.redirectInput(input);
 		pb.redirectError(Redirect.PIPE);
 		pb.redirectOutput(output);
@@ -70,21 +225,32 @@ public class JavaCodeTester implements CodeTester {
 		boolean matched = false;
 		int pid = -1;
 		String errMsg = null;
+		boolean passes = false;
+		long memoryUsage = 0;
 		try {
+			
 			process = pb.start();
-			pid = getPid(process);
+			pid = getPid(process); // pid를 가져옴		
+			
+			passesLimitTime = process.waitFor(timeLimit,TimeUnit.MILLISECONDS);
+			logger.info("process exec:"+process.exitValue());
 			errMsg = getStringFromStream(process.getErrorStream());
-			passesLimitTime = process.waitFor(timeLimit,TimeUnit.MILLISECONDS);			
+			logger.info("errMsg:"+errMsg);
 			if(!passesLimitTime) {
-				process.destroy();				
+				process.destroy();	
+				
 			}else {				
-				long memoryUsage = memoryMonitor.getMemoryUsage(pid);
+				
+				memoryUsage = memoryMonitor.getMemoryUsage(pid);				
 				if(memoryUsage>memoryLimit) {
 					passesLimitMemory = false;
 				}else {
 					passesLimitMemory = true;
 				}
 				matched = checkDiffFiles(expected, output);
+				if(matched) {
+					passes = true;
+				}
 			}
 			
 		} catch (IOException | InterruptedException e) {
@@ -92,16 +258,19 @@ public class JavaCodeTester implements CodeTester {
 		}
 		
 		long endNano = System.currentTimeMillis(); // 끝 시작
-		result.put("Time", endNano - startNano);
-		result.put("memoryUsage",memoryMonitor.getMemoryUsage(pid));
-		result.put("passesLimitMemory", passesLimitMemory);
-		result.put("matched ", matched);
-		result.put("passesLimitTime", passesLimitTime);
+		result.put(KEY_PROCESSING_NANO_TIME, endNano - startNano);
+		result.put(KEY_MEMORY_USAGE,memoryMonitor.getMemoryUsage(pid));
+		result.put(KEY_PASSES_LIMIT_MEMORY, passesLimitMemory);
+		result.put(KEY_MATCHED, matched);
+		result.put(KEY_PASSES_LIMIT_TIME, passesLimitTime);
+		result.put(KEY_PASSES_CASE,passes);
 		if(errMsg != null) {
 			result.put("errMsg",errMsg );			
 		}
 		return result; 
 	}
+	
+	
 	// 실행결과의 output 테스트함
 	boolean checkDiffFiles(File expected, File actual) {
 		Scanner expectedScan = null;
@@ -138,20 +307,26 @@ public class JavaCodeTester implements CodeTester {
 	 * @return
 	 */
 	public String getStringFromStream(InputStream inputStream) {
-		InputStreamReader inputReader = new InputStreamReader(inputStream);
+		InputStreamReader inputReader;
 		String result = null;
-		char inputBuf[] = new char[1024];
-		int nRead = 0;
-		StringBuilder sb=  new StringBuilder();
 		try {
-			while(inputReader.ready()) {
-				nRead  = inputReader.read(inputBuf);
-				sb.append(inputBuf,0,nRead);
-			}			
-			result = sb.toString();
-		} catch (IOException e) {
+			inputReader = new InputStreamReader(inputStream,"MS949");
+			char inputBuf[] = new char[1024];
+			int nRead = 0;
+			StringBuilder sb=  new StringBuilder();
+			try {
+				while(inputReader.ready()) {
+					nRead  = inputReader.read(inputBuf);
+					sb.append(inputBuf,0,nRead);
+				}			
+				result = sb.toString();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
 		return result;
 	}
