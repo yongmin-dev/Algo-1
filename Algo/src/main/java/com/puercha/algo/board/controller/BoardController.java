@@ -51,7 +51,9 @@ public class BoardController {
 	}
 
 	// 목록보기
-	@GetMapping({ "/list", "/list/{reqPage}", "/list/{reqPage}/{searchType}/{keyword}" })
+	@GetMapping({ "/list", 
+		"/list/{reqPage}", 
+		"/list/{reqPage}/{searchType}/{keyword}" })
 	public String list(@PathVariable(required = false) String reqPage,
 			@PathVariable(required = false) String searchType, @PathVariable(required = false) String keyword,
 			HttpSession session, Model model) {
