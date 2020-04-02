@@ -62,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
 				attachmentVO.setPostNum(postNum);
 				// 첨부파일 이름
 				attachmentVO.setFname(file.getOriginalFilename());
-				attachmentVO.setFsize(file.getSize());
+				attachmentVO.setFsize(""+file.getSize());
 				attachmentVO.setFtype(file.getContentType());
 				attachmentVO.setFdata(file.getBytes());
 
@@ -127,14 +127,14 @@ public class BoardServiceImpl implements BoardService {
 		// 1) 게시글 가져오기
 		BoardPostVO boardPostVO = postingDAO.select(postNum);
 
-		List<AttachmentVO> files = postingDAO.selectFiles(postNum);
+		List<AttachmentVO> attachmentVO = postingDAO.selectFiles(postNum);
 
 		postingDAO.updateHit(postNum);
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("board", boardPostVO);
-		if (files != null && files.size() > 0) {
-			map.put("files", files);
+		map.put(KEY_BOARD_VO, boardPostVO);
+		if (attachmentVO != null && attachmentVO.size() > 0) {
+			map.put("attachmentVO", attachmentVO);
 		}
 
 		return map;
@@ -188,8 +188,8 @@ public class BoardServiceImpl implements BoardService {
 		
 		totalRec = postingDAO.countTotalRecord(searchType, keyword);
 		
-		pm = new PageManager(fc, totalRec);
 		fc = new FindCriteria(l_reqPage, searchType, keyword);
+		pm = new PageManager(fc, totalRec);
 		
 		return pm;
 	}
