@@ -1,6 +1,7 @@
 package com.puercha.algo.board.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -217,4 +218,18 @@ public class BoardController {
 		return "redirect:/board/list/" + returnPage;
 	}
 
+	@GetMapping(value= "/test", produces = "application/json; charset=UTF-8")
+	public ResponseEntity<Map<String,Object>> testJson(
+		HttpSession session
+			){
+		ResponseEntity<Map<String,Object>> res = null;
+		Map<String,Object> myjson = new HashMap();
+		UserVO userVO = (UserVO) session.getAttribute("userInfo");
+		myjson.put("user",userVO);
+		myjson.put("hello","world!");
+		res = new ResponseEntity<Map<String,Object>>(myjson,HttpStatus.OK);
+		return res;
+	}
+	
 }
+
