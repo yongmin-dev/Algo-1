@@ -107,7 +107,7 @@ public class PostingDAOImplXML implements PostingDAO {
 		map.put("endRec", endRec);
 		map.put("searchType",searchType);
 		if(keyword != null) {
-			map.put("keyword", Arrays.asList(keyword.split("\\s+")));
+			map.put("keywords", Arrays.asList(keyword.split("\\s+")));
 		}
 		map.put("andor", "or");
 		return sqlSession.selectList("mappers.PostingDAO-mapper.selectList3", map);

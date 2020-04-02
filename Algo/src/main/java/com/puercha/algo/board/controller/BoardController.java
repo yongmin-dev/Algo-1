@@ -30,6 +30,7 @@ import com.puercha.algo.board.service.BoardService;
 import com.puercha.algo.board.vo.AttachmentVO;
 import com.puercha.algo.board.vo.BoardCategoryVO;
 import com.puercha.algo.board.vo.BoardPostVO;
+import com.puercha.algo.user.service.LoginService;
 import com.puercha.algo.user.vo.UserVO;
 
 @Controller
@@ -40,6 +41,8 @@ public class BoardController {
 
 	@Inject
 	BoardService boardService;
+	@Inject
+	LoginService loginService;
 
 	@ModelAttribute
 	public void getBoardCategory(Model model) {
@@ -66,6 +69,8 @@ public class BoardController {
 
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get("boardPostVO");
+		
+		
 		logger.info(boardPostVO.toString());
 		List<AttachmentVO> attachmentVO = null;
 		model.addAttribute("boardPostVO", boardPostVO);
@@ -102,35 +107,45 @@ public class BoardController {
 	}
 
 	// 게시글 작성양식
-	@GetMapping("/writeForm/{returnPage}")
-	public String writeForm(@ModelAttribute @PathVariable String returnPage, Model model, HttpServletRequest request) {
-		model.addAttribute("boardPostVO", new BoardPostVO());
-		return "/board/writeForm";
+	@GetMapping("/posting/{returnPage}")
+	public String posting(@ModelAttribute @PathVariable String returnPage, Model model, HttpServletRequest request) {
+
+		BoardPostVO boardPostVO = new BoardPostVO();
+	//	UserVO userVO = (UserVO)request.getSession().getAttribute("userInfo");
+		UserVO userVO = loginService.getLoggedInUser(request.getSession());
+
+		boardPostVO.setUserName(userVO.getUsername());
+		boardPostVO.setUserNum(userVO.getUserNum());
+
+		model.addAttribute("boardPostVO", boardPostVO);
+		model.addAttribute("userVO", userVO);
+
+		return "/board/posting";
 	}
 
 	// 게시글 작성하기
-	@PostMapping("/write/{returnPage}")
+	@PostMapping("/posting/{returnPage}")
 	public String write(@PathVariable String returnPage, @Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO,
 			BindingResult result, HttpServletRequest request) {
 
 		logger.info("게시글 작성 :" + boardPostVO.toString());
 
 		if (result.hasErrors()) {
-			return "/board/writeForm";
+			return "board/posting";
 		}
 
-		UserVO userVO = (UserVO) request.getSession().getAttribute("user");
-		userVO.setEmail(userVO.getEmail());
-		userVO.setUsername(userVO.getUsername());
+		UserVO userVO = (UserVO) request.getSession().getAttribute("userInfo");
+		boardPostVO.setUserName(userVO.getUsername());
+		boardPostVO.setUserNum(userVO.getUserNum());
 
 		logger.info("게시글 작성 2" + boardPostVO.toString());
 		boardService.write(boardPostVO);
 
-		return "redirect:/board/view/" + returnPage + "/" + boardPostVO.getPostNum();
+		return "redirect:/board/list/" + returnPage + "/" + boardPostVO.getPostNum();
 	}
 
 	// 게시글 삭제
-	@GetMapping("/delete/{returnPage}/{postNum}")
+	@GetMapping("/delete/{postNum}/{returnPage}")
 	public String delete(@PathVariable String returnPage, @PathVariable String postNum, Model model) {
 
 		// 1) 게시글 및 첨부파일 삭제
@@ -160,45 +175,46 @@ public class BoardController {
 	}
 
 	// 게시글 수정
-	@PostMapping("/modify/{returnPage}")
-	public String modify(@PathVariable String returnPage, @Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO,
-			BindingResult result) {
+	@PostMapping("/modifying/{postNum}/{returnPage}")
+	public String modify(@PathVariable String returnPage, @PathVariable String postNum,
+			@Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO, BindingResult result) {
 		if (result.hasErrors()) {
-			return "/board/readForm";
+			return "/board/postView";
 		}
 		logger.info("게시글 수정 내용: " + boardPostVO.toString());
 		boardService.modify(boardPostVO);
-		return "redirect:/board/view/" + returnPage + "/" + boardPostVO.getPostNum();
+		return "redirect:/board/list/" + returnPage;
 	}
 
 	// 답글달기 양식
-	@GetMapping("replyForm/{returnPage}/{postNum}")
+	@GetMapping("reply/{postNum}/{returnPage}")
 	public String replyForm(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum,
 			Model model) {
 
 		Map<String, Object> map = boardService.view(postNum);
-		BoardPostVO boardPostVO = (BoardPostVO) map.get("board");
-
+		BoardPostVO boardPostVO = (BoardPostVO) map.get(BoardService.KEY_BOARD_VO);
+		
 		boardPostVO.setTitle("->[답글]" + boardPostVO.getTitle());
 		boardPostVO.setContent("->[본문] " + boardPostVO.getContent());
 		model.addAttribute("boardPostVO", boardPostVO);
 
-		return "/board/replyForm";
+		return "/board/posting";
 	}
 
 	// 답글처리
 	@PostMapping("/reply/{returnPage}")
-	public String reply(@PathVariable String returnPage, @Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO, BindingResult result, HttpServletRequest request) {
+	public String reply(@PathVariable String returnPage, @Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO,
+			BindingResult result, HttpServletRequest request) {
 		logger.info("답글달기 실행 :" + boardPostVO.toString());
-		if(result.hasErrors()) {
-			return "/board/replyForm";
+		if (result.hasErrors()) {
+			return "/board/posting";
 		}
-		UserVO userVO = (UserVO)request.getSession().getAttribute("user");
+		UserVO userVO = (UserVO) request.getSession().getAttribute("userInfo");
 		boardPostVO.setUserNum(userVO.getUserNum());
 		boardPostVO.setUserName(userVO.getUsername());
-			boardService.reply(boardPostVO);
+		boardService.reply(boardPostVO);
 
-			return "redirect:/board/list/"+returnPage;
+		return "redirect:/board/list/" + returnPage;
 	}
 
 }
