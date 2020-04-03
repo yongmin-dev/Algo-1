@@ -54,10 +54,8 @@ public class CaseFileManager implements CaseFileService {
 	 */
 	@Override
 	public File writeFile(String caseData, File dir, String fileName) {
-		File caseFile = new File(dir.getAbsolutePath()+File.separator + fileName);
-		
-		BufferedWriter writer = null; 
-		
+		File caseFile = new File(dir.getAbsolutePath()+File.separator + fileName);		
+		BufferedWriter writer = null; 		
 		try {
 			writer = new BufferedWriter(new FileWriter(caseFile));
 		} catch (IOException e) {
@@ -85,7 +83,26 @@ public class CaseFileManager implements CaseFileService {
 	 */
 	@Override
 	public int prepareCaseFile(long cNum, long caseNum) {
-		
+		File challengeDir = new File(rootDir,String.valueOf(cNum)); // 도전과제 디렉토리
+		if (!challengeDir.exists()) {
+			challengeDir.mkdirs();
+		}
+		File inputDir = new File(challengeDir,NAME_INPUT_DIR); // 인풋 디렉토리
+		if(!inputDir.exists()) { 
+			inputDir.mkdirs();
+		}
+		File expectedDir = new File(challengeDir,NAME_EXPECTED_OUTPUT_DIR); // 예상 답안
+		if(!expectedDir.exists()) {
+			expectedDir.mkdirs();
+		}
+		File inputCaseFile = new File(inputDir,String.valueOf(caseNum)); // 인풋 데이터
+		File expectedCaseFile = new File(expectedDir,String.valueOf(caseNum)); // 예상 답안 데이터
+		if(!inputCaseFile.exists()||!expectedCaseFile.exists()) {
+			ChallengeCaseVO challengeCase = challengeDAO.selectOneCase(caseNum);
+			writeCaseFile(challengeCase);
+		}
+		if(challengeDir.exists() && inputCaseFile.exists() && expectedCaseFile.exists()) // 다 존제하면
+			return 1;
 		return 0;
 	}
 
@@ -97,6 +114,7 @@ public class CaseFileManager implements CaseFileService {
 	@Override
 	public int prepareAllCaseFiles(long cNum) {
 		List<ChallengeCaseVO> list = challengeDAO.selectAllCaseMetaDatas(cNum);
+		
 		return 0;
 	}
 
@@ -124,8 +142,6 @@ public class CaseFileManager implements CaseFileService {
 		writeFile(challengeCase.getOutput(), expectedDir, String.valueOf(caseNum));
 //		logger.info("expectedDir exists:"+expectedDir.exists());
 		
-		// input 열기
-//		writeFile(caseData, dir, fileName)
 		return 1;
 	}
 	

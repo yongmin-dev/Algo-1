@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import com.puercha.algo.challenge.dao.ChallengeDAO;
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
 import com.puercha.algo.challenge.vo.ChallengeResultVO;
+import com.puercha.algo.challenge.vo.ChallengeVO;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
@@ -58,14 +59,6 @@ public class JavaCodeTester implements CodeTester {
 	@Inject
 	ChallengeDAO challengeDAO;
 	
-//	public JavaCodeTester(long timeLimit, long memoryLimit) {
-//		this.timeLimit = timeLimit;
-//		this.memoryLimit = memoryLimit;
-//	}
-//	private long timeLimit; // 시간 제한
-//	private long memoryLimit; // 메모리 제한
-//	private String code;
-//	private File compiledProgram;
 	// 초기화
 	@Override
 	public void init () {
@@ -75,7 +68,7 @@ public class JavaCodeTester implements CodeTester {
 	
 	
 	@Override
-	public void preapareExecution() {
+	public void prepareExecution() {
 		
 	}
 
@@ -131,20 +124,21 @@ public class JavaCodeTester implements CodeTester {
 		return sourceCodeDir;
 	}
 	
-	
 	@Async
 	@Override
-	public void doTest(ChallengeResultVO result) {
+	//테스트 시작
+	public void doTest(ChallengeResultVO result) {		
 		// 컴파일 시작
-		// 상태 변경
 		logger.info("doTest(ChallengeResultVO result) ");
-		result.setStatus('C');
+		result.setStatus('C'); // 상태 변경
 		result.setResultComment("Compiling");
 		challengeDAO.updateChallengeResult(result);
+		ChallengeVO challengeInfo = challengeDAO.selectOne(result.getCNum()); // 도전과제 VO
+		long limitTime = challengeInfo.getLimitTime();
+		long limitMemory = challengeInfo.getLimitMemory();
+		File sourceDir = compile(result.getResultNum(),null,result.getCode()); // 소스코드 위치
 		
-		File sourceDir = compile(result.getResultNum(),null,result.getCode());
-		
-		File challengeDir = caseFileManager.getChallengeDir(result.getCNum());
+		File challengeDir = caseFileManager.getChallengeDir(result.getCNum()); // 도전과제 위치
 		
 		// 테스트 시작
 		List<ChallengeCaseVO> list = challengeDAO.selectAllCaseMetaDatas(result.getCNum());
@@ -153,6 +147,7 @@ public class JavaCodeTester implements CodeTester {
 		
 		for(int i=0;i<list.size();i++) {
 			ChallengeCaseVO caseMeta = list.get(i);
+			caseFileManager.prepareCaseFile(caseMeta.getCNum(), caseMeta.getCaseNum());// 케이스 파일 준비
 			// 출력 파일 만들기
 			File output = new File(sourceDir,CaseFileService.NAME_OUTPUT_FILE);
 			
@@ -169,13 +164,14 @@ public class JavaCodeTester implements CodeTester {
 			commandList.add("Main");
 			
 			logger.info("input exists:"+input.exists()+" "+input);
-			Map<String,Object> caseResult = testOneCase(commandList,input, output, expected);
+			Map<String,Object> caseResult = testOneCase(commandList,input, output, expected,limitMemory,limitTime);
 			 
 			boolean isPassed = (caseResult.get(KEY_PASSES_CASE)!=null) ? (boolean)caseResult.get(KEY_PASSES_CASE) : false;
 			if(!isPassed) {
 				failedResult  = caseResult;
 				break;
 			}
+			// 테스트 도중 상태 
 			result.setStatus('T');
 			result.setResultComment(String.format("%d %%", (i+1)/list.size()));
 			challengeDAO.updateChallengeResult(result);
@@ -207,9 +203,9 @@ public class JavaCodeTester implements CodeTester {
 
 	// case하나를 테스트함
 	@Override
-	public Map<String,Object> testOneCase(List<String> commandList,File input, File output, File expected) {
-		long memoryLimit = 500000; // 임시
-		long timeLimit = 2000; // 임시
+	public Map<String,Object> testOneCase(List<String> commandList,File input, File output, File expected, long memoryLimit, long timeLimit) {
+//		long memoryLimit = 500000; // 임시
+//		long timeLimit = 2000; // 임시
 		
 		Map<String,Object> result = new HashMap<String, Object>();// 결과 저장
 		long startNano = System.currentTimeMillis();// 시작 시간
@@ -232,15 +228,14 @@ public class JavaCodeTester implements CodeTester {
 			process = pb.start();
 			pid = getPid(process); // pid를 가져옴		
 			
-			passesLimitTime = process.waitFor(timeLimit,TimeUnit.MILLISECONDS);
-			logger.info("process exec:"+process.exitValue());
+			passesLimitTime = process.waitFor(timeLimit,TimeUnit.MILLISECONDS);			
 			errMsg = getStringFromStream(process.getErrorStream());
 			logger.info("errMsg:"+errMsg);
 			if(!passesLimitTime) {
 				process.destroy();	
 				
 			}else {				
-				
+				logger.info("process exec:"+process.exitValue());
 				memoryUsage = memoryMonitor.getMemoryUsage(pid);				
 				if(memoryUsage>memoryLimit) {
 					passesLimitMemory = false;

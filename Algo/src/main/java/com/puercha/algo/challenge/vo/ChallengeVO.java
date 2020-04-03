@@ -14,7 +14,7 @@ public class ChallengeVO {
 	// 도전과제번호
 	private long cNum;
 
-	// 출제자
+	// 출제자 번호
 	private long userNum;
 
 	// 출제자 이름

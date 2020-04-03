@@ -1,6 +1,6 @@
 package com.puercha.algo.challenge.service;
 
-import java.util.List;
+import java.util.Map;
 
 import com.puercha.algo.challenge.vo.ChallengeResultVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
@@ -11,7 +11,8 @@ import com.puercha.algo.challenge.vo.ChallengeVO;
  *
  */
 public interface ChallengeService {
-	
+	public final static String KEY_CHALLENGE_LIST = "challengeList"; 
+	public final static String KEY_PAGE_INFO = "pageInfo";
 	/**
 	 * 도전과제 검색하기
 	 * @param page 페이지 번호
@@ -19,13 +20,13 @@ public interface ChallengeService {
 	 * @param type 타입
 	 * @return
 	 */
-	List<ChallengeVO> serachChallenges(long page, String keyword, String type);
+	Map<String,Object> serachChallenges(long page, String keyword, String type);
 	/**
 	 * 도전과제 열람
 	 * @param ChallengeNum 도젅과제 번호
 	 * @return 도전과제 가져옴
 	 */
-	ChallengeVO viewChallenges(long ChallengeNum);	
+	ChallengeVO viewChallenges(long challengeNum);	
 	// 도전과제 생성
 	/**
 	 * 도전과제 생성

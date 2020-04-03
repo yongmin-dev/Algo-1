@@ -17,7 +17,7 @@ import com.puercha.algo.user.service.LoginService;
 import com.puercha.algo.user.vo.UserVO;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/login")
 public class LoginController {
 	
 	private static final Logger logger
@@ -29,22 +29,24 @@ public class LoginController {
 	LoginService loginService;	
 	
 	//로그인 양식
-	@GetMapping("/loginForm")
+	@GetMapping("/signing-in")
 	public String getLoginForm(
 			@RequestParam(value="next",required=false)String next,
 			Model model) {
 		logger.info("next:"+next);
 		if(next == null) {
 			next="/";
-		}
+		}		
+		model.addAttribute("next",next);
+		
 		return "user/signin";
 	}
 	//로그인 처리
-	@PostMapping("/login")
+	@PostMapping("/sign-in")
 	public String login(
 			@RequestParam("email") String email,
 			@RequestParam("pw") String pw,
-			@RequestParam("next") String next,
+			@RequestParam(value="next", required = false) String next,
 			HttpSession session,
 			Model model) {
 		
@@ -53,7 +55,8 @@ public class LoginController {
 		logger.info("next="+next);
 		
 		UserVO user = loginService.loginUser(email, pw, session);
-		
+		if(next == null)
+			next= "/";
 		if(user == null) {
 			model.addAttribute("svr_msg","가입된 사용자정보가 없습니다. 비밀번호와 이메일을 확인해주세요");
 			return "/user/signin";			
@@ -62,7 +65,7 @@ public class LoginController {
 		}
 	}
 	//로그아웃
-	@GetMapping("logout")
+	@GetMapping("/log-out")
 	public String logout(HttpSession session) {
 		
 		session.invalidate();

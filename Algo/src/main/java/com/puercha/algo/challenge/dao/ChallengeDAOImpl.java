@@ -108,7 +108,27 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	}
 	
 	
-	
+	/**
+	 * 도전과제의 총 개수
+	 * @param type 검색 타입
+	 * @param keyword 검색어
+	 * @return 총 개수 반환
+	 */
+	@Override
+	public long getCountTotalChallenges(String type, String keyword) {
+		logger.info("getCountTotalChallenges(String type, String keyword):"+ type+", "+keyword);
+		Map<String,Object> params = new HashMap<>();
+		if(keyword != null) {
+			params.put("types",Arrays.asList(type.split("\\s+")));
+		}
+		if(keyword != null) {
+			params.put("keywords",Arrays.asList(keyword.split("\\s+")));
+		}
+		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.getCountTotalChallenges", params);
+	}
+
+
+
 	/**
 	  * 도전과제 결과 보기 
 	  * @param resultNum 결과 번호

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,8 +54,13 @@ public class MemoryMonitor {
 	}
 	public void setParentProcessId(String parentProcessId) {
 		this.parentProcessId = parentProcessId;
+
 	}
 
+	public Set<Integer> getKeySet(){
+		return this.memoryUsageInfo.keySet();
+	}
+	
 
 
 	/**
@@ -74,7 +80,7 @@ public class MemoryMonitor {
 			this.memoryUsageInfo.replace(pid, Math.max(pre , memoryUsage) );
 		}
 		else  {
-			this.memoryUsageInfo.replace(pid, memoryUsage);
+			this.memoryUsageInfo.put(pid, memoryUsage);
 		}
 	}
 	
@@ -169,11 +175,8 @@ public class MemoryMonitor {
 			print.println(cmd);
 			print.flush();
 			inputBuilder = new StringBuilder();
-			while(isRunnable) {
-				// 명령어 출력
-//				logger.info("loop:"+cnt++);
-				
-				
+			
+			while(isRunnable) {				
 				try {					
 					while(inputReader.ready()) {
 						nRead = inputReader.read(inputBuf);						
@@ -190,7 +193,7 @@ public class MemoryMonitor {
 							Matcher dataMatcher = dataPattern.matcher(line);
 							Matcher nameMatcher = namePattern.matcher(line);
 							if(nameMatcher.find()) { // 컬럼명일경우
-								System.out.println("line:"+line);
+//								System.out.println("line:"+line);
 								String lower = line.toLowerCase();
 //								System.out.printf("%s %s %s %d %d %n",lower,NAME_PEAKWORKINGSETSIZE,NAME_PROCESSID,
 //										lower.indexOf(NAME_PEAKWORKINGSETSIZE) , 
@@ -198,7 +201,7 @@ public class MemoryMonitor {
 								isPidFirst = lower.indexOf(NAME_PEAKWORKINGSETSIZE) > lower.indexOf(NAME_PROCESSID);
 							}
 							if(dataMatcher.find()) { // pid일 경우								
-								System.out.println("line:"+line);
+//								System.out.println("line:"+line);
 								Matcher numberMatcher = numberPattern.matcher(line);
 								String pidStr, memoryStr;
 //								System.out.println("number matcher:"+numberMatcher.toString());
@@ -213,8 +216,8 @@ public class MemoryMonitor {
 									numberMatcher.find();
 									pidStr = numberMatcher.group();									
 								}
-								logger.info(String.format("pid:%s , usage: %s", pidStr,memoryStr));
-								memoryMonitor.setMemoryUsage(Integer.parseInt(pidStr), Long.parseLong(memoryStr));
+//								logger.info(String.format("pid:%s , usage: %s", pidStr,memoryStr));
+								memoryMonitor.setMemoryUsage(Integer.parseInt(pidStr), Long.parseLong(memoryStr));cnt++;
 //								System.out.printf("pid:%s memory:%s%n",pidStr,memoryStr);
 							}							
 							preIdx  = idx + System.lineSeparator().length();//개행 다음
@@ -241,7 +244,6 @@ public class MemoryMonitor {
 				
 			}
 		}
-		
 		
 	}
 }

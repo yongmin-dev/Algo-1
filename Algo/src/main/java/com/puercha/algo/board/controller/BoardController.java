@@ -62,11 +62,11 @@ public class BoardController {
 		model.addAttribute("list", boardService.list(reqPage, searchType, keyword));
 		// 페이지제어
 		model.addAttribute("pm", boardService.getPageManager(reqPage, searchType, keyword));
-		return "board/list";
+		return "board/board";
 	}
 
 	// 게시글보기
-	@GetMapping("/view/{returnPage}/{postNum}")
+	@GetMapping("/post/{postNum}/{returnPage}")
 	public String view(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum, Model model) {
 
 		Map<String, Object> map = boardService.view(postNum);
@@ -74,15 +74,13 @@ public class BoardController {
 		
 		
 		logger.info(boardPostVO.toString());
-		List<AttachmentVO> files = null;
-		if (map.get("files") != null) {
-			files = (List<AttachmentVO>) map.get("files");
-
-			model.addAttribute("boardPostVO", boardPostVO);
-			model.addAttribute("files", files);
-
+		List<AttachmentVO> attachmentVO = null;
+		model.addAttribute("boardPostVO", boardPostVO);
+		if (map.get("attachmentVO") != null) {
+			attachmentVO = (List<AttachmentVO>) map.get("attachmentVO");
+			model.addAttribute("attachmentVOs", attachmentVO);
 		}
-		return "/board/readForm";
+		return "/board/postView";
 	}
 
 	// 첨부파일 다운로드/
@@ -94,7 +92,7 @@ public class BoardController {
 		final HttpHeaders headers = new HttpHeaders();
 		String[] mtypes = attachmentVO.getFtype().split("/");
 		headers.setContentType(new MediaType(mtypes[0], mtypes[1]));
-		headers.setContentLength(attachmentVO.getFsize());
+		headers.setContentLength(Integer.parseInt(attachmentVO.getFsize()));
 
 		// 첨부파일이 한글일 경우 깨짐 방지
 		String fileName = null;
@@ -235,4 +233,3 @@ public class BoardController {
 	}
 	
 }
-

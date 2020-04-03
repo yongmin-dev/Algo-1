@@ -19,7 +19,7 @@ public class PageManager{
 	private int endPage;
 	
 	//전체 레코드 수
-	private int totalRec;
+	private long totalRec;
 	
 	//최종페이지
 	private int finalEndPage;
@@ -35,7 +35,7 @@ public class PageManager{
 	
 	private final int PAGE_NUM_PER_PAGE = 10;
 	
-	public PageManager(RowCriteria rc, int totalRec) {
+	public PageManager(RowCriteria rc, long totalRec) {
 		this.rc = rc;
 		this.totalRec = totalRec;
 		this.pageNumPerPage = PAGE_NUM_PER_PAGE;
