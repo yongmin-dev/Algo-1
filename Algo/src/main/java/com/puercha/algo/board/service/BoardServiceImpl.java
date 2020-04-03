@@ -29,12 +29,13 @@ public class BoardServiceImpl implements BoardService {
 	@Inject
 	PostingDAO postingDAO;
 
-	// 게시글 읽어오기
+	// 카테고리 읽어오기
 	@Override
 	public List<BoardCategoryVO> getCategory() {
 		return postingDAO.getCategory();
 	}
 
+	//
 	@Transactional
 	@Override
 	public int write(BoardPostVO boardPostVO) {
@@ -52,6 +53,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	// 첨부파일 저장하기
+	@Transactional
 	private void writeFile(List<MultipartFile> files, long postNum) {
 		for (MultipartFile file : files) {
 			try {

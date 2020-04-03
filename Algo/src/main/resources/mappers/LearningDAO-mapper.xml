@@ -1,3 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mappers.learningDAO-mapper"></mapper>
+<mapper namespace="mappers.learningDAO-mapper">
+
+	<!-- 과목목록 -->
+	<!-- 1/전체목록 -->
+	<select id="selectSubjectList" resultType="SubjectVO">
+		select
+		subject_num as "subjectNum",
+		title,
+		create_at as "createdAt",
+		updated_at as "updatedAt",
+		user_num as "userNum",
+		image_data as
+		"imageData"
+		FROM(select row_number() over(order by
+		subject_num desc) as
+		num,
+		subject_num,
+		title,
+		create_at,
+		updated_at,
+		user_num,
+		image_data from
+		subject
+		<if test="searchType != null and keywords != null">
+			where
+			<foreach item="keyword" collection="keywords" open="("
+				separator="or" close=")">
+				<choose>
+					<!-- 제목 -->
+					<when test="searchType == 'T'.toString()">
+						title like '%'||#{keyword}||'%'
+					</when>
+					<!-- 작성자 -->
+					<when test="searchType == 'N'toString()">
+						userNum like '%'||#{keyword}||'%'
+					</when>
+					<otherwise>
+						title like '%'||#{keyword}||'%' or userNum like
+						'%'||#{keyword}||'%'
+					</otherwise>
+				</choose>
+			</foreach>
+		</if>
+		)
+	</select>
+
+	<!-- 총 레코드 수 -->
+	<select id="countTotalRecord" parameterType="map"
+		resultType="int">
+		select count(subject.subject_num) as countTotal
+		from subject
+		<if test="searchType !=null and keywords !=null">
+			where
+			<foreach item="keyword" collection="keywords" open="("
+				separator="or" close=")">
+				<choose>
+					<!-- 제목 -->
+					<when test="searchType == 'T'.toString()">
+						title like '%'||#{keyword}||'%'
+					</when>
+					<!-- 작성자 -->
+					<when test="searchType == 'N'.toString()">
+						userNum like '%'||#{keyword}||'%'
+					</when>
+					<otherwise>
+						title like '%'||#{keyword}||'%' or userNum like
+						'%'||#{keyword}||'%'
+					</otherwise>
+				</choose>
+			</foreach>
+		</if>
+
+
+
+
+	</select>
+
+	<select id="selectUnitList" resultType="UnitVO">
+		select
+		Unit_num as
+		"unitNum",
+		subject_num as "subjectNum",
+		content,
+		title,
+		chapter_depth as
+		"chapterDepth",
+		created_at as "createdAt",
+		updated_at as "updatedAt"
+		from unit where subject_num like #{subjectNum}
+
+
+	</select>
+
+	<select id="selectOneUnit" resultType="UnitVO">
+		select
+		Unit_num as "unitNum",
+		subject_num as "subjectNum",
+		content,
+		title,
+		chapter_depth as "chapterDepth",
+		created_at as "createdAt",
+		updated_at
+		as "updatedAt"
+		from unit where unit_num like #{unitNum}
+
+
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
