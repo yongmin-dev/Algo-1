@@ -17,6 +17,9 @@ public class ChallengeVO {
 	// 출제자
 	private long userNum;
 
+	// 출제자 이름
+	private String username;
+	
 	// 도전과제 내용
 	private String content;
 
