@@ -14,8 +14,38 @@
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
+		
+				<div>
+			<table>
+				<tr>
+					<th>단원명</th>
+					<th>단원명</th>
+					<th>내용</th>
+					<th>단원제목</th>
+					<th>챕터뎁스</th>
+
+				</tr>
+
+ 				<c:forEach var="unit" items="${unitList }">
+					<fmt:formatDate value="${unit.createdAt }"
+						pattern="yyyy/MM/dd HH:mm" var="cdate" />
+					<tr>
+						<td>${unit.unitNum }</td>
+						<td>${unit.content }</td>
+						<td><a
+							href="${pageContext.request.contextPath }/learning/unit/${unit.unitNum }">
+								${unit.title }</a>
+						<td>${cdate }</td>
+											</tr>
+				</c:forEach>
+			</table>
+		</div>
+		<div>
+		세부내용 : ${unitVO.content }
+		</div>
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>
 </html>
+
 

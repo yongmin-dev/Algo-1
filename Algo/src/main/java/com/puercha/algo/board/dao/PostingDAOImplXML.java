@@ -109,7 +109,7 @@ public class PostingDAOImplXML implements PostingDAO {
 		if(keyword != null) {
 			map.put("keywords", Arrays.asList(keyword.split("\\s+")));
 		}
-		map.put("andor", "or");
+
 		return sqlSession.selectList("mappers.PostingDAO-mapper.selectList3", map);
 	}
 	
@@ -124,7 +124,7 @@ public class PostingDAOImplXML implements PostingDAO {
 			map.put("list", Arrays.asList(keyword.split("\\s+")));
 			
 		}
-		map.put("andor","or");
+
 		logger.info("keyword2:" + map.get("list"));
 		
 		return sqlSession.selectOne("mappers.PostingDAO-mapper.countTotalRecord", map);

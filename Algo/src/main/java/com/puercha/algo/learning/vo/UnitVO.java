@@ -2,11 +2,14 @@ package com.puercha.algo.learning.vo;
 
 import java.util.Date;
 
+import lombok.Data;
+
 /**
  * @author Yongmin
  * 단원 VO
  * 
  */
+@Data
 public class UnitVO {
 	
 	//단원

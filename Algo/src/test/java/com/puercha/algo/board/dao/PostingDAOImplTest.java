@@ -131,7 +131,7 @@ public class PostingDAOImplTest {
 
 		assertEquals(2, cnt);
 	}
-	
+
 	@Test
 	@Named("게시글 보기")
 	@Disabled
@@ -146,7 +146,7 @@ public class PostingDAOImplTest {
 		logger.info(boardPostVO.toString());
 
 	}
-	
+
 	@Test
 	@Named("조회수 증가")
 	@Disabled
@@ -159,7 +159,7 @@ public class PostingDAOImplTest {
 		logger.info("hit :" + boardPostVO.getHit());
 		assertEquals(1, cnt);
 	}
-	
+
 	@Test
 	@Named("게시글목록")
 	@Disabled
@@ -185,7 +185,7 @@ public class PostingDAOImplTest {
 			logger.info(boardPostVO.toString());
 		}
 	}
-	
+
 	@Test
 	@Named("총 레코드 카운트")
 	@Disabled
@@ -207,7 +207,7 @@ public class PostingDAOImplTest {
 
 		boardCategoryVO.setCategoryNum(1);
 		boardCategoryVO.setName("질문게시글");
-		
+
 		boardPostVO.setCategory(boardCategoryVO);
 		boardPostVO.setTitle("답글테스트");
 		boardPostVO.setUserNum(1);
@@ -217,40 +217,40 @@ public class PostingDAOImplTest {
 		int cnt = postingDAO.insertReply(boardPostVO);
 
 	}
-	
+
 	@Test
 	@Named("첨부파일 1개 조회")
 	@Disabled
 	public void selectFile() {
 		AttachmentVO attachmentVO = new AttachmentVO();
-		
+
 		attachmentVO = postingDAO.selectFile("26");
 		assertNotNull(attachmentVO);
-		logger.info("selectFile :" +attachmentVO.toString());
-			
+		logger.info("selectFile :" + attachmentVO.toString());
+
 	}
+
 	@Test
 	@Named("첨부파일 전체 조회")
 	@Disabled
 	public void selectFiles() {
-		
+
 		List<AttachmentVO> list = postingDAO.selectFiles("1");
-		
+
 		assertNotNull(list);
 		logger.info("selectFiles :" + list.toString());
-		
-	}
 
+	}
 
 	@Test
 	@Named("답글 스텝 올려주기")
 	@Disabled
 	public void updateStep() {
 		BoardPostVO boardPostVO = new BoardPostVO();
-		
+
 		boardPostVO = postingDAO.select("1");
 		int cnt = postingDAO.updateStep(boardPostVO.getPostGroup(), boardPostVO.getPostStep());
-		
+
 		assertEquals(1, cnt);
 	}
 
