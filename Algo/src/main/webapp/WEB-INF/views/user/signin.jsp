@@ -16,11 +16,13 @@
 	<main>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 		<h3>로그인</h3>
-		<input type="text" name="email" id="email" placeholder="이메일">
-		<span id="emailMsg"></span>
-		<input type="password" name="pw" id="pw" placeholder="비밀번호">
-		<span id="pwMsg" class="errmsg"><c:if test="${!empty svr_msg}" >${svr_msg }</c:if></span>
-		<input type="submit" name="" id="loginBtn" value="로 그 인">
+		<form method="POST" action="${pageContext.request.contextPath}/login/sign-in">
+			<input type="text" name="email" id="email" placeholder="이메일">
+			<span id="emailMsg"></span>
+			<input type="password" name="pw" id="pw" placeholder="비밀번호">
+			<span id="pwMsg" class="errmsg"><c:if test="${!empty svr_msg}" >${svr_msg }</c:if></span>
+			<input type="submit" name="" id="loginBtn" value="로 그 인">
+		</form>
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>
