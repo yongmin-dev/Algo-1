@@ -86,10 +86,10 @@
 			    challenge.updated_at as "updatedAt"
 			FROM challenge, app_user
 			WHERE challenge.user_num  = app_user.user_num
-				<if test="types != null and keywords != null and types.length() > 0 and keywords.length() )>0">
+				<if test="types != null and keywords != null and types.size() > 0 and keywords.size() >0">
 					
-					<foreach collection="types" item="type" index="i" open="AND (" separator="OR" close=")">						
-						<foreach collection="keywords" item="keyword" >
+					<foreach collection="types" item="type" index="i" open="AND (" separator="or" close=")">						
+						<foreach collection="keywords" item="keyword" separator="OR"  >
 							<choose>
 								<when test="type=='T'.toString()">
 								    challenge.title like  '%' || #{keyword} || '%'					
@@ -100,18 +100,46 @@
 								<when test="type=='N'.toString()">
 									app_user.username like  '%' || #{keyword} || '%'
 								</when>
-								<otherwise>
-									1 = 0
-								</otherwise>
+								<otherwise>1 = 0</otherwise>
 							</choose>							 
 						</foreach>
 					</foreach>				
 										
 				</if>
 			)
-			WHERE "num" <![CDATA[ >= ]]>  startRowNum 
-			AND "num" <![CDATA[ <= ]]> endRowNum
+			WHERE "num" <![CDATA[ >= ]]>  #{startRowNum} 
+			AND "num" <![CDATA[ <= ]]> #{endRowNum}
 	</select>
+	<!-- 도전과제 총 개수 -->
+	<select id="getCountTotalChallenges" parameterType="hashmap"
+	resultType="long">
+	SELECT count(*)
+	FROM Challenge, App_User
+	WHERE challenge.user_num =
+	app_user.user_num
+		<if	test="types != null and keywords != null and types.size() > 0 and keywords.size() >0">
+			<foreach collection="types" item="type" index="i" 
+			open="AND ("
+				separator="or" close=")">
+				<foreach collection="keywords" item="keyword" open="(" separator="OR" close=")">
+					<choose>
+						<when test="type=='T'.toString()">
+							challenge.title like '%' || #{keyword} || '%'
+						</when>
+						<when test="type=='C'.toString()">
+							challenge.content like '%' || #{keyword} || '%'
+						</when>
+						<when test="type=='N'.toString()">
+							app_user.username like '%' || #{keyword} || '%'
+						</when>
+						<otherwise>	1 = 0	</otherwise>
+					</choose>
+				</foreach>
+			</foreach> 
+		</if>
+	</select>
+	
+	
 	<!-- 도전과제 결과 보기 -->
 	<select id="selectOneResult" parameterType="long" resultType="ChallengeResultVO">
 		SELECT 

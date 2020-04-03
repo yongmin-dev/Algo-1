@@ -53,6 +53,15 @@ public interface ChallengeDAO {
 	 */
 	List<ChallengeVO> selectAllChallenge(long startRowNum, long endRowNum, String type, String keyword);
 		
+	/**
+	 * 도전과제의 총 개수
+	 * @param type 검색 타입
+	 * @param keyword 검색어
+	 * @return 총 개수 반환
+	 */
+	long getCountTotalChallenges(String type, String keyword);
+	
+	
 	 /**
 	  * 도전과제 결과 보기 
 	  * @param resultNum 결과 번호

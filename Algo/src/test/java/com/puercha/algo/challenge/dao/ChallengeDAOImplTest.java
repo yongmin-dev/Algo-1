@@ -102,7 +102,7 @@ public class ChallengeDAOImplTest {
 
 	// 도전과제 목록 검색
 	public void testSelectAllChallenge(long startRowNum, long endRowNum, String type, String keyword) {
-
+		
 	}
 
 	// 도전과제 결과 보기
