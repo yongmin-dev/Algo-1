@@ -1,3 +1,4 @@
+
 package com.puercha.algo.board.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

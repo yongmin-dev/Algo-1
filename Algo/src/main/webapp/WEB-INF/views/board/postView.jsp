@@ -19,6 +19,7 @@
  <div class="container">
 <div class="board_wrap">
 	
+	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 	<h2>질문게시판</h2>
 		
     <form action="">

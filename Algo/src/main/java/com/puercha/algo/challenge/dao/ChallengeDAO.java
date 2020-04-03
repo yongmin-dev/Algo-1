@@ -53,6 +53,15 @@ public interface ChallengeDAO {
 	 */
 	List<ChallengeVO> selectAllChallenge(long startRowNum, long endRowNum, String type, String keyword);
 		
+	/**
+	 * 도전과제의 총 개수
+	 * @param type 검색 타입
+	 * @param keyword 검색어
+	 * @return 총 개수 반환
+	 */
+	long getCountTotalChallenges(String type, String keyword);
+	
+	
 	 /**
 	  * 도전과제 결과 보기 
 	  * @param resultNum 결과 번호
@@ -111,7 +120,6 @@ public interface ChallengeDAO {
 	 */
 	long getCountTotalResult(long cNum);
 	
-	
 	/**
 	 * 케이스 번호로 케이스 데이터 하나 열람 
 	 * @param caseNum 케이스 번호
@@ -125,6 +133,15 @@ public interface ChallengeDAO {
 	 * @return 테스트케이스 VO의 리스트
 	 */
 	List<ChallengeCaseVO> selectAllCase(long cNum);
+	
+	/**
+	 * 도전과제 내 모든 케이스를 메타 정보만 가져옴(input,output제외)
+	 * @param cNum 도전과제 번호
+	 * @return 테스트케이스 VO의 리스트
+	 */
+	List<ChallengeCaseVO> selectAllCaseMetaDatas(long cNum);
+	
+	
 	
 	/* Update */
 	/**

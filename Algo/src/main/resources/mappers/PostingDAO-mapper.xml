@@ -41,7 +41,8 @@
 	<!-- 첨부파일 저장 -->
 	<insert id="insertFile" parameterType="AttachmentVO">
 
-		INSERT INTO post_attachment(
+		INSERT INTO
+		post_attachment(
 		fid, post_num, fname, fsize, ftype, fdata)
 		VALUES(
 		attachment_fid_seq.nextval, #{postNum}, #{fname}, #{fsize}, #{ftype},
@@ -51,9 +52,9 @@
 
 	<!-- 게시글 수정 -->
 	<update id="update" parameterType="BoardPostVO">
-		UPDATE board_POST
+		UPDATE board
 		SET category_num =
-		#{category.categoryNum},
+		{#boardCategoryVO.categoryNum},
 		title = #{title},
 		content = #{content},
 		updated_at = systimestamp
@@ -83,11 +84,10 @@
 	<select id="select" parameterType="long" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "category.categoryNum",
-		t2.name as "category.name",
+		t2.category_num as "categoryNum",
 		title,
-		user_num as "userNum",
-		username as "userName",
+		user_num
+		as "userNum",
 		created_at as "createdAt",
 		updated_at as "updatedAt",
 		hit,
@@ -103,20 +103,9 @@
 
 	</select>
 
-	<!-- 첨부파일 1개 가져오기 -->
+
+	<!-- 첨부파일 가져오기 -->
 	<select id="selectFile" parameterType="long"
-		resultType="AttachmentVO">
-		SELECT fid, post_num as "postNum", fname, fsize, ftype,
-		fdata, created_at as "createdAt", updated_at as "updatedAt"
-		FROM
-		post_attachment
-		WHERE fid = #{fid}		
-
-	</select>
-
-
-	<!-- 첨부파일 전체 가져오기 -->
-	<select id="selectFiles" parameterType="long"
 		resultType="AttachmentVO">
 		SELECT fid, post_num as "postNum", fname, fsize, ftype,
 		fdata, created_at as "createdAt", updated_at as "updatedAt"
@@ -142,11 +131,12 @@
 	<select id="selectList" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "category.categoryNum",
-		t2.name as "category.name",
+		t2.category_num as
+		"boardCategoryVO.categoryNum",
+		t2.name as
+		"boardCategoryVO.name",
 		title,
 		username as "userName",
-		user_num as "userNum",
 		created_at as
 		"createdAt",
 		updated_at as
@@ -173,12 +163,11 @@
 		resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		category_num as
-		"category.categoryNum",
-		name as "category.name",
+		t2.category_num as
+		"boardCategoryVO.categoryNum",
+		t2.name as "boardCategoryVO.name",
 		title,
 		username as "userName",
-		user_num as "userNum",
 		created_at as "createdAt",
 		updated_at as "updatedAt",
 		hit,
@@ -197,17 +186,14 @@
 		t1.username,
 		t1.created_at,
 		t1.updated_at,
-		t1.content,
-		t1.post_group,
-		t1.post_step,
 		t1.hit,
 		t1.indent
 		from board_post t1, board_category t2
 		where t1.category_num =
 		t2.category_num
-		<if test="searchType != null and keywords != null">
+		<if test="searchType != null and list != null">
 			and
-			<foreach item="item" collection="keywords" open="("
+			<foreach item="item" collection="list" open="("
 				separator="or" close=")">
 				<choose>
 					<!-- 제목 -->
@@ -252,7 +238,7 @@
 		indent
 		) VALUES(
 		board_post_num_seq.nextval,
-		#{category.categoryNum},
+		#{boardCategory.categoryNum},
 		#{title},
 		#{userNum},
 		#{userName},
@@ -281,10 +267,10 @@
 	<select id="countTotalRecord" parameterType="map"
 		resultType="int">
 		select count(t1.post_num) as countTotal
-		from board_post t1, board_category t2
+		from board_post t1,
+		board_category t2
 		where t1.category_num = t2.category_num
 		<if test="searchType != null and list !=null">
-		 and
 		<foreach item="item" collection="list" open="(" separator="or"
 			close=")">
 			<choose>

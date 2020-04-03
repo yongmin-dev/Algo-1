@@ -12,7 +12,7 @@ import com.puercha.algo.user.vo.UserVO;
 
 @Service
 public class LoginManager implements LoginService{
-	public static final String KEY_USER_INFO = "userInfo"; 
+
 	private static final Logger logger
 	= LoggerFactory.getLogger(LoginManager.class);
 	
@@ -27,21 +27,11 @@ public class LoginManager implements LoginService{
 		user = userDAO.selectUser(email, pw);
 		if(user!=null) {
 			//세션에 로그인된 사용자 정보 넣기 
-			session.setAttribute(KEY_USER_INFO, user);
+			session.setAttribute("userInfo", user);
 		}else {
 			session.invalidate();
 		}
 		return user;
-	}
-
-	/**
-	 *  로그인 된 세션 가져오기 
-	 * @param session 현재 세션
-	 * @return 실패시 null
-	 */
-	@Override
-	public UserVO getLoggedInUser(HttpSession session) {		
-		return (UserVO) session.getAttribute(KEY_USER_INFO);
 	}
 
 	// 로그아웃
