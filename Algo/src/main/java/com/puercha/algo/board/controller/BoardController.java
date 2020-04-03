@@ -56,6 +56,7 @@ public class BoardController {
 	public String list(@PathVariable(required = false) String reqPage,
 			@PathVariable(required = false) String searchType, @PathVariable(required = false) String keyword,
 			HttpSession session, Model model) {
+		
 		UserVO userVO = (UserVO) session.getAttribute("user");
 		// 게시글목록
 		model.addAttribute("list", boardService.list(reqPage, searchType, keyword));
@@ -82,7 +83,7 @@ public class BoardController {
 		return "/board/postView";
 	}
 
-	// 첨부파일 다운로드
+	// 첨부파일 다운로드/
 	@GetMapping("selectFile/{fid}")
 	public ResponseEntity<byte[]> getFile(@PathVariable String fid) {
 		AttachmentVO attachmentVO = boardService.viewFile(fid);
