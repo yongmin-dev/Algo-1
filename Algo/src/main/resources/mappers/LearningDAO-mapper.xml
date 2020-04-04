@@ -108,7 +108,22 @@
 
 	</select>
 
-
+	<!-- 마무리문제 불러오기 -->
+	<select id="selectQuizList" resultType = "QuizVO">
+	
+	select
+	quiz_num as "quizNum",
+	unit_num as "unitNum",
+	title,
+	content,
+	correct_answer as "correcAnswer",
+	solution,
+	created_at as "createdAt",
+	updated_at as "updatedAt",
+	user_num as "userNum"
+	from quiz where unit_num like #{unitNum} 
+	
+	</select>
 
 
 

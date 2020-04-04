@@ -85,7 +85,13 @@ public class LearningDAOImpl implements LearningDAO {
 		map.put("subjectNum", subjectNum);
 		return sqlSession.selectList("mappers.learningDAO-mapper.selectUnitList", map);
 	}
-
+	@Override
+	public List<QuizVO> selectAllQuiz(long unitNum) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("unitNum", unitNum);
+		return sqlSession.selectList("mappers.learningDAO-mapper.selectQuizList", map);
+	}
+	
 	@Override
 	public List<SubjectVO> selectAllSubjects(long userNum) {
 		// TODO Auto-generated method stub
@@ -98,11 +104,7 @@ public class LearningDAOImpl implements LearningDAO {
 		return null;
 	}
 
-	@Override
-	public List<QuizVO> selectAllQuiz(long quizNum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public List<QuizAnswerVO> selectAllAnswer(long quizNum) {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.puercha.algo.learning.service.LearningService;
+import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitVO;
 import com.puercha.algo.user.service.LoginService;
@@ -40,7 +41,7 @@ public class LearningController {
 //		UserVO user = (UserVO) session.getAttribute("user");
 		logger.info("learning Controller 작동");
 
-		// 과목 목록 불러오기		
+		// 과목 목록 불러오기
 		model.addAttribute("subjectList", learningService.subjectList(reqPage, searchType, keyword));
 //		logger.info("list : " + model.getAttribute("list"));
 		// 페이지 제어
@@ -48,27 +49,31 @@ public class LearningController {
 
 		return "/learning/subjectList";
 	}
-	
-	
-	//과목열기
+
+	// 과목열기
 	@GetMapping("/subject/{subjectNum}")
 	public String unitList(@PathVariable String subjectNum, HttpSession session, Model model) {
 		model.addAttribute("unitList", learningService.unitList(subjectNum));
-			
-		
+
 		return "/learning/unitContent";
 	}
-	
-	
-	//단원열기
+
+	// 단원열기
 	@GetMapping("/unit/{unitNum}")
 	public String viewUnit(@PathVariable String unitNum, HttpSession session, Model model) {
-		
+
 		Map<String, Object> map = learningService.viewUnit(unitNum);
-		UnitVO unitVO = (UnitVO)map.get("UnitVO");
-		model.addAttribute("unitVO", unitVO);		
+		UnitVO unitVO = (UnitVO) map.get("UnitVO");
+		model.addAttribute("unitVO", unitVO);
 		return "/learning/unitContent";
 	}
-	
+
+	// 마무리문제풀기화면
+	@GetMapping("/quiz/{unitNum}")
+	public String viewQuiz(@PathVariable String unitNum, HttpSession session, Model model) {
+		model.addAttribute("quizList", learningService.viewQuiz(unitNum));
+		return "/learning/quiz";
+
+	}
 
 }

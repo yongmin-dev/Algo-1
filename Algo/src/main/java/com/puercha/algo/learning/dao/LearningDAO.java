@@ -34,8 +34,6 @@ public interface LearningDAO {
 	
 	/*Select*/
 	
-	//단원 열람, 단원내용관리화면
-	UnitVO selectOneUnit(long unitNum);
 	
 	/**
 	 * 단원리스트를 가져옴(내용제외:content)
@@ -43,6 +41,10 @@ public interface LearningDAO {
 	 * @return 단원 VO의 리스트
 	 */
 	List<UnitVO> selectAllUnits(long subjectNum);
+	//단원 열람, 단원내용관리화면
+	UnitVO selectOneUnit(long unitNum);
+
+	
 	
 		//과목리스트, 과목 조회(검색)
 	List<SubjectVO> selectAllSubjects(long pageNum,  String searchType,String keyword);
@@ -53,7 +55,7 @@ public interface LearningDAO {
 	List<SubjectVO> selectAllSubjects(long userNum, long pageNum);
 	
 	//마무리문제풀기화면, 마무리문제 리스트
-	List<QuizVO> selectAllQuiz(long quizNum);
+	List<QuizVO> selectAllQuiz(long unitNum);
 
 	//마무리문제 답안 리스트
 	List<QuizAnswerVO> selectAllAnswer(long quizNum);
