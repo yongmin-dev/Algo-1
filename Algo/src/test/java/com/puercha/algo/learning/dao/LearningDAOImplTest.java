@@ -1,6 +1,8 @@
 package com.puercha.algo.learning.dao;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,8 +17,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.puercha.algo.board.dao.PostingDAOImplTest;
+import com.puercha.algo.board.vo.BoardCategoryVO;
 import com.puercha.algo.board.vo.BoardPostVO;
+import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
+import com.puercha.algo.learning.vo.UnitVO;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/spring/root-context.xml")
@@ -46,6 +51,33 @@ public class LearningDAOImplTest {
 		int cnt = learningDAO.countTotalRecord("T", "test");
 		logger.info("totalRecordCount"+cnt);
 
+	}
+	
+	@Test
+	@Disabled
+	public void unitList() {
+				
+		List<UnitVO> unitList = learningDAO.selectAllUnits(1);
+		for(UnitVO unit : unitList) {
+			logger.info(unit.toString());
+		}
+	}
+
+
+	@Test
+	@Disabled
+	public void unitContent() {
+		UnitVO unitVO = new UnitVO();
+		unitVO = learningDAO.selectOneUnit(1);
+		logger.info(unitVO.toString());
+	}
+	
+	@Test
+	public void quizList() {
+		List<QuizVO> quizList = learningDAO.selectAllQuiz(1);
+		for(QuizVO quiz : quizList) {
+			logger.info(quiz.toString());
+		}
 	}
 	
 }
