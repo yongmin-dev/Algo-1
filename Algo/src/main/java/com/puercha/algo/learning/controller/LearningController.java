@@ -13,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.puercha.algo.learning.service.LearningService;
+import com.puercha.algo.learning.vo.QuizAnswerVO;
 import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitVO;
@@ -74,6 +76,17 @@ public class LearningController {
 		model.addAttribute("quizList", learningService.viewQuiz(unitNum));
 		return "/learning/quiz";
 
+	}
+
+	// 마무리 문제 정답확인
+	@PostMapping("/quiz/{unitNum}/check")
+	public String checkAnswers(@PathVariable String unitNum, HttpSession session, Model model, QuizAnswerVO quizAnswerVO) {
+		
+		
+		
+//		model.addAttribute
+		return null;
+		
 	}
 
 }
