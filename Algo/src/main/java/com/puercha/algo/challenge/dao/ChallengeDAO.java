@@ -54,6 +54,13 @@ public interface ChallengeDAO {
 	List<ChallengeVO> selectAllChallenge(long startRowNum, long endRowNum, String type, String keyword);
 		
 	/**
+	 * 자신이 작성한 도전과제들을 불러온다.
+	 * @param userNum 사용자 번호
+	 * @return 도전과제 리스트 객체
+	 */
+	List<ChallengeVO> selectOwnChallengeList(long userNum);
+	
+	/**
 	 * 도전과제의 총 개수
 	 * @param type 검색 타입
 	 * @param keyword 검색어
