@@ -56,7 +56,7 @@ public class BoardController {
 	public String list(@PathVariable(required = false) String reqPage,
 			@PathVariable(required = false) String searchType, @PathVariable(required = false) String keyword,
 			HttpSession session, Model model) {
-		
+
 		UserVO userVO = (UserVO) session.getAttribute("user");
 		// 게시글목록
 		model.addAttribute("list", boardService.list(reqPage, searchType, keyword));
@@ -71,8 +71,7 @@ public class BoardController {
 
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get("boardPostVO");
-		
-		
+
 		logger.info(boardPostVO.toString());
 		List<AttachmentVO> attachmentVO = null;
 		model.addAttribute("boardPostVO", boardPostVO);
@@ -113,7 +112,7 @@ public class BoardController {
 	public String posting(@ModelAttribute @PathVariable String returnPage, Model model, HttpServletRequest request) {
 
 		BoardPostVO boardPostVO = new BoardPostVO();
-	//	UserVO userVO = (UserVO)request.getSession().getAttribute("userInfo");
+		// UserVO userVO = (UserVO)request.getSession().getAttribute("userInfo");
 		UserVO userVO = loginService.getLoggedInUser(request.getSession());
 
 		boardPostVO.setUserName(userVO.getUsername());
@@ -195,7 +194,7 @@ public class BoardController {
 
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get(BoardService.KEY_BOARD_VO);
-		
+
 		boardPostVO.setTitle("->[답글]" + boardPostVO.getTitle());
 		boardPostVO.setContent("->[본문] " + boardPostVO.getContent());
 		model.addAttribute("boardPostVO", boardPostVO);
@@ -219,17 +218,15 @@ public class BoardController {
 		return "redirect:/board/list/" + returnPage;
 	}
 
-	@GetMapping(value= "/test", produces = "application/json; charset=UTF-8")
-	public ResponseEntity<Map<String,Object>> testJson(
-		HttpSession session
-			){
-		ResponseEntity<Map<String,Object>> res = null;
-		Map<String,Object> myjson = new HashMap();
+	@GetMapping(value = "/test", produces = "application/json; charset=UTF-8")
+	public ResponseEntity<Map<String, Object>> testJson(HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		Map<String, Object> myjson = new HashMap();
 		UserVO userVO = (UserVO) session.getAttribute("userInfo");
-		myjson.put("user",userVO);
-		myjson.put("hello","world!");
-		res = new ResponseEntity<Map<String,Object>>(myjson,HttpStatus.OK);
+		myjson.put("user", userVO);
+		myjson.put("hello", "world!");
+		res = new ResponseEntity<Map<String, Object>>(myjson, HttpStatus.OK);
 		return res;
 	}
-	
+
 }
