@@ -11,7 +11,8 @@
 <!-- 비로그인 -->
 <div class="upper_menu">
     <ul>
-      <li><a href="#">로그인</a></li>
+    	
+      <li><a href="${pageContext.request.contextPath}/login/signing-in">로그인</a></li>
       <li><a href="#">회원가입</a></li>
       <li><a href="#">ID/비밀번호 찾기</a></li>     
     </ul>

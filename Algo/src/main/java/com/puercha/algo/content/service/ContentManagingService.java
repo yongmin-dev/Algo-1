@@ -78,14 +78,7 @@ public interface ContentManagingService {
 	 */
 	ChallengeCaseVO getCase(long caseNum);
 	
-	/**
-	 * 새 케이스를 생성한다.
-	 * @param userNum 케이스 작성자 번호
-	 * @param cNum 도전과제 번호
-	 * @return 생성된 케이스의 번호
-	 */
-	long createCase(long userNum, long cNum);
-	
+
 	/**
 	 * 케이스를 삭제한다.
 	 * @param caseNum 케이스 번호
@@ -99,4 +92,12 @@ public interface ContentManagingService {
 	 * @return 성공 시 1
 	 */
 	int updateCase(ChallengeCaseVO challengeCase);
+	/**
+	 * 케이스를 업데이트 한다
+	 * @param caseNum 변경할 케이스의 번호
+	 * @param input 
+	 * @param expected
+	 * @return 성공 시 1
+	 */
+	int updateCase(long caseNum, String input, String expected);
 }
