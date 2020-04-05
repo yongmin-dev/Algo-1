@@ -1,21 +1,39 @@
 <!-- 모든페이지에서 사용할 헤더를 정의함 -->
+<%@page import="com.puercha.algo.user.service.LoginService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.puercha.algo.user.*" %>
+<%@ page import="com.puercha.algo.user.vo.*" %>
 <div class="header clear">
   <div class="header_inner clear">
   <h1 class="logo">
     <a href="#"><img src="<c:url value="/resources/images/HatchfulExport-All (2)/logo.png"/>" alt=""></a>
   </h1>
-
+  
+<%
+	UserVO user = (UserVO)request.getAttribute(LoginService.KEY_USER_INFO);
+	if(user!=null)
+		pageContext.setAttribute("userInfo", user); 
+ %>
 <!-- 비로그인 -->
 <div class="upper_menu">
-    <ul>
-    	
-      <li><a href="${pageContext.request.contextPath}/login/signing-in">로그인</a></li>
-      <li><a href="#">회원가입</a></li>
-      <li><a href="#">ID/비밀번호 찾기</a></li>     
-    </ul>
+	<c:choose>
+		<c:when test="${empty userInfo}">
+		    <ul>    
+		      <li><a href="${pageContext.request.contextPath}/login/signing-in">로그인</a></li>
+		      <li><a href="${pageContext.request.contextPath}/user/signing-up">회원가입</a></li>
+		      <li><a href="#">ID/비밀번호 찾기</a></li>     
+		    </ul>	
+		</c:when>
+		<c:otherwise>
+			<ul>    
+		      <li><a href="${pageContext.request.contextPath}/login/log-out">로그아웃</a></li>
+		      <li><a href="${pageContext.request.contextPath}/user/updating">${userInfo.username} 마이페이지</a></li>		      
+		    </ul>
+		</c:otherwise>
+	</c:choose>
+	
 <!-- 로그인 -->
     <!-- <ul>
       <li><a href="#">로그인</a></li>

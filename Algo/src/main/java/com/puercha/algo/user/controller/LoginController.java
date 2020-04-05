@@ -67,8 +67,8 @@ public class LoginController {
 	//로그아웃
 	@GetMapping("/log-out")
 	public String logout(HttpSession session) {
-		
-		session.invalidate();
+		loginService.logoutUser(session);
+//		session.invalidate();
 		return "redirect:/";
 	}
 	

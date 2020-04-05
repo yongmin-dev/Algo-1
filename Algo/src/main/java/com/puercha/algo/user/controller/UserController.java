@@ -44,13 +44,11 @@ public class UserController {
 	LoginService loginService;
 	@ModelAttribute
 	public void UserData(Model model) {
-	
-	
-	//성별
-	List<Code> gender = new ArrayList<>();
-	gender.add(new Code("남","남자"));
-	gender.add(new Code("여","여자"));
-	model.addAttribute("gender",gender);
+		// 성별
+		List<Code> gender = new ArrayList<>();
+		gender.add(new Code("남", "남자"));
+		gender.add(new Code("여", "여자"));
+		model.addAttribute("gender", gender);
 	}
 	//사용자생성 양식
 	@GetMapping("/signing-up")
@@ -91,8 +89,8 @@ public class UserController {
 //		UserVO userVO = userService.selectUser(email);
 		UserVO userVO = loginService.getLoggedInUser(session);
 		logger.info("userVO:" + userVO);
-		//비밀번호 제거
-		userVO.setPw(null);
+//		//비밀번호 제거
+//		userVO.setPw(null);
 		model.addAttribute("uvo",userVO);
 	
 		return "user/profile";

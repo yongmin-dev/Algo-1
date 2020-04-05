@@ -21,7 +21,7 @@
 			<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 			<h2>회원가입</h2>
 			<form:label path="email">이메일</form:label>
-			<form:input type="text" path="id" />
+			<form:input type="text" path="email" />
 			<span class="errmsg" id="email_errmsg"></span>
 			<form:errors path="email" cssClass="errmsg"></form:errors>
 
@@ -30,7 +30,7 @@
 			<span class="errmsg" id="pw_errmsg"></span>
 			<form:errors path="pw" cssClass="errmsg"></form:errors>
 
-			<form:label path="pwChk">비밀번호 재확인</form:label>
+			<label for="pwChk">비밀번호 재확인</label>
 			<input type="password" id="pwChk" />
 			<span class="errmsg" id="pwChk_errmsg"></span>
 
@@ -44,22 +44,22 @@
 			<span class="errmsg" id="usernick_errmsg"></span>
 			<form:errors path="username" cssClass="errmsg"></form:errors>
 
-			<form:lable path="address">주소</form:lable>
+			<form:label path="address">주소</form:label>
 			<form:input type="text" path="address" />
 			<spen class="errmsg" id="address_errmsg"></spen>
 			<form:errors path="address" cssClass="errmsg"></form:errors>
 
 			<form:label path="gender">성별</form:label>
 			<form:radiobuttons path="gender" items="${gender }" itemValie="code"
-				itemLable="label" />
+				itemLabel="label" />
 			<span class="errmsg" id="gender_errmsg"></span>
-			<form:errors path="gerder" cssClass="errmsg"></form:errors>
+			<form:errors path="gender" cssClass="errmsg"></form:errors>
 
 			<form:label path="birth">생년월일</form:label>
 			<form:input type="date" path="birth" />
 			<span class="errmsg" id="birth_errmsg"></span>
 			<form:errors path="birth" cssClass="errmsg"></form:errors>
-			<button type="submit" id="joinBtn">가 입 하 기</button>
+			<button type="submit" id="joinBtn">가 입 하 기</button> 
 		</form:form>
 	</main>
 	<%@include file="/WEB-INF/views/include/footer.jsp"%>

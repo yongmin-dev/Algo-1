@@ -16,7 +16,16 @@
 	<main>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 		<h3>로그인</h3>
-		<form method="POST" action="${pageContext.request.contextPath}/login/sign-in">
+		<c:choose>
+			<c:when test="${empty next}">
+				<form method="POST" action="${pageContext.request.contextPath}/login/sign-in">					
+			</c:when>
+			<c:otherwise>
+				<form method="POST" action="${pageContext.request.contextPath}/login/sign-in?next=${next}">
+<%-- 			<form id="loginForm" action="<c:url value='/signin?next=${next}' />" method="POST">	 --%>
+			</c:otherwise>
+		</c:choose>		
+<%-- 		<form method="POST" action="${pageContext.request.contextPath}/login/sign-in"> --%>
 			<input type="text" name="email" id="email" placeholder="이메일">
 			<span id="emailMsg"></span>
 			<input type="password" name="pw" id="pw" placeholder="비밀번호">

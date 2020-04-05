@@ -12,7 +12,6 @@ import com.puercha.algo.user.vo.UserVO;
 
 @Service
 public class LoginManager implements LoginService{
-	public static final String KEY_USER_INFO = "userInfo"; 
 	private static final Logger logger
 	= LoggerFactory.getLogger(LoginManager.class);
 	
