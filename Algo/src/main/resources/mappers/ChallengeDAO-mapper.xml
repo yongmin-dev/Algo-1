@@ -110,13 +110,30 @@
 			WHERE "num" <![CDATA[ >= ]]>  #{startRowNum} 
 			AND "num" <![CDATA[ <= ]]> #{endRowNum}
 	</select>
+	<!-- 자신이 작성한 도전과제들을 불러온다.	 -->
+	<select id="selectOwnChallengeList" parameterType="long" resultType="ChallengeVO">
+		SELECT 
+			c_num as "cNum" ,
+		    content as "content",
+		    title as "title",
+		    limit_memory as "limitMemory",
+		    limit_time as "limitTime",
+		    challenge.user_num as "userNum",
+		    app_user.username as "username",
+		    pass_num as "passNum",
+		    challenge.created_at as "createdAt",
+		    challenge.updated_at as "updatedAt"
+		FROM challenge, app_user
+			WHERE challenge.user_num  = app_user.user_num    
+			AND challenge.user_num = #{userNum}
+	</select>
+	
 	<!-- 도전과제 총 개수 -->
-	<select id="getCountTotalChallenges" parameterType="hashmap"
-	resultType="long">
-	SELECT count(*)
-	FROM Challenge, App_User
-	WHERE challenge.user_num =
-	app_user.user_num
+	<select id="getCountTotalChallenges" parameterType="hashmap" resultType="long">
+		SELECT count(*)
+		FROM Challenge, App_User
+		WHERE challenge.user_num =
+		app_user.user_num
 		<if	test="types != null and keywords != null and types.size() > 0 and keywords.size() >0">
 			<foreach collection="types" item="type" index="i" 
 			open="AND ("
@@ -207,7 +224,7 @@
 		    WHERE challenge_result.c_num = #{cNum}
 		    AND challenge_result.user_num = #{userNum}
 		    )
-		WHERE num = 1 ;
+		WHERE num = 1 
 	</select>
 	
 	<!-- 1. 모든 도전과제의 모든 결과 개수를 가져옴 -->
@@ -316,13 +333,13 @@
 	<!-- 도전과제 삭제 -->
 	<delete id="deleteChallenge" parameterType="long">
 		DELETE FROM challenge 
-		WHERE c_num = #{cNum};
+		WHERE c_num = #{cNum}
 	</delete>
 	
 	<!-- 도전과제 결과 삭제 -->
 	<delete id="deleteChallengeReseult" parameterType="long">
 		DELETE FROM challenge_result
-		WHERE result_num = #{resultNum};
+		WHERE result_num = #{resultNum}
 	</delete>
 	
 	<!-- 도전과제 테스트케이스 삭제 -->

@@ -107,7 +107,19 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectAllChallenge", params);
 	}
 	
-	
+	/**
+	 * 자신이 작성한 도전과제들을 불러온다.
+	 * @param userNum 사용자 번호
+	 * @return 도전과제 리스트 객체
+	 */	
+	@Override
+	public List<ChallengeVO> selectOwnChallengeList(long userNum) {
+		logger.info("selectOwnChallengeList(long userNum)");		
+		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectOwnChallengeList",userNum);
+	}
+
+
+
 	/**
 	 * 도전과제의 총 개수
 	 * @param type 검색 타입
