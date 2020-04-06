@@ -64,7 +64,7 @@ public class BoardServiceImpl implements BoardService {
 				attachmentVO.setPostNum(postNum);
 				// 첨부파일 이름
 				attachmentVO.setFname(file.getOriginalFilename());
-				attachmentVO.setFsize(""+file.getSize());
+				attachmentVO.setFsize("" + file.getSize());
 				attachmentVO.setFtype(file.getContentType());
 				attachmentVO.setFdata(file.getBytes());
 
@@ -121,22 +121,25 @@ public class BoardServiceImpl implements BoardService {
 		return cnt;
 	}
 
-	
-	//게시글 읽기
+	// 게시글 읽기
 	@Transactional
 	@Override
 	public Map<String, Object> view(String postNum) {
 		// 1) 게시글 가져오기
+		logger.info("boardServiceStart");
 		BoardPostVO boardPostVO = postingDAO.select(postNum);
-
+		logger.info("BoardServiceTrace" + boardPostVO);
 		List<AttachmentVO> attachmentVO = postingDAO.selectFiles(postNum);
-
+		logger.info("boardServiceFile" + attachmentVO);
 		postingDAO.updateHit(postNum);
+		
 
 		Map<String, Object> map = new HashMap<>();
-		map.put(KEY_BOARD_VO, boardPostVO);
+		map.put("boardPostVO", boardPostVO);
+		logger.info("boardServiceMap" + boardPostVO);
+
 		if (attachmentVO != null && attachmentVO.size() > 0) {
-			map.put("attachmentVO", attachmentVO);
+			map.put("attachmentVOs", attachmentVO);
 		}
 
 		return map;
@@ -157,58 +160,60 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardPostVO> list(String reqPage, String searchType, String keyword) {
 
-		logger.info("list param :" + reqPage + " "+ searchType);
+		logger.info("list param :" + reqPage + " " + searchType);
 		int l_reqPage = 0;
-		
-		//요청 페이지 정보가 없으면 1로 초기화
-		if(reqPage == null || reqPage.trim().isEmpty()) {
+
+		// 요청 페이지 정보가 없으면 1로 초기화
+		if (reqPage == null || reqPage.trim().isEmpty()) {
 			l_reqPage = 1;
-		}else {
+		} else {
 			l_reqPage = Integer.parseInt(reqPage);
 		}
 		RowCriteria rowCriteria = new RowCriteria(l_reqPage);
-		logger.info("RowCriteria"+ rowCriteria.getStartRec()+" "+ rowCriteria.getEndRec() +" " + searchType+ " " + keyword);
+		logger.info("RowCriteria" + rowCriteria.getStartRec() + " " + rowCriteria.getEndRec() + " " + searchType + " "
+				+ keyword);
 		return postingDAO.selectList(rowCriteria.getStartRec(), rowCriteria.getEndRec(), searchType, keyword);
 	}
-	
-	//페이지 제어
+
+	// 페이지 제어
 	@Override
 	public PageManager getPageManager(String reqPage, String searchType, String keyword) {
-		
+
 		PageManager pm = null;
 		FindCriteria fc = null;
-		
+
 		int totalRec = 0;
 		int l_reqPage = 0;
-		
+
 		// 요청페이지 정보가 없으면 1로 초기화
-		if(reqPage == null || reqPage.trim().isEmpty()) {
+		if (reqPage == null || reqPage.trim().isEmpty()) {
 			l_reqPage = 1;
-		}else {
+		} else {
 			l_reqPage = Integer.parseInt(reqPage);
 		}
-		
+
 		totalRec = postingDAO.countTotalRecord(searchType, keyword);
-		
+
 		fc = new FindCriteria(l_reqPage, searchType, keyword);
 		pm = new PageManager(fc, totalRec);
-		
+
 		return pm;
 	}
-	//답글 작성
+
+	// 답글 작성
 	@Transactional
 	@Override
 	public int reply(BoardPostVO boardPostVO) {
-		//1) 게시글 답글 작성
+		// 1) 게시글 답글 작성
 		int cnt = postingDAO.insertReply(boardPostVO);
-		
-		if(boardPostVO.getFiles()!= null && boardPostVO.getFiles().size() > 0) {
+
+		if (boardPostVO.getFiles() != null && boardPostVO.getFiles().size() > 0) {
 			writeFile(boardPostVO.getFiles(), boardPostVO.getPostNum());
 		}
 		return cnt;
 	}
 
-	//첨부파일 보기
+	// 첨부파일 보기
 	@Override
 	public AttachmentVO viewFile(String fid) {
 		return postingDAO.selectFile(fid);

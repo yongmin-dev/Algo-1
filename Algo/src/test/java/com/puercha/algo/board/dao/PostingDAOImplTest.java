@@ -139,11 +139,19 @@ public class PostingDAOImplTest {
 	public void view() {
 
 		BoardPostVO boardPostVO = new BoardPostVO();
-		boardPostVO = postingDAO.select("23");
+		boardPostVO = postingDAO.select("1");
+		
 		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
-
+		boardCategoryVO.setCategoryNum(1);
+		boardCategoryVO.setName("카테고리");
+		
+		boardPostVO.setCategory(boardCategoryVO);
+		
+		
+		
+		
 		logger.info("" + boardCategoryVO.getCategoryNum());
-		assertEquals(23, boardPostVO.getPostNum());
+		assertEquals(1, boardPostVO.getPostNum());
 		logger.info(boardPostVO.toString());
 
 	}
@@ -198,12 +206,13 @@ public class PostingDAOImplTest {
 
 	@Test
 	@Named("답글달기")
-//	@Disabled
+	@Disabled
 	public void insertReply() {
 
 		BoardPostVO boardPostVO = new BoardPostVO();
-		boardPostVO = postingDAO.select("23");
 		BoardCategoryVO boardCategoryVO = new BoardCategoryVO();
+		boardPostVO = postingDAO.select("23");
+
 		logger.info(boardPostVO.toString());
 
 		boardCategoryVO.setCategoryNum(1);
@@ -233,7 +242,7 @@ public class PostingDAOImplTest {
 
 	@Test
 	@Named("첨부파일 전체 조회")
-	@Disabled
+//	@Disabled
 	public void selectFiles() {
 
 		List<AttachmentVO> list = postingDAO.selectFiles("1");

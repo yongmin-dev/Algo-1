@@ -84,14 +84,15 @@
 	<select id="select" parameterType="long" resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as "categoryNum",
+		t2.category_num as "category.categoryNum",
+		t2.name as "category.name",
 		title,
-		user_num
-		as "userNum",
+		user_num as "userNum",
 		created_at as "createdAt",
 		updated_at as "updatedAt",
 		hit,
 		content,
+		username as "userName",
 		post_group as "postGroup",
 		post_step as "postStep",
 		indent
@@ -163,9 +164,9 @@
 		resultType="BoardPostVO">
 		SELECT
 		post_num as "postNum",
-		t2.category_num as
+		category_num as
 		"boardCategoryVO.categoryNum",
-		t2.name as "boardCategoryVO.name",
+		name as "boardCategoryVO.name",
 		title,
 		username as "userName",
 		created_at as "createdAt",
@@ -186,6 +187,9 @@
 		t1.username,
 		t1.created_at,
 		t1.updated_at,
+		t1.post_step,
+		t1.post_group,
+		t1.content,
 		t1.hit,
 		t1.indent
 		from board_post t1, board_category t2
