@@ -271,8 +271,118 @@
 		FROM  challenge_case
 		WHERE c_num = #{cNum}
 	</select>
-
 	
+	<!-- 전체 랭킹의 개수 -->
+	<select id="getCountTotalRank" parameterType="map" resultType="long">
+		SELECT COUNT(*)
+		FROM Challenge_result
+		WHERE c_num = #{cNum}
+		AND status = 'S'
+	</select>
+	
+	<!-- 순서대로 일부 도전과제를 가져옴 -->
+	<select id="selectAllRanks" parameterType="map" resultType="ChallengeResultVO">
+		SELECT * 
+			FROM (
+			    SELECT 
+			        ROW_NUMBER() OVER (ORDER BY
+			        	<choose>
+							<when test="type=='M'.toString()">
+							used_memory
+							</when>
+							<when test="type=='T'.toString()">
+							processing_time
+							</when>
+							<otherwise>
+					        	processing_time							
+							</otherwise>			        	
+			        	</choose> 
+			        asc) as "rankNum",
+			        result_num as "resultNum",
+			        result_comment as "resultComment",
+			        cr.user_num as "userNum",
+			        au.username as "username",
+			        cr.used_memory as  "usedMemory",
+			        cr.processing_time as "processingTime",
+			        cr.c_num as "cNum",
+			        cr.status as "status",
+			        cr.created_at as "createdAt",
+			        cr.updated_at as "updatedAt"
+			    FROM Challenge_result cr, App_user au
+			    WHERE cr.user_num = au.user_num
+			    AND status= 'S'
+			    AND cr.c_num = #{cNum}
+			    ORDER BY "rankNum"		    
+			)
+			WHERE  "rankNum"  <![CDATA[ >= ]]>   #{startRowNum}
+			AND  "rankNum" <![CDATA[ <= ]]> #{endRowNum}
+	</select>
+	
+	<!-- 개인의 랭크를 검색	 -->
+	<select id="selectOneRank" parameterType="hashmap" resultType="ChallengeResultVO">
+		SELECT *
+		FROM 
+			(SELECT 
+			    ROW_NUMBER() OVER (ORDER BY  
+			    	<choose>
+						<when test="type=='M'.toString()">
+						"usedMemory"
+						</when>
+						<when test="type=='T'.toString()">
+						"processingTime"
+						</when>
+						<otherwise>
+				        	"processingTime"							
+						</otherwise>			        	
+		        	</choose> 
+			    	asc) as "num",
+			    "rankNum", 
+			    "resultNum",
+			     "resultComment",
+			    "userNum", 
+			    "username",
+			    "usedMemory",
+			    "processingTime",
+			    "cNum",
+			     "status",
+			     "createdAt",
+			     "updatedAt"
+			FROM (
+				    SELECT 
+				        ROW_NUMBER() OVER (ORDER BY
+				        	<choose>
+								<when test="type=='M'.toString()">
+								used_memory
+								</when>
+								<when test="type=='T'.toString()">
+								processing_time
+								</when>
+								<otherwise>
+						        	processing_time							
+								</otherwise>			        	
+				        	</choose> 
+							 asc) as "rankNum",
+				        result_num as "resultNum",
+				        result_comment as "resultComment",
+				        cr.user_num as "userNum",
+				        au.username as "username",
+				        cr.used_memory as  "usedMemory",
+				        cr.processing_time as "processingTime",
+				        cr.c_num as "cNum",
+				        cr.status as "status",
+				        cr.created_at as "createdAt",
+				        cr.updated_at as "updatedAt"
+				        
+				    FROM Challenge_result cr, App_user au
+				    WHERE cr.user_num = au.user_num    
+				    AND status= 'S'
+				    AND cr.c_num = #{cNum}
+				    ORDER BY "rankNum"
+				)
+			WHERE  "userNum" = #{userNum}
+			)
+		WHERE "num" = 1
+	</select>
 	
 	<!-- Update -->
 	<!-- 도전과제 변경 -->
