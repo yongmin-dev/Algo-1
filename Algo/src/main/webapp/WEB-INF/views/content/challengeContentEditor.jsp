@@ -12,7 +12,10 @@
 		#case-list li.selected{
 			background:lime;
 		}
-	
+		
+		main{width:980px;margin:0 auto;}
+		button{    padding: 10px 20px;cursor:pointer;}
+		#content{height:400px;}
 	</style>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/content-manager.js"></script>
 </head>
@@ -23,7 +26,7 @@
 			<form:hidden path="userNum" value="${challenge.userNum}"/>
 			<form:hidden path="cNum" value="${challenge.CNum}"/>
 			<!-- 편집이 다 끝냈을 때 누르는 버튼 -->
-			<form:button>편집 완료</form:button>
+			<form:button>편집 완료</form:button> <br>
 			<!-- 도전과제 제목 -->
 			<form:label path="title">제목 </form:label><form:input path="title" value="${challenge.title}"/>
 			<!-- 제한 메모리 -->
@@ -41,7 +44,7 @@
 				
 			</ul>
 			<!-- 케이스 저장 버튼 -->
-			<button id="btn-data-save">케이스 저장</button>
+			<button id="btn-data-save">케이스 저장</button> <br />
 			<!-- 케이스의 인풋값 -->
 			<label for="input-data-editor">	INPUT</label>			
 			<textarea id="input-data-editor"></textarea>
