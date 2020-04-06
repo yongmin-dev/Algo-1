@@ -22,20 +22,30 @@
 		<form:form modelAttribute="challenge" action="${pageContext.request.contextPath}/content/challenge/edit" method="POST" >
 			<form:hidden path="userNum" value="${challenge.userNum}"/>
 			<form:hidden path="cNum" value="${challenge.CNum}"/>
+			<!-- 편집이 다 끝냈을 때 누르는 버튼 -->
 			<form:button>편집 완료</form:button>
+			<!-- 도전과제 제목 -->
 			<form:label path="title">제목 </form:label><form:input path="title" value="${challenge.title}"/>
+			<!-- 제한 메모리 -->
 			<form:label path="limitMemory">제한메모리</form:label><form:input path="limitMemory" value="${challenge.limitMemory}"/>
+			<!-- 제한 시간	-->
 			<form:label path="limitTime">제한시간</form:label><form:input path="limitTime" value="${challenge.limitTime}"/>
 <!-- 			<label><input type="radio" /></label>  -->
 <!-- 			<label><input type="radio" /></label>  -->
+			<!-- 문제내용 -->
 			<form:textarea path="content" ></form:textarea>
+			<!-- 도전과제 케이스 추가버튼 -->
 			<button type="button" id="btn-new-challenge">추가</button>
+			<!-- 도전과제 케이스 -->
 			<ul id="case-list">
 				
 			</ul>
+			<!-- 케이스 저장 버튼 -->
 			<button id="btn-data-save">케이스 저장</button>
-			<label for="input-data-editor">	INPUT</label>
+			<!-- 케이스의 인풋값 -->
+			<label for="input-data-editor">	INPUT</label>			
 			<textarea id="input-data-editor"></textarea>
+			<!-- 케이스의 예상결과 -->
 			<label for="expected-data-editor">EXPECTED</label>			
 			<textarea id="expected-data-editor"></textarea>
 		</form:form>

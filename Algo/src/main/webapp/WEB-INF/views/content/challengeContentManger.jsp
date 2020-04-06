@@ -18,8 +18,11 @@
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
-		<button id="btn-editor" type="button">편집기</button>		
-		<button id="btn-new-challenge" type="button">새 도전과제</button>		
+		<!-- 편집기 : 누르면 선택한 도전과제의 편집기 화면으로 감-->
+		<button id="btn-editor" type="button">편집기</button>
+		<!-- 도전과제를 추가함 -->
+		<button id="btn-new-challenge" type="button">새 도전과제</button>
+		<!-- 도전과제 리스트 -->
 		<ul id="challenge-list">
 			
 		</ul>
