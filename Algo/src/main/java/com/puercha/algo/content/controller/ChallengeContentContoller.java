@@ -70,6 +70,7 @@ public class ChallengeContentContoller {
 			){
 		ResponseEntity<Map<String,Object>> res = null;
 		UserVO sessionUser = loginService.getLoggedInUser(session);
+		logger.info("sessionUser:"+sessionUser);
 		long newChallengeNum = contentManager.createEmptyChallenge(
 				sessionUser.getUserNum(),
 				sessionUser.getUsername()

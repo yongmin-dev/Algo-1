@@ -24,6 +24,7 @@ public class LoginManager implements LoginService{
 		UserVO user = null;
 		// 로그인 여부 확인
 		user = userDAO.selectUser(email, pw);
+		logger.info("user logs in:"+user);
 		if(user!=null) {
 			//세션에 로그인된 사용자 정보 넣기 
 			session.setAttribute(KEY_USER_INFO, user);
