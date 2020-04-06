@@ -35,7 +35,7 @@
 			<!-- 문제내용 -->
 			<form:textarea path="content" ></form:textarea>
 			<!-- 도전과제 케이스 추가버튼 -->
-			<button type="button" id="btn-new-challenge">추가</button>
+			<button type="button" id="btn-new-case">추가</button>
 			<!-- 도전과제 케이스 -->
 			<ul id="case-list">
 				

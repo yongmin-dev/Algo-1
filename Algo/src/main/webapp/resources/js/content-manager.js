@@ -55,8 +55,8 @@ window.addEventListener("load",(e)=>{
     	caseList.addEventListener('click',caseListHandler);
     }
     
-    // 새 도전과제 추가 버튼
-    const addNewCaseBtn = document.querySelector("#btn-new-challenge");
+    // 새 케이스 추가 버튼
+    const addNewCaseBtn = document.querySelector("#btn-new-case");
     if(addNewCaseBtn){
     	const cNum = document.querySelector("input#cNum").value;
     	addNewCaseBtn.addEventListener('click',
