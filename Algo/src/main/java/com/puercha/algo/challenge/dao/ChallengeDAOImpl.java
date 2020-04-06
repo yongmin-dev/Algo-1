@@ -99,7 +99,8 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 		params.put("startRowNum", startRowNum);
 		params.put("endRowNum", endRowNum);		
 		if(keyword != null) {
-			params.put("types",Arrays.asList(type.split("\\s+")));
+			params.put("types",Arrays.asList(type.split("")));
+			logger.info("types:"+Arrays.asList(type.split("")));
 		}
 		if(keyword != null) {
 			params.put("keywords",Arrays.asList(keyword.split("\\s+")));
@@ -130,8 +131,9 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	public long getCountTotalChallenges(String type, String keyword) {
 		logger.info("getCountTotalChallenges(String type, String keyword):"+ type+", "+keyword);
 		Map<String,Object> params = new HashMap<>();
-		if(keyword != null) {
-			params.put("types",Arrays.asList(type.split("\\s+")));
+		if(type != null) {
+//			params.put("types",Arrays.asList(type.split("\\s+")));
+			params.put("types",Arrays.asList(type.split("")));
 		}
 		if(keyword != null) {
 			params.put("keywords",Arrays.asList(keyword.split("\\s+")));

@@ -136,6 +136,8 @@ public class JavaCodeTester implements CodeTester {
 		ChallengeVO challengeInfo = challengeDAO.selectOne(result.getCNum()); // 도전과제 VO
 		long limitTime = challengeInfo.getLimitTime();
 		long limitMemory = challengeInfo.getLimitMemory();
+		long usedMemory = -1;
+		long processingTime = -1;
 		File sourceDir = compile(result.getResultNum(),null,result.getCode()); // 소스코드 위치
 		
 		File challengeDir = caseFileManager.getChallengeDir(result.getCNum()); // 도전과제 위치
@@ -186,6 +188,9 @@ public class JavaCodeTester implements CodeTester {
 					caseResult.get(KEY_PASSES_LIMIT_MEMORY),
 					caseResult.get(KEY_MEMORY_USAGE)
 					));
+			usedMemory = Math.max(usedMemory,(long)caseResult.get(KEY_MEMORY_USAGE));
+			processingTime = Math.max(usedMemory,(long)caseResult.get(KEY_PROCESSING_NANO_TIME));
+			
 			
 		}
 		if(failedResult!=null) {
@@ -196,6 +201,8 @@ public class JavaCodeTester implements CodeTester {
 			result.setStatus('S');
 			result.setResultComment("성공");
 		}
+		result.setProcessingTime(processingTime);
+		result.setUsedMemory(usedMemory);
 		challengeDAO.updateChallengeResult(result);		
 		logger.info("완료");
 	}

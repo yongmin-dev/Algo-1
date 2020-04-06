@@ -43,9 +43,7 @@ public class ChallengeManager implements ChallengeService {
 		logger.info("pageManager:"+pageManager);
 		// 조회
 		List<ChallengeVO> list = challengeDAO.selectAllChallenge(fc.getStartRec(), fc.getEndRec(), type, keyword);
-		searchingResult.put(KEY_CHALLENGE_LIST, list);
-		
-		
+		searchingResult.put(KEY_CHALLENGE_LIST, list);		
 		return searchingResult;
 	}
 

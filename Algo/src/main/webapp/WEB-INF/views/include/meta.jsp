@@ -8,4 +8,3 @@
 <script type="text/javascript" src="<c:url value="/resources/common/js/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/js/slick.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/js/common.js"/>"></script>
-
