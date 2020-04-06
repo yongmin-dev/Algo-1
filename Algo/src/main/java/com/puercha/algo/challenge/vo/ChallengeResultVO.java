@@ -30,6 +30,8 @@ public class ChallengeResultVO {
 	//유저 번호
 	private long userNum;
 	
+
+	
 	//결과 상태
 	private char status;
 	
@@ -41,5 +43,11 @@ public class ChallengeResultVO {
 	
 	//수정 일시
 	private Date updatedAt;
-	
+
+
+	/* 랭킹 관련 */
+	// 사용자 이름
+	private String username;
+	// 랭크
+	private long rankNum;
 }
