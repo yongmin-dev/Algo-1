@@ -76,7 +76,7 @@ public class ChallengeContentContoller {
 				sessionUser.getUsername()
 				);
 		Map<String,Object> body = new HashMap<String,Object> ();
-		body.put("newChallengeNum ",  newChallengeNum );
+		body.put("newChallengeNum",  newChallengeNum );
 		res = new ResponseEntity<Map<String,Object>>(body,HttpStatus.OK);
 		return res;
 	}

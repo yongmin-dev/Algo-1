@@ -17,6 +17,7 @@ import com.puercha.algo.challenge.vo.ChallengeResultVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
 import com.puercha.algo.common.FindCriteria;
 import com.puercha.algo.common.PageManager;
+import com.puercha.algo.common.RowCriteria;
 
 @Service
 public class ChallengeManager implements ChallengeService {
@@ -110,4 +111,55 @@ public class ChallengeManager implements ChallengeService {
 		return null;
 	}
 
+	/**
+	 * 전체 랭킹을 반환함
+	 * @param page 랭킹 페이지
+	 * @param cNum 도전문제 번호
+	 * @param type 타입
+	 * @return 랭킹의 리스트 및 페이지 정보
+	 */
+	@Override
+	public Map<String,Object> getRankingList(long page, long cNum, String type) {
+		RowCriteria RowCriteria = new FindCriteria((int)page);
+		long totalRows = 0;
+		totalRows = challengeDAO.getCountTotalRank(cNum);
+		PageManager pageManager = new PageManager(RowCriteria, totalRows);
+		long startRowNum = pageManager.getRc().getStartRec();
+		long endRowNum = pageManager.getRc().getEndRec();
+		Map<String,Object> datas =  new HashMap<>();
+		List<ChallengeResultVO> list = challengeDAO.selectAllRanks(startRowNum, endRowNum, cNum, type);
+		datas.put("list",list);
+		datas.put("pageInfo",pageManager);
+		return datas;
+	}
+
+	
+
+	
+	/**
+	 * 랭킹을 검색함
+	 * @param cNum 도전과제 번호
+	 * @param userNum 사용자 번호
+	 * @param type 검색타입 (메모리기준,사용시간기준)
+	 * @return 내 랭킹 결과 (등수, 도전과제결과객체)
+	 */
+//	@Override
+//	public Map<String, Object> getRank(long cNum, long userNum, String type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+	/**
+	 * user의 랭킹을 검색함
+	 * @param cNum 도전과제 번호
+	 * @param userNum 사용자 번호
+	 * @param type 검색타입 (메모리기준,사용시간기준)
+	 * @return 내 랭킹 결과 VO
+	 */
+	@Override
+	public ChallengeResultVO getMyRank(long cNum, long userNum, String type) {
+		logger.info("getMyRank(long cNum, long userNum, String type)");
+		return challengeDAO.selectOneRank( cNum,  userNum,  type);
+	}
+	
 }

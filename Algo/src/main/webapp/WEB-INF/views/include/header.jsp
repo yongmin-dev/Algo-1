@@ -8,7 +8,7 @@
 <div class="header clear">
   <div class="header_inner clear">
   <h1 class="logo">
-    <a href="#"><img src="<c:url value="/resources/images/HatchfulExport-All (2)/logo.png"/>" alt=""></a>
+    <a href="#"><img src="<c:url value="/resources/images/HatchfulExport-All (2)/logo_transparent.png"/>" alt=""></a>
   </h1>
   
 <%

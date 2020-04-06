@@ -1,5 +1,6 @@
 package com.puercha.algo.challenge.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.puercha.algo.challenge.vo.ChallengeResultVO;
@@ -57,4 +58,41 @@ public interface ChallengeService {
 	 * @return 도전과제 결과 VO
 	 */	
 	ChallengeResultVO getResult(long resultNum);
+	
+	/**
+	 * 전체 랭킹을 반환함
+	 * @param page 랭킹 페이지
+	 * @param cNum 도전문제 번호
+	 * @param type 타입
+	 * @return 랭킹의 리스트 및 페이지 정보
+	 */
+//	List<ChallengeResultVO> getRankingList(long page, long cNum, String type);
+	Map<String,Object> getRankingList(long page, long cNum, String type);
+	
+	
+	/**
+	 * user의 랭킹을 검색함
+	 * @param cNum 도전과제 번호
+	 * @param userNum 사용자 번호
+	 * @param type 검색타입 (메모리기준,사용시간기준)
+	 * @return 내 랭킹 결과 (등수, 도전과제결과객체)
+	 */
+//	Map<String,Object> getRank(long cNum, long userNum, String type);
+	/**
+	 * user의 랭킹을 검색함
+	 * @param cNum 도전과제 번호
+	 * @param userNum 사용자 번호
+	 * @param type 검색타입 (메모리기준,사용시간기준)
+	 * @return 내 랭킹 결과 (등수, 도전과제결과객체)
+	 */
+//	Map<String,Object> getRank(long cNum, long userNum, String type);
+	
+	/**
+	 * user의 랭킹을 검색함
+	 * @param cNum 도전과제 번호
+	 * @param userNum 사용자 번호
+	 * @param type 검색타입 (메모리기준,사용시간기준)
+	 * @return 내 랭킹 결과 VO
+	 */
+	ChallengeResultVO getMyRank(long cNum, long userNum, String type);
 }

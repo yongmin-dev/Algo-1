@@ -216,4 +216,30 @@ public interface ChallengeDAO {
 	 * @return
 	 */
 	int deleteAllCase(long cNum);
+	
+	/**
+	 * 전체 랭킹의 개수
+	 * @param cNum 도전과제 번호
+	 * @param type 검색 타입(메모리:M, 시간:T)
+	 * @return 전체 랭킹 개수
+	 */
+	long getCountTotalRank(long cNum);
+	/**
+	 * 순서대로 일부 도전과제 결과를 가져온다. 
+	 * @param startRowNum 시작 행 번호
+	 * @param endRowNum 끝 행 번호
+	 * @param cNum 도전과제 번호
+	 * @param type 순서 기준
+	 * @return 랭크 검색결과 리스트
+	 */
+	List<ChallengeResultVO> selectAllRanks(long startRowNum, long endRowNum, long cNum, String type);
+
+	/**
+	 * 개인의 랭크를 검색한다.
+	 * @param cNum 도전과제
+	 * @param userNum 랭크를 조회할 사용자 번호
+	 * @param type 순서 타입
+	 * @return 결과 VO
+	 */
+	ChallengeResultVO selectOneRank(long cNum, long userNum, String type);
 }

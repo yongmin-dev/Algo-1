@@ -25,7 +25,7 @@ import com.puercha.algo.user.service.LoginService;
 import com.puercha.algo.user.vo.UserVO;
 
 @Controller
-@RequestMapping(path = "/challenge")
+@RequestMapping(path = {"/challenge"})
 public class ChallengeController {
 	private final static Logger logger = LoggerFactory.getLogger(ChallengeController.class);
 	public final static String KEY_CHALLENGE_LIST_DATAS = "challengeListDatas";
@@ -99,8 +99,7 @@ public class ChallengeController {
 		ResponseEntity<String> res = null;
 		res = new ResponseEntity<String> ("312412",HttpStatus.OK);
 		return res;
-	}
-	
+	}	
 	
 
 }
