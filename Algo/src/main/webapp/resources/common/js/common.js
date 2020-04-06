@@ -23,3 +23,13 @@ $(document).ready(function(){
 
 
 });
+
+
+function getContextRootPath(){
+  const html = document.querySelector("html");
+  console.log("html:"+html);
+  if(!html || !html.getAttribute("data-contextpath"))
+    return "/";
+  console.log("contextRoot:",html.getAttribute("data-contextpath"));
+  return html.getAttribute("data-contextpath");
+}

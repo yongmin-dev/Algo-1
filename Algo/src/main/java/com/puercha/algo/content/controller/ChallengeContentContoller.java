@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -102,18 +103,23 @@ public class ChallengeContentContoller {
 	
 	
 	// 도전과제 제목 수정
-	@PutMapping(path="/{cNum}", produces="application/json")
+	@PutMapping(path="/{cNum}",consumes = "application/json", produces="application/json")
 	public ResponseEntity<Map<String,Object>> updateChallengeTitle(
-			@RequestParam(name = "title") String title, 
+			@RequestBody Map<String,Object> requestBody, 
 			@PathVariable(name = "cNum") long cNum,
 			HttpSession session
 			){
 		ResponseEntity<Map<String,Object>> res = null;
 		Map<String,Object> body = new HashMap<String,Object> ();
 		UserVO sessionUser = loginService.getLoggedInUser(session);
+		if(sessionUser==null) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.UNAUTHORIZED);
+		}
+		String title = (String)requestBody.get("title");
+		logger.info("title:"+title);
 		int result = contentManager.updateChallengeTitle(cNum, title, sessionUser.getUserNum());
 		if(result!=1) {			
-			res = new ResponseEntity<Map<String,Object>>(HttpStatus.UNAUTHORIZED);
+			res = new ResponseEntity<Map<String,Object>>(HttpStatus.BAD_REQUEST);
 		}else {
 			body.put("msg","success");
 			res = new ResponseEntity<Map<String,Object>>(body,HttpStatus.OK);
@@ -134,22 +140,18 @@ public class ChallengeContentContoller {
 	}
 
 	// 도전과제 편집 적용
-	@PutMapping(path="/edit",consumes = "application/json" , produces = "application/json" )
-	public ResponseEntity<Map<String,Object>> updateChallengeTitle(
-			@RequestBody ChallengeVO challenge,
+//	@PutMapping(path="/edit",consumes = "application/json" , produces = "application/json" )
+	@PostMapping(path="/edit" )
+//	public ResponseEntity<Map<String,Object>> updateChallengeTitle(
+	public String updateChallengeTitle(
+//			@RequestBody ChallengeVO challenge,
+			@ModelAttribute("challenge") ChallengeVO challenge, 
 			HttpSession session		
 			){
 		ResponseEntity<Map<String,Object>> res = null;
 		Map<String,Object> body = new HashMap<String,Object> ();
 		int result = contentManager.updateChallenge(challenge);
-		if(result!=1) {						
-			res = new ResponseEntity<Map<String,Object>>(HttpStatus.UNAUTHORIZED);
-		}else {
-			body.put("msg","success");
-			res = new ResponseEntity<Map<String,Object>>(body,HttpStatus.OK);
-		}
-		logger.info("challenge:"+challenge);
-		return res;
+		return "redirect:/content/challenge";
 	}
 	
 	// 테스트케이스 리스트 
@@ -214,15 +216,21 @@ public class ChallengeContentContoller {
 	
 	
 	// 케이스 수정
-	@PutMapping(path="/case/{caseNum}", consumes = "application/json", produces="application/json")
+	@PutMapping(path= {"/case/{caseNum}","/case"}, consumes = "application/json", produces="application/json")
 	public ResponseEntity<Map<String,Object>> updateCase(
-			@RequestBody ChallengeCaseVO challengeCase,
+			@RequestBody Map<String,Object> challengeCase,
 			HttpSession session
 			){
 		ResponseEntity<Map<String,Object>> res = null;
 		Map<String,Object> body = new HashMap<String,Object> ();
 //		UserVO sessionUser = loginService.getLoggedInUser(session);
-		int result = contentManager.updateCase(challengeCase);
+		logger.info("updateCase():"+challengeCase);
+		int result = 0; 
+		result = contentManager.updateCase(
+				Long.valueOf((String)challengeCase.get("caseNum")),				
+				(String)challengeCase.get("input"),
+				(String)challengeCase.get("output")
+				);
 		if(result!=1) {			
 			res = new ResponseEntity<Map<String,Object>>(HttpStatus.UNAUTHORIZED);
 		}else {

@@ -10,6 +10,8 @@ import com.puercha.algo.user.vo.UserVO;
  *
  */
 public interface LoginService {
+	public static final String KEY_USER_INFO = "userInfo"; 
+
 	// 로그인
 	UserVO loginUser(String email, String pw, HttpSession session);
 	// 로그아웃

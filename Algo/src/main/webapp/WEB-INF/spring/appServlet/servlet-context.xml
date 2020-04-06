@@ -42,5 +42,25 @@
 		<context:include-filter type="annotation" 
 		                        expression="org.springframework.web.bind.annotation.ControllerAdvice"/>                        												
 	</context:component-scan>
-	
+	<!-- interceptor 설정 -->	
+	<interceptors>
+		<!-- 로그인 세션 확인 -->
+		<interceptor>
+			<!-- 1)특정 URL지정 -->
+<!-- 			<mapping path="/board/**/"/> -->
+			<mapping path="/board/**"/>
+			<mapping path="/challenge/**/"/>
+			<mapping path="/content/**"/>
+			<mapping path="/admin/**"/>
+			<mapping path="/user/**"/>
+			<exclude-mapping path="/board/list/**"/>
+			<exclude-mapping path="/board/post/**"/>
+			<exclude-mapping path="/challenge/list/**"/>
+			<exclude-mapping path="/learning/list/**"/>
+			<exclude-mapping path="/user/sign*"/>			
+			<!-- 2)빈 등록 -->
+			<beans:bean id="loginInterceptor" 
+									class="com.puercha.algo.interceptor.LoginInterceptor" />
+		</interceptor>	
+	</interceptors>
 </beans:beans>

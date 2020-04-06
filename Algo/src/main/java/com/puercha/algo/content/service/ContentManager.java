@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.puercha.algo.challenge.dao.ChallengeDAO;
@@ -12,7 +14,9 @@ import com.puercha.algo.challenge.vo.ChallengeVO;
 
 @Service
 public class ContentManager implements ContentManagingService {
-
+	private static final Logger logger = LoggerFactory.getLogger(ContentManager.class);
+	
+	
 	@Inject
 	ChallengeDAO challengeDAO;
 	/**
@@ -92,9 +96,8 @@ public class ContentManager implements ContentManagingService {
 	 * @return 도전과제 VO
 	 */
 	@Override
-	public ChallengeVO getChallengeContent(long cNum) {
-		// TODO Auto-generated method stub
-		return null;
+	public ChallengeVO getChallengeContent(long cNum) {		
+		return challengeDAO.selectOne(cNum);
 	}
 
 	/**
@@ -124,21 +127,10 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public ChallengeCaseVO getCase(long caseNum) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info(String.format("getCase(%d)", caseNum));
+		return challengeDAO.selectOneCase(caseNum);
 	}
 
-	/**
-	 * 새 케이스를 생성한다.
-	 * @param userNum 케이스 작성자 번호
-	 * @param cNum 도전과제 번호
-	 * @return 생성된 케이스의 번호
-	 */
-	@Override
-	public long createCase(long userNum, long cNum) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	/**
 	 * 케이스를 삭제한다.
@@ -147,8 +139,8 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int deleteCase(long caseNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info(String.format("deleteCase(%d)", caseNum));
+		return challengeDAO.deleteChallengeCase(caseNum);
 	}
 
 	/**
@@ -158,8 +150,23 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int updateCase(ChallengeCaseVO challengeCase) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info(String.format("updateCase(%d)", challengeCase.getCaseNum()));
+		return challengeDAO.updateChallengeCase(challengeCase);
 	}
-
+	
+	/**
+	 * 케이스를 업데이트 한다
+	 * @param caseNum 변경할 케이스의 번호
+	 * @param input 
+	 * @param expected
+	 * @return 성공 시 1
+	 */
+	@Override
+	public int updateCase(long caseNum, String input, String expected) {
+		ChallengeCaseVO challengeCase = challengeDAO.selectOneCase(caseNum);
+		logger.info(String.format("updateCase(%d)", challengeCase.getCaseNum()));
+		challengeCase.setInput(input);
+		challengeCase.setOutput(expected);
+		return challengeDAO.updateChallengeCase(challengeCase);
+	}
 }
