@@ -69,12 +69,13 @@ public class BoardController {
 	@GetMapping("/post/{postNum}/{returnPage}")
 	public String view(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum, Model model) {
 
+		logger.info("게시글 보기 :" + postNum);
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get("boardPostVO");
-
-		logger.info(boardPostVO.toString());
-		List<AttachmentVO> attachmentVO = null;
+		logger.info("controller" + boardPostVO);
 		model.addAttribute("boardPostVO", boardPostVO);
+
+		List<AttachmentVO> attachmentVO = null;
 		if (map.get("attachmentVO") != null) {
 			attachmentVO = (List<AttachmentVO>) map.get("attachmentVO");
 			model.addAttribute("attachmentVOs", attachmentVO);
