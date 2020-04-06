@@ -17,7 +17,7 @@
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
 	<main>
-		<form:form action="${pageContext.request.contextPath }/user/signup"	modelAttribute="uvo" method="post">
+		<form:form action="${pageContext.request.contextPath }/user/sign-up"	modelAttribute="uvo" method="post">
 			<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 			<h2>회원가입</h2>
 			<form:label path="email">이메일</form:label>
@@ -50,7 +50,7 @@
 			<form:errors path="address" cssClass="errmsg"></form:errors>
 
 			<form:label path="gender">성별</form:label>
-			<form:radiobuttons path="gender" items="${gender }" itemValie="code"
+			<form:radiobuttons path="gender" items="${gender }" itemValue="code"
 				itemLabel="label" />
 			<span class="errmsg" id="gender_errmsg"></span>
 			<form:errors path="gender" cssClass="errmsg"></form:errors>
