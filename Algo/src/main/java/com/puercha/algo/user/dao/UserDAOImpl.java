@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
 	//사용자 생성
 	@Override
 	public int insertUser(UserVO userVO) {
-		logger.info("UserDAOImpl.insertUser(UserVO userVO) 호출됨!");
+		logger.info("UserDAOImpl.insertUser(UserVO userVO) 호출됨!"+userVO);
 		return sqlSession.insert("mappers.UserDAO-mapper.insertUser",userVO);
 	}
 	/* Read */
