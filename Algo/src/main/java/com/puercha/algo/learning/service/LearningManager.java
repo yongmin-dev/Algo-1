@@ -15,6 +15,7 @@ import com.puercha.algo.common.FindCriteria;
 import com.puercha.algo.common.PageManager;
 import com.puercha.algo.common.RowCriteria;
 import com.puercha.algo.learning.dao.LearningDAO;
+import com.puercha.algo.learning.vo.QuizAnswerVO;
 import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitVO;
@@ -87,12 +88,21 @@ public class LearningManager implements LearningService {
 		return map;
 	}
 
+	
 	//마무리문제 보기
 	@Override
 	public List<QuizVO> viewQuiz(String unitNum) {
-				
+		Map<String, Object> map = new HashMap<>();
+		map.put("unitNum", unitNum);
+
 		return learningDAO.selectAllQuiz(Integer.parseInt(unitNum));
 	}
+
+	@Override
+	public List<QuizAnswerVO> viewQuizAnswer(String quizNum) {
+		return learningDAO.selectAllAnswer(Integer.parseInt(quizNum));
+	}
+	
 
 	
 

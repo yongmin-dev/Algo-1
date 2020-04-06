@@ -44,9 +44,7 @@ public interface LearningDAO {
 	//단원 열람, 단원내용관리화면
 	UnitVO selectOneUnit(long unitNum);
 
-	
-	
-		//과목리스트, 과목 조회(검색)
+	//과목리스트, 과목 조회(검색)
 	List<SubjectVO> selectAllSubjects(long pageNum,  String searchType,String keyword);
 	
 	//과목리스트,자기가 작성한 과목 조회(관리)	

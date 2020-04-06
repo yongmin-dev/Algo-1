@@ -2,6 +2,8 @@ package com.puercha.algo.learning.vo;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+
 import lombok.Data;
 
 /**
@@ -10,14 +12,16 @@ import lombok.Data;
  * 
  */
 @Data
+@Entity
 public class QuizAnswerVO {
 
-	//답변 번호
-	private long answerNum;
-	
+
 	//문제 번호
 	private long quizNum;
 	
+	//답변 번호
+	private long answerNum;
+		
 	//선택지 내용
 	private String content;
 	

@@ -73,18 +73,20 @@ public class LearningController {
 	// 마무리문제풀기화면
 	@GetMapping("/quiz/{unitNum}")
 	public String viewQuiz(@PathVariable String unitNum, HttpSession session, Model model) {
+		
 		model.addAttribute("quizList", learningService.viewQuiz(unitNum));
+		
 		return "/learning/quiz";
 
 	}
 
 	// 마무리 문제 정답확인
-	@PostMapping("/quiz/{unitNum}/check")
+//	@PostMapping("/quiz/{unitNum}/check")
 	public String checkAnswers(@PathVariable String unitNum, HttpSession session, Model model, QuizAnswerVO quizAnswerVO) {
 		
+//		model.addAttribute("quizAnswer", learningService.)
 		
-		
-//		model.addAttribute
+//		
 		return null;
 		
 	}

@@ -46,10 +46,12 @@
 		</div>
 
 		<!-- 단워 내용보기는 unitVO로 불러옴 -->
-		단원 내용보기 : ${unitVO.title } 
-		<a
+		단원 내용보기 : ${unitVO.title } <a
 			href="${pageContext.request.contextPath }/learning/quiz/${unitVO.unitNum }">
 			마무리 문제 풀기</a>
+			
+			
+			
 
 	</main>
 	<%@include file="/WEB-INF/views/include/footer.jsp"%>

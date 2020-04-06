@@ -95,37 +95,73 @@
 
 	<select id="selectOneUnit" resultType="UnitVO">
 		select
-		Unit_num as "unitNum",
+		Unit_num as
+		"unitNum",
 		subject_num as "subjectNum",
 		content,
 		title,
-		chapter_depth as "chapterDepth",
+		chapter_depth as
+		"chapterDepth",
 		created_at as "createdAt",
 		updated_at
 		as "updatedAt"
-		from unit where unit_num like #{unitNum}
+		from
+		unit where unit_num like #{unitNum}
 
 
 	</select>
 
 	<!-- 마무리문제 불러오기 -->
-	<select id="selectQuizList" resultType = "QuizVO">
+	<!-- <select id="selectQuizList" resultType="QuizVO"> select quiz_num as 
+		"quizNum", unit_num as "unitNum", title, content, correct_answer as "correcAnswer", 
+		solution, created_at as "createdAt", updated_at as "updatedAt", user_num 
+		as "userNum" from quiz where unit_num like #{unitNum} </select> -->
+
+	<!-- 마무리문제 답안지 불러오기 -->
 	
-	select
-	quiz_num as "quizNum",
-	unit_num as "unitNum",
-	title,
-	content,
-	correct_answer as "correcAnswer",
-	solution,
-	created_at as "createdAt",
-	updated_at as "updatedAt",
-	user_num as "userNum"
-	from quiz where unit_num like #{unitNum} 
-	
+	<select id="selectQuizList" resultType="QuizVO" resultMap="QuizVOMap">
+
+		select
+		t1.quiz_num as "quizNum",
+		t1.unit_num as "unitNum",
+		t1.title,
+		t1.content,
+		t1.correct_answer as
+		"correctAnswer",
+		t1.solution,
+
+		t1.user_num as "userNum",
+		t2.answer_num as "answer.answerNum",
+		t2.quiz_num as "answer.quizNum",
+		t2.is_correct as "answer.isCorrect",
+		t2.content as "answer.content"
+		from quiz t1 left
+		join quiz_answer t2
+		on t1.quiz_num = t2.quiz_num
+		where t1.unit_num like
+		#{unitNum}
+
 	</select>
+	
+	<resultMap type="QuizAnswerVO" id="QuizAnswerVO">
+		<!-- <id property="answerNum" column="answerNum" /> -->
+		<result column="answer.answerNum" property="answerNum" />
+		<result column="answer.content" property="content" />
+		<result column="answer.quizNum" property="quizNum" />
+		
 
 
+	</resultMap>
+	<resultMap type="QuizVO" id="QuizVOMap">
+		<result column="quizNum" property="quizNum" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="correctAnswer" property="correctAnswer" />
+		<result column="userNum" property="userNum" />
+		<collection property="answerList" resultMap="QuizAnswerVO" />
+	</resultMap>
+
+	
 
 
 

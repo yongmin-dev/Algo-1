@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.puercha.algo.board.dao.PostingDAOImplTest;
 import com.puercha.algo.board.vo.BoardCategoryVO;
 import com.puercha.algo.board.vo.BoardPostVO;
+import com.puercha.algo.learning.vo.QuizAnswerVO;
 import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitVO;
@@ -73,10 +74,20 @@ public class LearningDAOImplTest {
 	}
 	
 	@Test
+//	@Disabled
 	public void quizList() {
 		List<QuizVO> quizList = learningDAO.selectAllQuiz(1);
 		for(QuizVO quiz : quizList) {
 			logger.info(quiz.toString());
+//			for(QuizVO answers :  )
+		}
+	}
+	@Test
+	@Disabled
+	public void answerList() {
+		List<QuizAnswerVO> answerList = learningDAO.selectAllAnswer(1);
+		for(QuizAnswerVO answer : answerList) {
+			logger.info(answer.toString());
 		}
 	}
 	

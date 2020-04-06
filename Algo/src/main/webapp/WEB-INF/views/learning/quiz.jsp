@@ -19,20 +19,40 @@
 	<main>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 		<div>
-		<table>
-			<c:forEach var="quiz" items="${quizList }">
-				<fmt:formatDate value="${quiz.createdAt }"
-					pattern="yyyy/MM/dd HH:mm" var="cdate" />
+
+			<table>
 				<tr>
-					<td>${quiz.quizNum }</td>
-					<td>${quiz.unitNum }</td>
-					<td>${quiz.title }</td>
-					
-					<td>${cdate }</td>
+					<th>제목</th>
+					<th>과목명</th>
+					<th>과목명</th>
+					<th>과목명</th>
+					<th>과목명</th>
 				</tr>
-			</c:forEach>
+				
+				<c:forEach var="quiz" items="${quizList }">
+					<tr>
+						<td>${quiz.content }</td>
+						
+						<c:forEach var="answer" items="${quiz.answerList }">
+						<td>
+						${answer.content }
+						</td>
+						</c:forEach>
+						
+						
+					</tr>
+				</c:forEach>
 			</table>
+
 		</div>
+
+
+
+
+
+
+
+
 	</main>
 	<%@include file="/WEB-INF/views/include/footer.jsp"%>
 </body>

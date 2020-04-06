@@ -36,6 +36,7 @@ public class BoardPostVO {
 	// 분류 카테고리
 	private BoardCategoryVO category;
 	
+	
 //	private long categoryNum;
 		
 	

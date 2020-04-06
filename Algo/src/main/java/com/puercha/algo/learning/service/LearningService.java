@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.puercha.algo.common.PageManager;
+import com.puercha.algo.learning.vo.QuizAnswerVO;
 import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitVO;
@@ -31,5 +32,7 @@ public interface LearningService {
 	//마무리문제 불러오기
 	List<QuizVO> viewQuiz(String unitNum);
 	
+	//마무리문제 답지 불러오기
+	List<QuizAnswerVO> viewQuizAnswer(String unitNum);
 	
 }

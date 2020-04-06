@@ -74,9 +74,8 @@ public class LearningDAOImpl implements LearningDAO {
 	@Override
 	public UnitVO selectOneUnit(long unitNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("UnitNum", unitNum);
-
-		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneUnit", Long.valueOf(unitNum));
+		map.put("unitNum", unitNum);
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneUnit", map);
 	}
 
 	@Override
@@ -93,6 +92,13 @@ public class LearningDAOImpl implements LearningDAO {
 	}
 	
 	@Override
+	public List<QuizAnswerVO> selectAllAnswer(long quizNum) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("quizNum",  quizNum);
+		return sqlSession.selectList("mappers.learningDAO-mapper.selectAnswerList", map);
+	}
+	
+	@Override
 	public List<SubjectVO> selectAllSubjects(long userNum) {
 		// TODO Auto-generated method stub
 		return null;
@@ -106,11 +112,7 @@ public class LearningDAOImpl implements LearningDAO {
 
 
 
-	@Override
-	public List<QuizAnswerVO> selectAllAnswer(long quizNum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public UnitCompletionVO selectUnitCompletion(long userNum) {

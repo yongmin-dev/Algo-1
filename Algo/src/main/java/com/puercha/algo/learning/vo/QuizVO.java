@@ -1,6 +1,9 @@
 package com.puercha.algo.learning.vo;
 
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Entity;
 
 import lombok.Data;
 
@@ -9,6 +12,7 @@ import lombok.Data;
  * 마무리문제 VO
  * 
  */
+@Entity
 @Data
 public class QuizVO {
 
@@ -41,5 +45,8 @@ public class QuizVO {
 	
 	//출제자
 	private long userNum;
+	
+	//퀴즈 정답 선택지
+	private List<QuizAnswerVO> answerList;
 		
 }
