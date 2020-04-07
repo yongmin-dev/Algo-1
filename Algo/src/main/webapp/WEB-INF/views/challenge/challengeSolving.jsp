@@ -36,7 +36,7 @@
 	
 	<!-- 결과표시	-->
 	<span id="result-msg"></span>
-
+	<div id="after-submit"></div>
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>

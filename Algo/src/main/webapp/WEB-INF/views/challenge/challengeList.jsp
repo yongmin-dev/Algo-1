@@ -66,7 +66,7 @@
 				<a href="${pageContext.request.contextPath}/challenge/list?page=1${searchParams}">처음</a>
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.startPage-1}${searchParams}">이전 페이지</a>
 			</c:if>
-			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.startPage}" step="1" var="num">
+			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" step="1" var="num">
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${num}${searchParams}">${num}</a>
 			</c:forEach>
 			<c:if test="${pageInfo.next}">

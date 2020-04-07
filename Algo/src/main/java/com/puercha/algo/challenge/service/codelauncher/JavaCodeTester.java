@@ -35,6 +35,8 @@ import com.puercha.algo.challenge.dao.ChallengeDAO;
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
 import com.puercha.algo.challenge.vo.ChallengeResultVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
+import com.puercha.algo.common.psapi.PROCESS_MEMORY_COUNTERS_EX;
+import com.puercha.algo.common.psapi.PsapiExt;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
@@ -52,8 +54,8 @@ public class JavaCodeTester implements CodeTester {
 	public static final String KEY_MATCHED = "matched";
 	public static final String KEY_PASSES_CASE = "passes";
 //	MemoryMonitor memoryMonitor = new MemoryMonitor();
-	@Inject
-	MemoryMonitor memoryMonitor ;
+//	@Inject
+//	MemoryMonitor memoryMonitor ;
 	
 	@Inject
 	CaseFileService caseFileManager;
@@ -247,7 +249,7 @@ public class JavaCodeTester implements CodeTester {
 				
 			}else {				
 				logger.info("process exec:"+process.exitValue());
-				memoryUsage = memoryMonitor.getMemoryUsage(pid);				
+//				memoryUsage = memoryMonitor.getMemoryUsage(pid);				
 				if(memoryUsage>memoryLimit) {
 					passesLimitMemory = false;
 				}else {
@@ -265,7 +267,7 @@ public class JavaCodeTester implements CodeTester {
 		
 		long endNano = System.currentTimeMillis(); // 끝 시작
 		result.put(KEY_PROCESSING_NANO_TIME, endNano - startNano);
-		result.put(KEY_MEMORY_USAGE,memoryMonitor.getMemoryUsage(pid));
+		result.put(KEY_MEMORY_USAGE,getMemory(process));
 		result.put(KEY_PASSES_LIMIT_MEMORY, passesLimitMemory);
 		result.put(KEY_MATCHED, matched);
 		result.put(KEY_PASSES_LIMIT_TIME, passesLimitTime);
@@ -363,4 +365,34 @@ public class JavaCodeTester implements CodeTester {
 	    return pid;
 	}
 	
+	// 프로세스의 사용 메모리를 가져온다.
+	static long getMemory(Process p){
+		Field f = null;
+		try {
+			f = p.getClass().getDeclaredField("handle");
+		} catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    f.setAccessible(true);
+	    long handLong=0;
+		try {
+			handLong = f.getLong(p);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    Kernel32 kernel = Kernel32.INSTANCE;
+
+	    WinNT.HANDLE handle = new WinNT.HANDLE();
+
+	    handle.setPointer(Pointer.createConstant(handLong));
+	    PROCESS_MEMORY_COUNTERS_EX processMemoryCountersEx = new PROCESS_MEMORY_COUNTERS_EX();
+	    long dProcessMemory = 0;
+    	if(PsapiExt.INSTANCE.GetProcessMemoryInfo(handle, processMemoryCountersEx, processMemoryCountersEx.size()))
+    	{
+    		dProcessMemory = (processMemoryCountersEx.PrivateUsage.longValue()) ; // 0 or -1
+    	}	    	
+		return dProcessMemory;
+	}
 }

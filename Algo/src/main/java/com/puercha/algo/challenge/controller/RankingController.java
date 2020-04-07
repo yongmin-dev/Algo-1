@@ -51,6 +51,7 @@ public class RankingController {
 		model.addAttribute("pageInfo",pageInfo);
 		model.addAttribute("cNum", cNum);
 		model.addAttribute("type", type);
+		model.addAttribute("curPage", page);
 		ChallengeResultVO myBestResult = challengeService.getMyRank(cNum, user.getUserNum(), type);
 		model.addAttribute("myBestResult",myBestResult );
 		return "challenge/ranking";

@@ -29,31 +29,32 @@ window.addEventListener("load",(e)=>{
 				console.log(result);
 				const evtSource = new EventSource(contextPath+'/challenge/result/realtime/'+result.resultNum);
 // const evtSource = new
-// EventSource(contextPath+'/challenge/result/realtime/'+148);
+
 				evtSource.onopen = e=>{
-// console.log("open: " + e);
-// console.dir(e);
+
 				}
-				evtSource.onmessage = function(e) {
-// console.log("message: " + e.data);
+				evtSource.onmessage = function(e) { // sse
 				  const resultMsg = document.querySelector('#result-msg');
 				  const responseData = JSON.parse(e.data);
-// console.dir(responseData);
-// resultMsg.innerHTML = e.data;
-				  if(responseData.status==='S' || responseData.status==='F'){
-					  resultMsg.innerHTML="상태:"+responseData.resultComment+
-					  "<br>메모리 사용량: "+ responseData.usedMemory+
-					  "kb<br>실행시간:"+responseData.processingTime+"ns"
+				  const {status,resultComment,processingTime,usedMemory} =responseData; 
+				  if(status==='S' || status==='F'){ // 성공이나 실패 시
+					  resultMsg.innerHTML=`상태 : ${resultComment}(${status})<br>`+
+					  `메모리 사용량 : ${usedMemory} byte<br>`+
+					  `실행시간 : ${processingTime} ns<br>`;
 					  evtSource.close();
-					  
+					  const afterSubmitEle = document.getElementById('after-submit');
+					  const rankingButton = document.createElement('button');
+					  rankingButton.innerText = "랭킹보기";
+					  rankingButton.addEventListener('click',
+					  e=>{
+						  location.href=`${contextPath}/ranking/${cNum}/1`;
+					  });
+					  afterSubmitEle.appendChild(rankingButton );
 				  }else {
 					resultMsg.innerHTML=responseData.resultComment;
 					}
-// eventList.appendChild(newElement);
 				}
 				evtSource.onerror = function(err) {
-// console.error("EventSource failed:", err);
-// evtSource.close();
 				  
 				};
 			});
