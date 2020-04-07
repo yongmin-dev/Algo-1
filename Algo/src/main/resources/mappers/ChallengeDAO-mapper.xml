@@ -69,6 +69,23 @@
 		FROM challenge
 		WHERE c_num = #{cNum}
 	</select>
+	<!-- 도전과제 row 1개 열람	 -->
+	<select id="selectOneChallenge" parameterType="hashmap" resultType="ChallengeVO">
+		SELECT 
+		    c_num AS "cNum",
+		    content,
+		    title,
+		    limit_memory AS "limitMemory",
+		    limit_time AS "limitTime" ,
+		    user_num AS "userNum",
+			app_user.username as "username",
+		    pass_num AS "passNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt"   
+		FROM challenge, app_user
+		WHERE challenge.user_num  = app_user.user_num
+		AND c_num = #{cNum}
+	</select>
 	<!-- 도전과제 목록 검색	 -->
 	<select id="selectAllChallenge" parameterType="hashmap" resultType="ChallengeVO">
 		SELECT *

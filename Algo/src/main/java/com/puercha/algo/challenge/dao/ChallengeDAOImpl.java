@@ -80,7 +80,8 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 		Map<String,Object> params = new HashMap<>();
 		params.put("cNum", cNum);
 		logger.info("selectOne(long cNum):"+cNum);
-		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectOne",params);
+//		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectOne",params);
+		return sqlSession.selectOne("mappers.ChallengeDAO-mapper.selectOneChallenge",params);
 	}
 
 	

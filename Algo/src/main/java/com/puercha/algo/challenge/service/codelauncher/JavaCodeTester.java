@@ -28,6 +28,7 @@ import javax.tools.ToolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import com.puercha.algo.challenge.dao.ChallengeDAO;
@@ -39,6 +40,7 @@ import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 
 @Service
+@EnableAsync
 public class JavaCodeTester implements CodeTester {
 	private static final Logger logger = LoggerFactory.getLogger(JavaCodeTester.class);
 	static final String DIR_NAME_RESULTS="results";
@@ -175,7 +177,9 @@ public class JavaCodeTester implements CodeTester {
 			}
 			// 테스트 도중 상태 
 			result.setStatus('T');
-			result.setResultComment(String.format("%d %%", (i+1)/list.size()));
+			logger.info("percentage:"+String.format("%.2f %%", 100.0*(i+1)/list.size()));
+			result.setResultComment(String.format("%.2f %%", 100.0*(i+1)/list.size()));
+//			logger.info(result.toString());
 			challengeDAO.updateChallengeResult(result);
 			
 			logger.info(String.format(
@@ -189,7 +193,7 @@ public class JavaCodeTester implements CodeTester {
 					caseResult.get(KEY_MEMORY_USAGE)
 					));
 			usedMemory = Math.max(usedMemory,(long)caseResult.get(KEY_MEMORY_USAGE));
-			processingTime = Math.max(usedMemory,(long)caseResult.get(KEY_PROCESSING_NANO_TIME));
+			processingTime = Math.max(processingTime,(long)caseResult.get(KEY_PROCESSING_NANO_TIME));
 			
 			
 		}

@@ -105,8 +105,8 @@ public class ChallengeManager implements ChallengeService {
 	 */	
 	@Override
 	public ChallengeResultVO getResult(long resultNum) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return challengeDAO.selectOneResult(resultNum);
 	}
 
 	/**

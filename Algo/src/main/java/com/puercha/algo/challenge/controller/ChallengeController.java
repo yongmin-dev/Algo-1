@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puercha.algo.challenge.service.ChallengeService;
+import com.puercha.algo.challenge.vo.ChallengeResultVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
 import com.puercha.algo.user.service.LoginService;
 import com.puercha.algo.user.vo.UserVO;
@@ -72,7 +75,8 @@ public class ChallengeController {
 		return "challenge/challengeSolving";
 	}
 	
-//	/challenge/code/{cNum}
+	//	/challenge/code/{cNum}
+	// 코드 제출
 	@PostMapping(path="/code/{cNum}", produces = "application/json")
 	@ResponseBody
 	ResponseEntity<Map<String,Object>> testCode(
@@ -85,19 +89,35 @@ public class ChallengeController {
 		String logMsg = String.format("cNum: %d code:%s",cNum, code);
 		UserVO user = loginService.getLoggedInUser(session);
 		// 테스트 실행
-		challengeService.doTest(cNum, user.getUserNum(), code);
+		ChallengeResultVO result = challengeService.doTest(cNum, user.getUserNum(), code);
 		logger.info(logMsg);
+		datas.put("result",result);
 		res = new ResponseEntity<Map<String,Object>>(datas,HttpStatus.OK);
 		return res;
 	}
 	
 //	/challenge/result/realtime/{resultNum}
-	@GetMapping(path="/result/realtime/{resultNum}", produces="text/event-stream;charset=UTF-8")
+	@GetMapping(path="/result/realtime/{resultNum}", produces="text/event-stream; charset=utf-8")
 	ResponseEntity<String> getResult(
 		@PathVariable(name="resultNum") long resultNum
 			){
+		ObjectMapper objectMapper= new ObjectMapper();
+		
 		ResponseEntity<String> res = null;
-		res = new ResponseEntity<String> ("312412",HttpStatus.OK);
+		ChallengeResultVO result = challengeService.getResult(resultNum);
+		String msgFormat = "retry:300%n%ndata:%s%n%n%n";
+		String data ="";
+		try {
+			data = objectMapper.writeValueAsString(result);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		logger.info("result:"+result);
+		String resultMsg = String.format(msgFormat, data );
+		res = new ResponseEntity<String> (resultMsg,HttpStatus.OK);		
+	
 		return res;
 	}	
 	
