@@ -14,13 +14,13 @@
 <c:set var="list" value="${datas[ChallengeManager.KEY_CHALLENGE_LIST]}"/>
 <c:set var="pageInfo" value="${datas[ChallengeManager.KEY_PAGE_INFO ]}"/>
 <!DOCTYPE html>
-<html>
+<html data-contextpath="${pageContext.request.contextPath}">
 <head>
 	<meta charset="UTF-8">
 	<title>도전과제 목록</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
-	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/chellenge-list.css"/>" />	
 	<script type="text/javascript" src="<c:url value="/resources/js/chellenge-list.js"/>"></script>
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
@@ -57,7 +57,7 @@
 					<c:set var="searchParams" value=""/>
 				</c:when>
 				<c:otherwise>			
-					<c:set var="searchParams" value="${pageInfo.rc.searchType}/${pageInfo.rc.keyword}"/>
+					<c:set var="searchParams" value="&type=${pageInfo.rc.searchType}&keyword=${pageInfo.rc.keyword}"/>
 				</c:otherwise>
 			</c:choose>
 			
@@ -66,13 +66,23 @@
 				<a href="${pageContext.request.contextPath}/challenge/list?page=1${searchParams}">처음</a>
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.startPage-1}${searchParams}">이전 페이지</a>
 			</c:if>
-			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.startPage}" step="1" var="num">
+			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" step="1" var="num">
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${num}${searchParams}">${num}</a>
 			</c:forEach>
 			<c:if test="${pageInfo.next}">
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.endPage+1}${searchParams}">이전 페이지</a>
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.finalEndPage}${searchParams}">마지막</a>
 			</c:if>
+		</div>
+		<div>
+			<select id="search-type">
+				<option value="T">제목 </option>
+				<option value="C">내용 </option>
+				<option value="TC">제목 + 내용</option>
+				<option value="N">작성자이름</option>
+			</select>
+			<input type="text" id="input-search"/>
+			<button type="button" id="btn-search-challenge" >검색</button>
 		</div>
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>

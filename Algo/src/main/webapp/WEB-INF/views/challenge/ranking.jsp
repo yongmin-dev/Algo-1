@@ -84,26 +84,36 @@
 				</tr>
 			</c:if>
 			</table>
-			<div>
-			<%-- 검색어 초기화 --%>			
+			
+			<div>			
 			
 			<!-- 페이지 네비게이션 -->
 			<c:if test="${pageInfo.prev}">
 				<a href="${pageContext.request.contextPath}/ranking/${cNum}/1?type=${type}">처음</a>
 				<a href="${pageContext.request.contextPath}/ranking/${cNum}/${pageInfo.startPage-1}?type=${type}">이전 페이지</a>
 			</c:if>
-			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.startPage}" step="1" var="num">
-				<a href="${pageContext.request.contextPath}/ranking/${cNum}/${num}?type=${type}">${num}</a>
+			<c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" step="1" var="num">
+				<c:choose>
+					<c:when test="${curPage eq num}">
+					<!-- 현재 페이지 -->
+						<a href="${pageContext.request.contextPath}/ranking/${cNum}/${num}?type=${type}">${num}</a>					
+					</c:when>
+					<c:otherwise>
+					<!-- 현재 페이지가 아닌 나머지 페이지 -->
+						<a href="${pageContext.request.contextPath}/ranking/${cNum}/${num}?type=${type}">${num}</a>
+					</c:otherwise>
+				</c:choose>
 			</c:forEach>
 			<c:if test="${pageInfo.next}">
 				<a href="${pageContext.request.contextPath}/ranking/${cNum}/${pageInfo.endPage+1}?type=${type}">이전 페이지</a>
 				<a href="${pageContext.request.contextPath}/ranking/${cNum}/${pageInfo.finalEndPage}?type=${type}">마지막</a>
 			</c:if>
-			 
+			</div>
+			<div>
 			<label><input name="type" type="radio" value="T" ${(type =='T') ? 'checked': ' '} />시간</label>
 			<label><input name="type" type="radio" value="M" ${(type =='M') ? 'checked': ' '} />메모리</label>
 			<button id="btn-search-rank" data-cnum="${cNum}">검색</button>
-		</div>
+			</div> 
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>
