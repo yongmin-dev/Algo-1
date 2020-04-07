@@ -239,7 +239,7 @@ public class JavaCodeTester implements CodeTester {
 		try {
 			
 			process = pb.start();
-			pid = getPid(process); // pid를 가져옴		
+//			pid = getPid(process); // pid를 가져옴		
 			
 			passesLimitTime = process.waitFor(timeLimit,TimeUnit.MILLISECONDS);			
 			errMsg = getStringFromStream(process.getErrorStream());
@@ -249,8 +249,8 @@ public class JavaCodeTester implements CodeTester {
 				
 			}else {				
 				logger.info("process exec:"+process.exitValue());
-//				memoryUsage = memoryMonitor.getMemoryUsage(pid);				
-				if(memoryUsage>memoryLimit) {
+				memoryUsage = getMemory(process);				
+				if(memoryUsage>memoryLimit*1024*1024) {
 					passesLimitMemory = false;
 				}else {
 					passesLimitMemory = true;
@@ -267,7 +267,7 @@ public class JavaCodeTester implements CodeTester {
 		
 		long endNano = System.currentTimeMillis(); // 끝 시작
 		result.put(KEY_PROCESSING_NANO_TIME, endNano - startNano);
-		result.put(KEY_MEMORY_USAGE,getMemory(process));
+		result.put(KEY_MEMORY_USAGE,memoryUsage);
 		result.put(KEY_PASSES_LIMIT_MEMORY, passesLimitMemory);
 		result.put(KEY_MATCHED, matched);
 		result.put(KEY_PASSES_LIMIT_TIME, passesLimitTime);
@@ -392,11 +392,9 @@ public class JavaCodeTester implements CodeTester {
 	    long dProcessMemory = 0;
     	if(PsapiExt.INSTANCE.GetProcessMemoryInfo(handle, processMemoryCountersEx, processMemoryCountersEx.size()))
     	{
-    		if((processMemoryCountersEx.PrivateUsage.longValue())!=0)
-    			dProcessMemory = (processMemoryCountersEx.PrivateUsage.longValue()) ; // 0 or -1
-    		else
-    			dProcessMemory = (processMemoryCountersEx.PagefileUsage.longValue()) ; // 0 or -1
-    	}	    	
+    			dProcessMemory = (processMemoryCountersEx.PeakPagefileUsage.longValue()) ; // 0 or -1
+
+    	}
 		return dProcessMemory;
 	}
 }
