@@ -367,6 +367,7 @@ public class JavaCodeTester implements CodeTester {
 	
 	// 프로세스의 사용 메모리를 가져온다.
 	static long getMemory(Process p){
+		
 		Field f = null;
 		try {
 			f = p.getClass().getDeclaredField("handle");
@@ -391,7 +392,10 @@ public class JavaCodeTester implements CodeTester {
 	    long dProcessMemory = 0;
     	if(PsapiExt.INSTANCE.GetProcessMemoryInfo(handle, processMemoryCountersEx, processMemoryCountersEx.size()))
     	{
-    		dProcessMemory = (processMemoryCountersEx.PrivateUsage.longValue()) ; // 0 or -1
+    		if((processMemoryCountersEx.PrivateUsage.longValue())!=0)
+    			dProcessMemory = (processMemoryCountersEx.PrivateUsage.longValue()) ; // 0 or -1
+    		else
+    			dProcessMemory = (processMemoryCountersEx.PagefileUsage.longValue()) ; // 0 or -1
     	}	    	
 		return dProcessMemory;
 	}
