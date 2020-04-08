@@ -9,7 +9,7 @@ import lombok.Data;
  * 게시판 카테고리 VO
  * 
  */
-@Entity
+
 @Data
 public class BoardCategoryVO {
 	

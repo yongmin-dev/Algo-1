@@ -24,72 +24,73 @@ import com.puercha.algo.learning.vo.UnitVO;
 public class LearningManager implements LearningService {
 
 	private final static Logger logger = LoggerFactory.getLogger(LearningManager.class);
-	
+
 	@Inject
 	LearningDAO learningDAO;
-	
 
-
-	//과목보기(검색어
+	// 과목보기(검색어
 	@Override
-	public List<SubjectVO> subjectList(String reqPage, String searchType, String keyword){
+	public List<SubjectVO> subjectList(String reqPage, String searchType, String keyword) {
 		int l_reqPage = 0;
-		
-		//요청페이지 정보가 없으면 1로 설정
-		if(reqPage == null || reqPage.trim().isEmpty()) {
-			l_reqPage=1;
-		}else {
-			l_reqPage=Integer.parseInt(reqPage);
+
+		// 요청페이지 정보가 없으면 1로 설정
+		if (reqPage == null || reqPage.trim().isEmpty()) {
+			l_reqPage = 1;
+		} else {
+			l_reqPage = Integer.parseInt(reqPage);
 		}
 		RowCriteria rowCriteria = new RowCriteria(l_reqPage);
-		
-		return learningDAO.selectAllSubjects(rowCriteria.getStartRec(), searchType, keyword);
-		
-	}
 
-	//페이지 제어
+		return learningDAO.selectAllSubjects(rowCriteria.getStartRec(), searchType, keyword);
+
+	}
+	
+	
+
+	// 페이지 제어
 	@Override
 	public PageManager getPageManager(String reqPage, String searchType, String keyword) {
 
 		PageManager pm = null;
 		FindCriteria fc = null;
-		
+
 		int totalRec = 0;
 		int l_reqPage = 0;
-		
-		//요청페이지 정보가 없으면 1로 초기화
-		if(reqPage == null || reqPage.trim().isEmpty()) {
+
+		// 요청페이지 정보가 없으면 1로 초기화
+		if (reqPage == null || reqPage.trim().isEmpty()) {
 			l_reqPage = 1;
-		}else {
+		} else {
 			l_reqPage = Integer.parseInt(reqPage);
 		}
-		
+
 		totalRec = learningDAO.countTotalRecord(searchType, keyword);
-		
+
 		fc = new FindCriteria(l_reqPage, searchType, keyword);
 		pm = new PageManager(fc, totalRec);
-		
+
 		return pm;
 	}
 
+	// 단원 리스트 불러오기
 	@Override
 	public List<UnitVO> unitList(String subjectNum) {
-		
+
 		return learningDAO.selectAllUnits(Integer.parseInt(subjectNum));
 	}
 
+	// 단원 내용 보기
 	@Override
 	public Map<String, Object> viewUnit(String unitNum) {
 		UnitVO unitVO = learningDAO.selectOneUnit(Integer.parseInt(unitNum));
-		
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("UnitVO", unitVO);
-				
+
 		return map;
 	}
 
-	
-	//마무리문제 보기
+	// 마무리문제 보기
 	@Override
 	public List<QuizVO> viewQuiz(String unitNum) {
 		Map<String, Object> map = new HashMap<>();
@@ -97,7 +98,7 @@ public class LearningManager implements LearningService {
 
 		return learningDAO.selectAllQuiz(Integer.parseInt(unitNum));
 	}
-
+	
 	@Override
 	public List<QuizAnswerVO> viewQuizAnswer(String quizNum) {
 		return learningDAO.selectAllAnswer(Integer.parseInt(quizNum));

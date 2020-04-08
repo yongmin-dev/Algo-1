@@ -85,7 +85,7 @@
 	    </ul>
     </c:if>
     <ul>
-      <li><a href="">게시판</a></li>
+      <li><a href="">게시판</a></li>      
       <li><a href="${rootPath}/board/list">· 질문게시판</a></li>
     </ul>
 </div>

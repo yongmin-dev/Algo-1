@@ -36,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	//
-	@Transactional
+//	@Transactional
 	@Override
 	public int write(BoardPostVO boardPostVO) {
 
