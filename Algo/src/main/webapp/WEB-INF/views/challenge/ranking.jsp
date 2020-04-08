@@ -20,9 +20,7 @@
 		
 		main{width:980px;margin:0 auto;padding:40px 0;}
 		#btn-search-rank{cursor:pointer;padding:10px 20px;}
-		table{font-size:14px;}
-		
-		
+		table{font-size:14px;text-align:center;}
 	</style>
 	<script type="text/javascript" src="<c:url value="/resources/js/ranking.js"/>"></script>
 </head>
@@ -31,6 +29,18 @@
 	<main>		 
 		<!-- 검색하는 페이지보다 내 등수가 상위일 경우 -->
 		<table>
+		
+		<tr>
+			<th>순위</th>
+			<th>제출자</th>
+			<th>메모리</th>
+			<th>사용시간</th>
+			<th>제출날짜</th>
+			<th>결과</th>
+		</tr>
+		
+		
+		
 		<c:if test="${!empty myBestResult and !empty list and list.size()>0 and myBestResult.rankNum < list.get(0).rankNum }">
 			<tr class="my-rank">
 				<!-- 랭크 -->
@@ -116,7 +126,7 @@
 				<a href="${pageContext.request.contextPath}/ranking/${cNum}/${pageInfo.finalEndPage}?type=${type}">마지막</a>
 			</c:if>
 			</div>
-			<div>
+			<div style="float:right;">
 			<label><input name="type" type="radio" value="T" ${(type =='T') ? 'checked': ' '} />시간</label>
 			<label><input name="type" type="radio" value="M" ${(type =='M') ? 'checked': ' '} />메모리</label>
 			<button id="btn-search-rank" data-cnum="${cNum}">검색</button>
