@@ -2,7 +2,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!-- footer start -->
-<div class="footer">
+
+
+<div class="footer" style="border-top:1px solid #bbbbbb; width:100%;">
   <p>Copyright 2020 TEA</p>
   <p>울산광역시 남구 신정동 울산KH정보교육원</p>
   <p>TEL:052-0000-0000</p>

@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.puercha.algo.user.*" %>
 <%@ page import="com.puercha.algo.user.vo.*" %>
-<div class="header clear">
+<div class="header clear" style="border-bottom:1px solid #555273;">
   <div class="header_inner clear">
   <h1 class="logo">
     <a href="#"><img src="<c:url value="/resources/images/HatchfulExport-All (2)/logo_transparent.png"/>" alt=""></a>

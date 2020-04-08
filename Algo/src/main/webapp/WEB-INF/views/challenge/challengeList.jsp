@@ -31,6 +31,8 @@
 	main .paging a{font-size:16px;}
 	#input-search{width:20%;}
 	#btn-search-challenge{cursor:pointer;padding:6px 20px;}
+	
+	main ul li span{display:inline-block;font-size:14px;}
 	</style>
 </head>
 <body>
@@ -38,6 +40,14 @@
 	<main>
 		<h2>도전문제 목록</h2>
 		<ul>
+		
+			<li style="width:100%;">
+			<span>번호</span>
+			<span style="width:79%;text-indent:20px;    ">제목</span>
+			<span style="text-indent:20px;">맞춘사람</span>
+			<span style="text-indent:5px;">작성자</span>
+			</li>
+		
 		
 			<c:forEach items="${list}" var="challenge">
 				<div>
