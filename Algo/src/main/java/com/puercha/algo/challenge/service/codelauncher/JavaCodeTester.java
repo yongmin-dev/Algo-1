@@ -28,17 +28,21 @@ import javax.tools.ToolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import com.puercha.algo.challenge.dao.ChallengeDAO;
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
 import com.puercha.algo.challenge.vo.ChallengeResultVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
+import com.puercha.algo.common.psapi.PROCESS_MEMORY_COUNTERS_EX;
+import com.puercha.algo.common.psapi.PsapiExt;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 
 @Service
+@EnableAsync
 public class JavaCodeTester implements CodeTester {
 	private static final Logger logger = LoggerFactory.getLogger(JavaCodeTester.class);
 	static final String DIR_NAME_RESULTS="results";
@@ -50,8 +54,8 @@ public class JavaCodeTester implements CodeTester {
 	public static final String KEY_MATCHED = "matched";
 	public static final String KEY_PASSES_CASE = "passes";
 //	MemoryMonitor memoryMonitor = new MemoryMonitor();
-	@Inject
-	MemoryMonitor memoryMonitor ;
+//	@Inject
+//	MemoryMonitor memoryMonitor ;
 	
 	@Inject
 	CaseFileService caseFileManager;
@@ -136,6 +140,8 @@ public class JavaCodeTester implements CodeTester {
 		ChallengeVO challengeInfo = challengeDAO.selectOne(result.getCNum()); // 도전과제 VO
 		long limitTime = challengeInfo.getLimitTime();
 		long limitMemory = challengeInfo.getLimitMemory();
+		long usedMemory = -1;
+		long processingTime = -1;
 		File sourceDir = compile(result.getResultNum(),null,result.getCode()); // 소스코드 위치
 		
 		File challengeDir = caseFileManager.getChallengeDir(result.getCNum()); // 도전과제 위치
@@ -173,7 +179,9 @@ public class JavaCodeTester implements CodeTester {
 			}
 			// 테스트 도중 상태 
 			result.setStatus('T');
-			result.setResultComment(String.format("%d %%", (i+1)/list.size()));
+			logger.info("percentage:"+String.format("%.2f %%", 100.0*(i+1)/list.size()));
+			result.setResultComment(String.format("%.2f %%", 100.0*(i+1)/list.size()));
+//			logger.info(result.toString());
 			challengeDAO.updateChallengeResult(result);
 			
 			logger.info(String.format(
@@ -186,6 +194,9 @@ public class JavaCodeTester implements CodeTester {
 					caseResult.get(KEY_PASSES_LIMIT_MEMORY),
 					caseResult.get(KEY_MEMORY_USAGE)
 					));
+			usedMemory = Math.max(usedMemory,(long)caseResult.get(KEY_MEMORY_USAGE));
+			processingTime = Math.max(processingTime,(long)caseResult.get(KEY_PROCESSING_NANO_TIME));
+			
 			
 		}
 		if(failedResult!=null) {
@@ -196,6 +207,8 @@ public class JavaCodeTester implements CodeTester {
 			result.setStatus('S');
 			result.setResultComment("성공");
 		}
+		result.setProcessingTime(processingTime);
+		result.setUsedMemory(usedMemory);
 		challengeDAO.updateChallengeResult(result);		
 		logger.info("완료");
 	}
@@ -226,7 +239,7 @@ public class JavaCodeTester implements CodeTester {
 		try {
 			
 			process = pb.start();
-			pid = getPid(process); // pid를 가져옴		
+//			pid = getPid(process); // pid를 가져옴		
 			
 			passesLimitTime = process.waitFor(timeLimit,TimeUnit.MILLISECONDS);			
 			errMsg = getStringFromStream(process.getErrorStream());
@@ -236,8 +249,8 @@ public class JavaCodeTester implements CodeTester {
 				
 			}else {				
 				logger.info("process exec:"+process.exitValue());
-				memoryUsage = memoryMonitor.getMemoryUsage(pid);				
-				if(memoryUsage>memoryLimit) {
+				memoryUsage = getMemory(process);				
+				if(memoryUsage>memoryLimit*1024*1024) {
 					passesLimitMemory = false;
 				}else {
 					passesLimitMemory = true;
@@ -254,7 +267,7 @@ public class JavaCodeTester implements CodeTester {
 		
 		long endNano = System.currentTimeMillis(); // 끝 시작
 		result.put(KEY_PROCESSING_NANO_TIME, endNano - startNano);
-		result.put(KEY_MEMORY_USAGE,memoryMonitor.getMemoryUsage(pid));
+		result.put(KEY_MEMORY_USAGE,memoryUsage);
 		result.put(KEY_PASSES_LIMIT_MEMORY, passesLimitMemory);
 		result.put(KEY_MATCHED, matched);
 		result.put(KEY_PASSES_LIMIT_TIME, passesLimitTime);
@@ -352,4 +365,36 @@ public class JavaCodeTester implements CodeTester {
 	    return pid;
 	}
 	
+	// 프로세스의 사용 메모리를 가져온다.
+	static long getMemory(Process p){
+		
+		Field f = null;
+		try {
+			f = p.getClass().getDeclaredField("handle");
+		} catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    f.setAccessible(true);
+	    long handLong=0;
+		try {
+			handLong = f.getLong(p);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    Kernel32 kernel = Kernel32.INSTANCE;
+
+	    WinNT.HANDLE handle = new WinNT.HANDLE();
+
+	    handle.setPointer(Pointer.createConstant(handLong));
+	    PROCESS_MEMORY_COUNTERS_EX processMemoryCountersEx = new PROCESS_MEMORY_COUNTERS_EX();
+	    long dProcessMemory = 0;
+    	if(PsapiExt.INSTANCE.GetProcessMemoryInfo(handle, processMemoryCountersEx, processMemoryCountersEx.size()))
+    	{
+    			dProcessMemory = (processMemoryCountersEx.PeakPagefileUsage.longValue()) ; // 0 or -1
+
+    	}
+		return dProcessMemory;
+	}
 }

@@ -55,7 +55,7 @@ public class LearningContentController {
 		ResponseEntity<List<SubjectVO>> res = null;
 
 		UserVO sessionUser = loginService.getLoggedInUser(session);
-		List<SubjectVO> list = contentManager.getSubjectList(sessionUser.getUserNum());
+		List<SubjectVO> list = contentManager.getUserSubjectList(sessionUser.getUserNum());
 		if (list != null) {
 			res = new ResponseEntity<List<SubjectVO>>(list, HttpStatus.OK);
 		} else {
@@ -97,18 +97,25 @@ public class LearningContentController {
 	}
 
 	// 과목 제목 수정
-	@PutMapping(path = "/subject/{subjectNum}", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Map<String, Object>> updateSubjectTitle(@RequestBody Map<String, Object> requestBody,
-			@PathVariable(name = "subjectNum") long subjectNum, HttpSession session) {
+	@PutMapping(path = "/subject", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateSubjectTitle(
+			@RequestBody Map<String, Object> requestBody,
+//			@PathVariable(name = "subjectNum") long subjectNum, 
+			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
 		Map<String, Object> body = new HashMap<String, Object>();
 		UserVO sessionUser = loginService.getLoggedInUser(session);
 		if (sessionUser == null) {
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		}
+//		logger.info("requestBody:"+requestBody);
+//		logger.info("requestBody.get(\"subjectNum\") instanceof String:"+ ( (requestBody.get("subjectNum")) instanceof Integer));
+		long subjectNum = (Integer)requestBody.get("subjectNum");
 		String title = (String) requestBody.get("title");
+		logger.info("subjectNum :" + subjectNum );
 		logger.info("title:" + title);
 		int result = contentManager.updateSubjectTitle(subjectNum, title, sessionUser.getUserNum());
+		logger.info("result:"+result);
 		if (result != 1) {
 			res = new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
 		} else {
@@ -139,9 +146,12 @@ public class LearningContentController {
 	@PostMapping(path = "/unit/new/{subjectNum}", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> createNewUnit(
 			@PathVariable(name = "subjectNum") long subjectNum,
+			@RequestBody Map<String, Object> requestBody,
 			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
-		long newUnitNum = contentManager.createEmptyUnit(subjectNum);
+		String chapterDepth = null;
+		chapterDepth = (String) requestBody.get("chapterDepth");
+		long newUnitNum = contentManager.createEmptyUnit(subjectNum,chapterDepth);
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("newUnitNum", newUnitNum);
 		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
@@ -157,8 +167,8 @@ public class LearningContentController {
 		Map<String, Object> body = new HashMap<String, Object>();
 		UserVO sessionUser = loginService.getLoggedInUser(session);
 		int result = contentManager.deleteUnit(unitNum, sessionUser.getUserNum());
-		if (result != 1) {
-
+		if (result < 0) {
+			
 			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		} else {
 			body.put("msg", "success");
@@ -169,14 +179,14 @@ public class LearningContentController {
 	}
 
 	// 단원 제목 수정
-	@PutMapping(path = "/unit/{unitNum}", consumes = "application/json", produces = "application/json")
+	@PutMapping(path = "/unit/title/{unitNum}", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateUnitTitle(
 			@RequestBody Map<String, Object> requestBody,
 			@PathVariable(name = "unitNum") long unitNum, HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
 		Map<String, Object> body = new HashMap<String, Object>();
 		UserVO sessionUser = loginService.getLoggedInUser(session);
-		if (sessionUser == null) {
+		if (sessionUser == null) { // 세션확인
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		}
 		String title = (String) requestBody.get("title");
@@ -190,7 +200,31 @@ public class LearningContentController {
 		}
 		return res;
 	}
-
+	
+	// 단원 뎁스 수정
+	@PutMapping(path = "/unit/depth/{unitNum}", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateUnitDepth(
+			@RequestBody Map<String, Object> requestBody,
+			@PathVariable(name = "unitNum") long unitNum, HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		Map<String, Object> body = new HashMap<String, Object>();
+		UserVO sessionUser = loginService.getLoggedInUser(session);
+		if (sessionUser == null) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
+		}
+		String chapterDepth = (String) requestBody.get("chapterDepth");
+		logger.info("chapterDepth:" + chapterDepth);
+		int result = contentManager.updateUnitDepth(unitNum, chapterDepth, sessionUser.getUserNum());
+		if (result != 1) {
+			res = new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
+		} else {
+			body.put("msg", "success");
+			res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
+		}
+		return res;
+	}
+	
+	
 	// 단원 편집화면
 	@GetMapping("/unit/editor/{unitNum}")
 	public String getUnitEditorPage(
@@ -210,7 +244,7 @@ public class LearningContentController {
 		ResponseEntity<Map<String, Object>> res = null;
 		// 나중에 오류여부 체크
 		int result = contentManager.updateUnit(unit);
-		return "redirect:/content/challenge";
+		return "redirect:/content/subject";
 	}
 
 	// 마무리문제 리스트

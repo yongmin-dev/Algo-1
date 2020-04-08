@@ -26,7 +26,7 @@ public class ContentManager implements ContentManagingService {
 	ChallengeDAO challengeDAO;
 	
 	@Inject
-	LearningDAO learingDAO;
+	LearningDAO learningDAO;
 	
 	/**
 	 * 모든 도전과제 리스트를 불러옴
@@ -185,9 +185,9 @@ public class ContentManager implements ContentManagingService {
 	 * @return 과목의 리스트 객체
 	 */
 	@Override
-	public List<SubjectVO> getSubjectList(long userNum) {
-		
-		return null;
+	public List<SubjectVO> getUserSubjectList(long userNum) {
+		logger.info("getSubjectList(long userNum)");
+		return learningDAO.selectAllUserSubjects(userNum);
 	}
 
 	
@@ -210,8 +210,11 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public long createEmptySubject(long userNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		SubjectVO subject = new SubjectVO();
+		subject.setTitle("새 과목");
+		subject.setUserNum(userNum);
+		learningDAO.insertSubject(subject);
+		return subject.getSubjectNum();
 	}
 
 
@@ -224,8 +227,12 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int updateSubjectTitle(long subjectNum, String title, long userNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("updateSubjectTitle(long subjectNum, String title, long userNum)");
+		SubjectVO subject = learningDAO.selectOneSubject(subjectNum);
+		if(userNum != subject.getUserNum())
+			return -1;
+		subject.setTitle(title);		
+		return learningDAO.updateSubject(subject);
 	}
 
 	/**
@@ -247,7 +254,7 @@ public class ContentManager implements ContentManagingService {
 	@Override
 	public int updateUnit(UnitVO unit) {
 		logger.info("updateUnit(UnitVO unit)");
-		return learingDAO.updateUnit(unit);
+		return learningDAO.updateUnit(unit);
 	}
 
 	/**
@@ -258,7 +265,7 @@ public class ContentManager implements ContentManagingService {
 	@Override
 	public List<UnitVO> getUnitList(long subjectNum) {
 		logger.info("getUnitList(long subjectNum)");
-		return learingDAO.selectAllUnits(subjectNum);
+		return learningDAO.selectAllUnitMetadatas(subjectNum);
 	}
 
 	/**
@@ -267,9 +274,17 @@ public class ContentManager implements ContentManagingService {
 	 * @return 성공 시 생성된 단원의 번호
 	 */
 	@Override
-	public long createEmptyUnit(long subjectNum) {
-		// TODO Auto-generated method stub
-		return 0;
+	public long createEmptyUnit(long subjectNum, String chapterDepth) {
+		logger.info("getUnitList(long subjectNum)");
+		UnitVO unit = new UnitVO();
+		unit.setChapterDepth(chapterDepth);		
+		unit.setSubjectNum(subjectNum);
+		unit.setContent("내용을 입력해주세요~");
+		unit.setTitle("새 단원");
+		int result = learningDAO.insertUnit(unit);
+		if(result == 1)
+			return unit.getUnitNum();
+		return -1;
 	}
 
 	/**
@@ -280,8 +295,16 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int deleteUnit(long unitNum, long userNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteUnit(long unitNum, long userNum)");
+		logger.info(String.format("unitNum: %d, userNum %d", unitNum, userNum));
+		UnitVO deletionTarget = learningDAO.selectOneUnit(unitNum);
+		SubjectVO subject = learningDAO.selectOneSubject(deletionTarget.getSubjectNum());
+		if(deletionTarget !=null) {
+			if(subject.getUserNum()==userNum) { // 단원의 주인인지 확인
+				return learningDAO.deleteUnit(unitNum);
+			}
+		}
+		return -1;
 	}
 
 	/** 
@@ -293,11 +316,40 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int updateUnitTitle(long unitNum, String title, long userNum) {
-		// TODO Auto-generated method stub
+		UnitVO modifyingTarget = learningDAO.selectOneUnit(unitNum);
+		modifyingTarget.setTitle(title);
+		SubjectVO subject = learningDAO.selectOneSubject(modifyingTarget .getSubjectNum());
+		if(modifyingTarget  !=null) {
+			if(subject.getUserNum()==userNum) { // 단원의 주인인지 확인
+				return learningDAO.updateUnit(modifyingTarget);
+			}
+		}
 		return 0;
 	}
 
 	
+	
+	/**
+	 * 단원의 depth를 설정한다.
+	 * @param unitNum 단원 번호
+	 * @param depth 
+	 * @param userNum 작성자 확인용 번호
+	 * @return 성공 시 1 
+	 */
+	@Override
+	public int updateUnitDepth(long unitNum, String depth, long userNum) {
+		logger.info(String.format("unitNum: %d, depth: %s, userNum %d", unitNum, depth, userNum));
+		UnitVO modifyingTarget = learningDAO.selectOneUnit(unitNum);
+		modifyingTarget.setChapterDepth(depth);;
+		SubjectVO subject = learningDAO.selectOneSubject(modifyingTarget .getSubjectNum());
+		if(modifyingTarget  !=null) {
+			if(subject.getUserNum()==userNum) { // 단원의 주인인지 확인
+				return learningDAO.updateUnit(modifyingTarget);
+			}
+		}
+		return 0;
+	}
+
 	/**
 	 * 마무리 문제 VO의 리스트를 가져옴
 	 * @param unitNum 마무리문제가 속한 단원 번호
@@ -305,8 +357,8 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public List<QuizVO> getQuizList(long unitNum) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getQuizList(long unitNum)");
+		return learningDAO.selectAllQuiz(unitNum);
 	}
 
 	
@@ -317,8 +369,7 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public QuizVO getQuiz(long quizNum) {
-		// TODO Auto-generated method stub
-		return null;
+		return learningDAO.selectOneQuiz(quizNum);
 	}
 
 	/**

@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mappers.learningDAO-mapper">
+	<!-- 과목생성하기 -->
+	<insert id="insertSubject" parameterType="SubjectVO">
+		INSERT INTO Subject (
+		    subject_num, 
+		    title, 
+		    user_num, 
+		    image_data, 
+		    image_size, 
+		    image_type, 
+		    image_name)
+		VALUES
+		    (SUBJECT_NUM_SEQ.nextval,
+		    #{title},
+		    #{userNum},
+		    #{imageData,jdbcType=BLOB},
+		    #{imageSize,jdbcType=NUMERIC},
+		    #{imageType,jdbcType=VARCHAR},
+		    #{imageName,jdbcType=VARCHAR})
+		<selectKey order="AFTER" keyProperty="subjectNum" resultType="long">
+			SELECT SUBJECT_NUM_SEQ.currval FROM dual
+		</selectKey>	
+	</insert>
+
+	<insert id="insertUnit" parameterType="UnitVO">		
+		INSERT INTO Unit (
+		    UNIT_NUM, 
+		    SUBJECT_NUM, 
+		    CONTENT, 
+		    TITLE, 
+		    CHAPTER_DEPTH
+		    )
+		VALUES (
+		    UNIT_NUM_SEQ.nextval,
+		    #{subjectNum},
+		    #{content},
+		    #{title},
+		    #{chapterDepth}
+		)
+		<selectKey keyProperty="unitNum" resultType="long" order="AFTER">
+			SELECT UNIT_NUM_SEQ.currval FROM dual
+		</selectKey>
+	</insert>
 
 	<!-- 과목목록 -->
 	<!-- 1/전체목록 -->
@@ -8,7 +50,7 @@
 		select
 		subject_num as "subjectNum",
 		title,
-		create_at as "createdAt",
+		created_at as "createdAt",
 		updated_at as "updatedAt",
 		user_num as "userNum",
 		image_data as
@@ -18,7 +60,7 @@
 		num,
 		subject_num,
 		title,
-		create_at,
+		created_at,
 		updated_at,
 		user_num,
 		image_data from
@@ -44,6 +86,42 @@
 			</foreach>
 		</if>
 		)
+	</select>
+	<!-- 사용자가 작성한 모든과목들가져오기 -->
+	<select id="selectAllUserSubjects" parameterType="hashmap" resultType="SubjectVO">
+		select	*
+		FROM(
+			select row_number() over(order by subject_num desc) as	num,
+			subject_num as "subjectNum",
+			title,
+			created_at as "createdAt",
+			updated_at as "updatedAt",
+			user_num as "userNum"
+			from subject
+			<if test="searchType != null and keywords != null">
+				where user_num = #{userNum}
+				<foreach item="keyword" collection="keywords" open="AND ("
+					separator="or" close=")">
+					<choose>
+						<!-- 제목 -->
+						<when test="searchType == 'T'.toString()">
+							title like '%'||#{keyword}||'%'
+						</when>
+						<!-- 작성자 -->
+						<when test="searchType == 'N'toString()">
+							userNum like '%'||#{keyword}||'%'
+						</when>
+						<otherwise>
+							title like '%'||#{keyword}||'%' or userNum like
+							'%'||#{keyword}||'%'
+						</otherwise>
+					</choose>
+				</foreach>
+			</if>
+			)
+		<if test="startRowNum != null and endRowNum != null">
+			WHERE num between #{startRowNum} and #{endRowNum}
+		</if>
 	</select>
 
 	<!-- 총 레코드 수 -->
@@ -76,8 +154,8 @@
 
 
 	</select>
-
-	<select id="selectUnitList" resultType="UnitVO">
+<!-- 단원의 리스트를 불러온다 -->
+	<select id="selectUnitList" parameterType="hashmap" resultType="UnitVO">
 		select
 		Unit_num as
 		"unitNum",
@@ -91,6 +169,19 @@
 		from unit where subject_num like #{subjectNum}
 
 
+	</select>
+	
+	<!-- 내용을 제외한 unit의 데이터들의 리스트를 가져옴 -->
+	<select id="selectAllUnitMetadatas" parameterType="hashmap" resultType="UnitVO">
+		SELECT
+		unit_num as "unitNum",
+		subject_num as "subjectNum",
+		title,
+		chapter_depth as "chapterDepth",
+		created_at as "createdAt",
+		updated_at as "updatedAt"
+		FROM unit 
+		WHERE subject_num = #{subjectNum}
 	</select>
 
 	<select id="selectOneUnit" resultType="UnitVO">
@@ -109,6 +200,22 @@
 		unit where unit_num like #{unitNum}
 
 
+	</select>
+
+	<!-- 과목 하나 불러오기 -->
+	<select id="selectOneSubject" parameterType="long" resultType="SubjectVO">
+		SELECT 
+		    subject_num AS "subjectNum",
+		    title AS "title",
+		    user_num AS "userNum",
+		    created_at AS "createdAt",
+		    updated_at AS "updatedAt",
+		    image_data AS "imageData",
+		    image_size AS "imageSize",
+		    image_type AS "imageType",
+		    image_name AS "imageName"
+		FROM Subject
+		WHERE subject_num = #{subjectNum}
 	</select>
 
 	<!-- 마무리문제 불러오기 -->
@@ -161,16 +268,47 @@
 		<collection property="answerList" resultMap="QuizAnswerVO" />
 	</resultMap>
 
-	
+	<!-- 한 개의 마무리문제를 열람 -->
+	<select id="selectOneQuiz" parameterType="long" resultType="QuizVO">
+		
+	</select>
+
+<!--  Update  -->
+	<!-- 과목 내용 변경 -->
+	<update id="updateSubject" parameterType="SubjectVO">
+		UPDATE subject
+		SET
+		    title= #{title}, 
+		    user_num = #{userNum}, 
+		    updated_at = SYSTIMESTAMP,
+		    IMAGE_DATA = #{imageData, jdbcType=BLOB}, 
+		    IMAGE_SIZE = #{imageSize, jdbcType=NUMERIC}, 
+		    IMAGE_TYPE = #{imageType, jdbcType=VARCHAR}, 
+		    IMAGE_NAME = #{imageType, jdbcType=VARCHAR}
+		WHERE subject_num = #{subjectNum}	
+	</update>
+	<!-- 단원 내용 편집 -->
+	<update id="updateUnit" parameterType="UnitVO">
+		UPDATE Unit
+		SET      
+		    SUBJECT_NUM = #{subjectNum}, 
+		    CONTENT = #{content}, 
+		    TITLE = #{title}, 
+		    CHAPTER_DEPTH = #{chapterDepth},
+		    UPDATED_AT = SYSTIMESTAMP
+		WHERE UNIT_NUM = #{unitNum}	
+	</update>	
 
 
 
 
 
-
-
-
-
+<!-- Delete -->
+<!-- 단원 삭제 -->
+<delete id="deleteUnit" parameterType="long" >
+	DELETE FROM unit 
+	WHERE unit_num = #{unitNum}
+</delete>
 
 
 

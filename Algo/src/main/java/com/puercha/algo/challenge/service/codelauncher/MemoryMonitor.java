@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  * @author Hyeonuk
  *
  */
-@Service
+//@Service
 public class MemoryMonitor {
 	public static final Logger logger = LoggerFactory.getLogger(MemoryMonitor.class);
 	public static void main(String[] args) {

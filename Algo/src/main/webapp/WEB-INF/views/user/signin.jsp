@@ -10,12 +10,33 @@
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/signin.css'/>" />	
 	<script type="text/javascript" src="<c:url value='/resources/js/signin.js'/>"></script>
+	
+	
+	<style>
+	main{    text-align: center;
+    margin: 0 auto;
+    width: 360px;   
+     }
+    #loginBtn{width: 100%;
+    cursor: pointer;
+    padding: 10px 0;}    
+	h3{padding:20px 0;}
+	
+	.logo_login img{width:100%;}
+	
+	
+	</style>
+	
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
-		<h3>로그인</h3>
+		<div class="logo_login">
+		<img src="/algo/resources/images/HatchfulExport-All (2)/logo_transparent.png" alt="" />
+		</div>		
 		<c:choose>
 			<c:when test="${empty next}">
 				<form method="POST" action="${pageContext.request.contextPath}/login/sign-in">					

@@ -13,6 +13,14 @@
 	href="<c:url value="/resources/css/signup.css"/>" />
 <script type="text/javascript"
 	src="<c:url value="/resources/js/signup.js"/>"></script>
+	
+	<style>
+	main{width:480px;margin:0 auto;margin-top: 150px;}
+	h2{text-align:center;}
+	#joinBtn{cursor:pointer;padding:10px 20px;width:100%;text-align:center;}
+	</style>
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
@@ -49,11 +57,11 @@
 			<spen class="errmsg" id="address_errmsg"></spen>
 			<form:errors path="address" cssClass="errmsg"></form:errors>
 
-			<form:label path="gender">성별</form:label>
+			<form:label path="gender">성별</form:label> <br />
 			<form:radiobuttons path="gender" items="${gender }" itemValue="code"
 				itemLabel="label" />
 			<span class="errmsg" id="gender_errmsg"></span>
-			<form:errors path="gender" cssClass="errmsg"></form:errors>
+			<form:errors path="gender" cssClass="errmsg"></form:errors> <br />
 
 			<form:label path="birth">생년월일</form:label>
 			<form:input type="date" path="birth" />

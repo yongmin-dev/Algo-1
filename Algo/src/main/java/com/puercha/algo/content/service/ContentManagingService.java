@@ -110,7 +110,7 @@ public interface ContentManagingService {
 	 * @param userNum 과목을 작성한 사용자의 userNum
 	 * @return 과목의 리스트 객체
 	 */
-	List<SubjectVO> getSubjectList(long userNum);
+	List<SubjectVO> getUserSubjectList(long userNum);
 
 	/**
 	 * 과목을 삭제한다.
@@ -164,7 +164,7 @@ public interface ContentManagingService {
 	 * @param subjectNum 과목 번호
 	 * @return 성공 시 생성된 단원의 번호
 	 */
-	long createEmptyUnit(long subjectNum);
+	long createEmptyUnit(long subjectNum, String chapterDepth);
 
 	/**
 	 * 단원을 삭제함
@@ -248,5 +248,14 @@ public interface ContentManagingService {
 	 * @return 성공시 1
 	 */
 	int updateAnswer(QuizAnswerVO answer);
+
+	/**
+	 * 단원의 depth를 설정한다.
+	 * @param unitNum 단원 번호
+	 * @param depth 
+	 * @param userNum 작성자 확인용 번호
+	 * @return 성공 시 1 
+	 */
+	int updateUnitDepth(long unitNum, String depth, long userNum);
 
 }
