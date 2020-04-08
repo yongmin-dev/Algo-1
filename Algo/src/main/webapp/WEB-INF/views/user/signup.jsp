@@ -13,6 +13,12 @@
 	href="<c:url value="/resources/css/signup.css"/>" />
 <script type="text/javascript"
 	src="<c:url value="/resources/js/signup.js"/>"></script>
+	
+	<style>
+	main{width:480px;margin:0 auto;}
+	</style>
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>

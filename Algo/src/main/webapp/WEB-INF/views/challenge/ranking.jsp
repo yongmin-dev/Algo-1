@@ -16,6 +16,13 @@
 		.my-result{
 			background-color: #aaffee
 		}
+		
+		
+		main{width:980px;margin:0 auto;padding:40px 0;}
+		#btn-search-rank{cursor:pointer;padding:10px 20px;}
+		table{font-size:14px;}
+		
+		
 	</style>
 	<script type="text/javascript" src="<c:url value="/resources/js/ranking.js"/>"></script>
 </head>

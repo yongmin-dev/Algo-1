@@ -10,6 +10,20 @@
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/signin.css'/>" />	
 	<script type="text/javascript" src="<c:url value='/resources/js/signin.js'/>"></script>
+	
+	
+	<style>
+	main{    text-align: center;
+    margin: 0 auto;
+    width: 360px;}
+    #loginBtn{width: 100%;
+    cursor: pointer;
+    padding: 10px 0;}    
+	h3{padding:20px 0;}
+	</style>
+	
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>

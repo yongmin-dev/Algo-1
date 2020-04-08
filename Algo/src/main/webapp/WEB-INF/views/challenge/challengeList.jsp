@@ -20,37 +20,47 @@
 	<title>도전과제 목록</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<script type="text/javascript" src="<c:url value="/resources/js/chellenge-list.js"/>"></script>
+	<style>
 	
+	main{width:980px;margin:0 auto;}
+	main h2{padding:20px 0;}
+	main ul li{display:inline-block;font-size:16px;padding:14px;}
+	main ul li.title{width:79%;text-indent:20px;}
+	/* main ul > div:nth-child(2n-1){background:#EDEDFA;} */	
+	main ul > div{border-bottom:2px solid #ededed;}
+	main .paging a{font-size:16px;}
+	#input-search{width:20%;}
+	#btn-search-challenge{cursor:pointer;padding:6px 20px;}
+	</style>
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
+		<h2>도전문제 목록</h2>
+		<ul>
 		
-		<div>
-			<h2>도전문제 목록</h2>
-			
 			<c:forEach items="${list}" var="challenge">
-			<span>
-
+				<div>
+			<li>
 				<!-- 도전문제 번호 -->
 				${challenge.CNum}								
-			</span>
-			<span>
+			</li>
+			<li class="title">
 				<!-- 제목 -->
 				<a href="${pageContext.request.contextPath}/challenge/${challenge.CNum}">${challenge.title }				
-			</span>
-			<span>
+			</li>
+			<li>
 				<!-- 통과한 사람 수 -->
 				${challenge.passNum }				
-			</span>
-			<span>
+			</li>
+			<li>
 				<!-- 작성자 -->
 				${challenge.username}				
-			</span>
-			<br>
+			</li>
+			</div>
 			</c:forEach>			
-		</div>
-		<div>
+
+		</ul>
 			<%-- 검색어 초기화 --%>			
 			<c:choose>
 				<c:when test="${empty pageInfo.rc.searchType or empty pageInfo.rc.keyword }">
@@ -62,6 +72,7 @@
 			</c:choose>
 			
 			<!-- 페이지 네비게이션 -->
+			<div class="paging">
 			<c:if test="${pageInfo.prev}">
 				<a href="${pageContext.request.contextPath}/challenge/list?page=1${searchParams}">처음</a>
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.startPage-1}${searchParams}">이전 페이지</a>
@@ -73,8 +84,9 @@
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.endPage+1}${searchParams}">이전 페이지</a>
 				<a href="${pageContext.request.contextPath}/challenge/list?page=${pageInfo.finalEndPage}${searchParams}">마지막</a>
 			</c:if>
+			</div>
 		</div>
-		<div>
+		<div style="text-align:center;padding:20px 0;">
 			<select id="search-type">
 				<option value="T">제목 </option>
 				<option value="C">내용 </option>
