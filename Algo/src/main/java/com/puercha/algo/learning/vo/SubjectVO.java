@@ -12,34 +12,24 @@ import lombok.Data;
  * 
  */
 @Data
-public class SubjectVO {
-
+public class SubjectVO {	
 	
-	//과목번호
-	private long subjectNum;
+	private long subjectNum; // 과목번호	
 	
-	//과목명
-	private String title;
+	private String title; // 과목명	
 	
-	//생성일시
-	private Date createdAt;
+	private Date createdAt; // 생성일시	
 	
-	//수정일시
-	private Date updatedAt;
+	private Date updatedAt; // 수정일시	
 	
-	//출제자
-	private long userNum;
+	private long userNum; // 출제자	
 	
-	//사진데이터
-	private byte[] imageData;
+	private byte[] imageData; // 사진데이터	
+	 
+	private long imageSize; // 사진 크기	
+	 
+	private String imageType; // 사진 타입	
 	
-	//사진 크기
-	private long imageSize;
-	
-	//사진 타입
-	private String imageType;
-	
-	//사진 이름
-	private String imageName;
+	private String imageName; // 사진 이름
 	
 }

@@ -41,16 +41,23 @@ public class LearningDAOImpl implements LearningDAO {
 
 	}
 
+	
+	/**
+	 *  단원 생성
+	 * @param unit 새로운 데이터의 VO
+	 * @return 성공 시 1
+	 */
 	@Override
 	public int insertUnit(UnitVO unit) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertSubject(SubjectVO subject)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertUnit",unit);
 	}
 
+	//과목 생성
 	@Override
 	public int insertSubject(SubjectVO subject) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertSubject(SubjectVO subject)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertSubject",subject);
 	}
 
 	@Override
@@ -70,7 +77,7 @@ public class LearningDAOImpl implements LearningDAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	/* Read */
 	@Override
 	public UnitVO selectOneUnit(long unitNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -84,6 +91,18 @@ public class LearningDAOImpl implements LearningDAO {
 		map.put("subjectNum", subjectNum);
 		return sqlSession.selectList("mappers.learningDAO-mapper.selectUnitList", map);
 	}
+	/**
+	 * 내용을 제외한 unit의 데이터들의 리스트를 가져옴
+	 * @param subjectNum 과목번호
+	 * @return unit vo의 리스트 객체
+	 */
+	@Override
+	public List<UnitVO> selectAllUnitMetadatas(long subjectNum){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("subjectNum", subjectNum);
+		return sqlSession.selectList("mappers.learningDAO-mapper.selectAllUnitMetadatas", map);
+	}
+	
 	@Override
 	public List<QuizVO> selectAllQuiz(long unitNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -99,18 +118,29 @@ public class LearningDAOImpl implements LearningDAO {
 	}
 	
 	@Override
-	public List<SubjectVO> selectAllSubjects(long userNum) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SubjectVO> selectAllUserSubjects(long userNum) {
+		logger.info("selectAllSubjects(long userNum)");
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("userNum", userNum);
+		return sqlSession.selectList("mappers.learningDAO-mapper.selectAllUserSubjects",params);
 	}
 
 	@Override
-	public List<SubjectVO> selectAllSubjects(long userNum, long pageNum) {
+	public List<SubjectVO> selectAllUserSubjects(long userNum, long pageNum) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
+	/**
+	 * 과목 한개 조회
+	 * @param subjectNum 과목번호
+	 * @return 과목 VO
+	 */
+	@Override
+	public SubjectVO selectOneSubject(long subjectNum) {
+		logger.info("selectOneSubject(long subjectNum)");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneSubject",subjectNum);
+	}
 
 
 
@@ -120,16 +150,39 @@ public class LearningDAOImpl implements LearningDAO {
 		return null;
 	}
 
+	/**
+	 * 한 개의 마무리문제를 열람
+	 * @param quizNum 열람할 마무리 문제 번호
+	 * @return Quiz VO
+	 */
 	@Override
-	public int updateUnit(UnitVO unit) {
-		// TODO Auto-generated method stub
-		return 0;
+	public QuizVO selectOneQuiz(long quizNum) {
+		logger.info("selectOneQuiz(long quizNum)");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneQuiz");
 	}
 
+
+	/* Update */
+	/**
+	 * 단원 수정, 단원내용 수정 완료
+	 * @param unit 단원 VO
+	 * @return 성공 시 1
+	 */
+	@Override
+	public int updateUnit(UnitVO unit) {
+		logger.debug("updateUnit(UnitVO unit)");
+		return sqlSession.update("mappers.learningDAO-mapper.updateUnit",unit);
+	}
+
+	/** 
+	 * 과목수정
+	 * @param subject 수정된 데이터를 가진 VO
+	 * @return 성공시 1
+	 */
 	@Override
 	public int updateSubject(SubjectVO subject) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.debug("updateSubject(SubjectVO subject)");
+		return sqlSession.update("mappers.learningDAO-mapper.updateSubject",subject);
 	}
 
 	@Override
@@ -146,8 +199,8 @@ public class LearningDAOImpl implements LearningDAO {
 
 	@Override
 	public int deleteUnit(long unitNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteUnit(long unitNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteUnit",unitNum);
 	}
 
 	@Override
