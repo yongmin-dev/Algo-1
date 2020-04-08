@@ -14,8 +14,9 @@
 <%
 	UserVO user = (UserVO)request.getAttribute(LoginService.KEY_USER_INFO);
 	if(user!=null)
-		pageContext.setAttribute("userInfo", user); 
+		pageContext.setAttribute("userInfo", user);
  %>
+ <c:set var="rootPath" value="${pageContext.request.contextPath}"></c:set>
 <!-- 비로그인 -->
 <div class="upper_menu">
 	<c:choose>
@@ -50,7 +51,6 @@
         <li><a href="#">마무리문제</a></li>
         <li><a href="#">도전과제</a></li>
         <li><a href="#">컨텐츠</a></li>
-        <li><a href="#">랭킹보기</a></li>
         <li><a href="#">게시판</a></li>
     </ul>
     </div>
@@ -65,44 +65,22 @@
     </ul>
     <ul>
       <li><a href="">이론학습</a></li>
-      <li><a href="">· 이론학습목록</a></li>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
-    </ul>
-    <ul>
-      <li><a href="">마무리 문제 목록</a></li>
-      <li><a href="">· 마무리 문제 풀기
-      </a></li>
-      <li><a href="">· 마무리 문제 풀이보기
-      </a></li>
-      <li><a href=""></a></li>
+      <li><a href="${rootPath}/learning/list">· 이론학습목록</a></li>
     </ul>
     <ul>
       <li><a href="">도전과제</a></li>
-      <li><a href="">· 도전과제조회</a></li>
-      <li><a href="">· 내가 푼 문제</a></li>
-      <li><a href="">· 도전과제 화면</a></li>
-      <li><a href="">· 도전과제 결과</a></li>
-      <li><a href="">· 도전과제 풀기화면</a></li>
-      
+      <li><a href="${rootPath}/challenge/list">· 도전과제조회</a></li>      
     </ul>
-    <ul>
-      <li><a href="">컨텐츠</a></li>
-      <li><a href="">· 이론학습 관리</a></li>
-      <li><a href="">· 도전과제 관리</a></li>
-      <li><a href="">· 튜터컨텐츠리스트</a></li>
-    </ul>
-    <ul>
-      <li><a href="">랭킹보기</a></li>
-      <li><a href="">· 랭킹조회</a></li>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
-    </ul>
+    <c:if test="${!empty user and user.type != 'S'}">
+	    <ul>
+	      <li><a href="">컨텐츠</a></li>
+	      <li><a href="${rootPath}/content/learning">· 이론학습 관리</a></li>
+	      <li><a href="${rootPath}/content/challenge">· 도전과제 관리</a></li>
+	    </ul>
+    </c:if>
     <ul>
       <li><a href="">게시판</a></li>
-      <li><a href="">· 질문게시판</a></li>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
+      <li><a href="${rootPath}/board/list">· 질문게시판</a></li>
     </ul>
 </div>
 </div>
