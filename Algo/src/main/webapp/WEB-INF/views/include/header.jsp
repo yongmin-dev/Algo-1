@@ -73,9 +73,15 @@
     </ul>
     <c:if test="${!empty user and user.type != 'S'}">
 	    <ul>
-	      <li><a href="">컨텐츠</a></li>
+	      <li><a href="">컨텐츠 관리</a></li>
 	      <li><a href="${rootPath}/content/learning">· 이론학습 관리</a></li>
 	      <li><a href="${rootPath}/content/challenge">· 도전과제 관리</a></li>
+	    </ul>
+    </c:if>
+    <c:if test="${!empty user and user.type != 'S'}">
+	    <ul>
+	      <li><a href="">관리자</a></li>
+	      <li><a href="${rootPath}/admin/application-list">· 튜터 신청서 관리</a></li>
 	    </ul>
     </c:if>
     <ul>
