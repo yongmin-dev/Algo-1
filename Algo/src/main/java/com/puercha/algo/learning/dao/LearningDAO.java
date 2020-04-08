@@ -17,7 +17,11 @@ import com.puercha.algo.learning.vo.UnitVO;
 public interface LearningDAO {
 	/* Create */
 	
-	//단원 생성
+	/**
+	 *  단원 생성
+	 * @param unit 새로운 데이터의 VO
+	 * @return 성공 시 1
+	 */
 	int insertUnit(UnitVO unit);
 	
 	//과목 생성
@@ -34,6 +38,13 @@ public interface LearningDAO {
 	
 	/*Select*/
 	
+	/**
+	 * 과목 한개 조회
+	 * @param subjectNum 과목번호
+	 * @return 과목 VO
+	 */
+	SubjectVO selectOneSubject(long subjectNum);
+	
 	
 	/**
 	 * 단원리스트를 가져옴(내용제외:content)
@@ -48,9 +59,9 @@ public interface LearningDAO {
 	List<SubjectVO> selectAllSubjects(long pageNum,  String searchType,String keyword);
 	
 	//과목리스트,자기가 작성한 과목 조회(관리)	
-	List<SubjectVO> selectAllSubjects(long userNum);	
+	List<SubjectVO> selectAllUserSubjects(long userNum);	
 	//과목리스트, 자기가 작성한 과목 조회(관리)
-	List<SubjectVO> selectAllSubjects(long userNum, long pageNum);
+	List<SubjectVO> selectAllUserSubjects(long userNum, long pageNum);
 	
 	//마무리문제풀기화면, 마무리문제 리스트
 	List<QuizVO> selectAllQuiz(long unitNum);
@@ -61,12 +72,35 @@ public interface LearningDAO {
 	//진척도 조회
 	UnitCompletionVO selectUnitCompletion(long userNum);
 	
+	/**
+	 * 내용을 제외한 unit의 데이터들의 리스트를 가져옴
+	 * @param subjectNum 과목번호
+	 * @return unit vo의 리스트 객체
+	 */
+	List<UnitVO> selectAllUnitMetadatas(long subjectNum);
+	
+	
+	/**
+	 * 한 개의 마무리문제를 열람
+	 * @param quizNum 열람할 마무리 문제 번호
+	 * @return Quiz VO
+	 */
+	QuizVO selectOneQuiz(long quizNum);
+	
 	/* update */
 	
-	//단원 수정, 단원내용 수정 완료
+	/**
+	 * 단원 수정, 단원내용 수정 완료
+	 * @param unit 단원 VO
+	 * @return 성공 시 1
+	 */
 	int updateUnit(UnitVO unit);
 	
-	//과목수정
+	/** 
+	 * 과목수정
+	 * @param subject 수정된 데이터를 가진 VO
+	 * @return 성공시 1
+	 */
 	int updateSubject(SubjectVO subject);
 	
 	//마무리문제 수정
@@ -91,6 +125,8 @@ public interface LearningDAO {
 	
 	//총 레코드 수
 	int countTotalRecord(String searchType, String keyword);
+
 	
+
 	
 }

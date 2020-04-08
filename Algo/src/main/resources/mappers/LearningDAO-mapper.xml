@@ -154,7 +154,7 @@
 
 
 	</select>
-
+<!-- 단원의 리스트를 불러온다 -->
 	<select id="selectUnitList" parameterType="hashmap" resultType="UnitVO">
 		select
 		Unit_num as
@@ -268,8 +268,10 @@
 		<collection property="answerList" resultMap="QuizAnswerVO" />
 	</resultMap>
 
-	
-
+	<!-- 한 개의 마무리문제를 열람 -->
+	<select id="selectOneQuiz" parameterType="long" resultType="QuizVO">
+		
+	</select>
 
 <!--  Update  -->
 	<!-- 과목 내용 변경 -->
