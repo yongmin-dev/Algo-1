@@ -12,7 +12,7 @@
 .header .bottom_menu ul li a:hover{border-bottom: 4px solid #555273;font-weight: bold;}
 .header .sub_menu{position: absolute;top: 112px;width:100%;background:#fff;z-index: 99;display: none;}
 .header .sub_menu .sub_menu_inner{width: 1280px;margin: 0 auto;padding:0 0 30px 0;}
-.header .sub_menu .sub_menu_inner ul{width:14%;display: inline-block;vertical-align: top;}
+.header .sub_menu .sub_menu_inner ul{width:24.5%;display: inline-block;vertical-align: top;}
 .header .sub_menu.on{display: block;}
 .header .sub_menu .sub_menu_inner ul li:first-child a{display:inline-block;padding:20px;font-size: 17px;}
 .header .sub_menu .sub_menu_inner ul li a{display:inline-block;padding:10px;}

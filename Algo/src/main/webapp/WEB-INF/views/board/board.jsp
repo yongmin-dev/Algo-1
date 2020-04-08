@@ -24,7 +24,6 @@
 			<table>
 				<tr>
 					<th>번호</th>
-					<th>분류</th>
 					<th>제목</th>
 					<th>작성자</th>
 					<th>작성일</th>
@@ -32,10 +31,9 @@
 				</tr>
 				<c:forEach var="record" items="${list }">
 					<fmt:formatDate value="${record.createdAt }"
-						pattern="yyyy/MM/dd HH:mm" var="cdate" />
+						pattern="yyyy/MM/dd" var="cdate" />
 					<tr>
 						<td>${record.postNum }</td>
-						<td>${record.category.categoryNum }</td>
 						<td><c:forEach begin="1" end="${record.indent }">&nbsp;&nbsp;</c:forEach>
 							<c:if test="${record.indent > 0 }">
 							</c:if> <a
