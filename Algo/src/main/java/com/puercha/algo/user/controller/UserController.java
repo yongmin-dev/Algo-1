@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -19,16 +20,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.puercha.algo.common.Code;
+import com.puercha.algo.user.service.AdminService;
 import com.puercha.algo.user.service.LoginService;
 import com.puercha.algo.user.service.UserService;
+import com.puercha.algo.user.vo.TutorApplicationVO;
 import com.puercha.algo.user.vo.UserVO;
+import com.sun.jna.platform.win32.Netapi32Util.UserInfo;
 
 @Controller
 @RequestMapping("/user")
@@ -39,6 +42,9 @@ public class UserController {
 	
 	@Inject
 	UserService userService;
+	
+	@Inject
+	AdminService adminService;
 	
 	@Inject
 	LoginService loginService;
@@ -167,4 +173,53 @@ public class UserController {
 		}		
 		return res;
 	}
+	
+	
+	//튜터 신청양식
+		@GetMapping("/applying")
+		public String tutorApplication(
+			@ModelAttribute String applyPage,
+			Model model, HttpServletRequest request) {
+			
+			TutorApplicationVO tutorApplicationVO = new TutorApplicationVO();
+			UserVO userVO = loginService.getLoggedInUser(request.getSession());
+			
+			tutorApplicationVO.setUserNum(userVO.getUserNum());
+			tutorApplicationVO.setApplicationNum(tutorApplicationVO.getApplicationNum());
+			
+			model.addAttribute("tutorApplicationVO",tutorApplicationVO);
+			model.addAttribute("userVO",userVO);
+			
+			
+			
+			return "user/tutorApplication";
+		}
+		//튜터 신청
+		@PostMapping("/apply")
+		public String write(String applyPage,
+				@ModelAttribute("tutorApplicationVO") TutorApplicationVO tutorApplicationVO,
+				BindingResult result, 
+				HttpSession session) {
+				
+			logger.info("튜터 신청:" + tutorApplicationVO.toString());
+			
+			if (result.hasErrors()) {
+				return "user/applying";
+			}
+			UserVO userVO = loginService.getLoggedInUser(session);			
+			tutorApplicationVO.setUserNum(userVO.getUserNum());
+			logger.info("튜터 신청1.5:" + tutorApplicationVO.toString()+": "+userVO);
+
+			long newApplicationNum = adminService.apply(tutorApplicationVO);
+			
+			logger.info("튜터 신청2" + tutorApplicationVO.toString());
+			logger.info("user:"+userVO);
+			if(tutorApplicationVO.getApplicationNum() != userVO.getUserNum()) {
+				return "redirect:/";
+			}else {
+				
+				return "user/tutorApplication";
+			}
+			
+		}
 }

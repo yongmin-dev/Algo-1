@@ -32,6 +32,32 @@
 			select user_num_seq.currval from dual
 		</selectKey>	
 	</insert>
+<!-- 튜터 신청서 -->
+<insert id="insertApplication" 
+					parameterType="TutorApplicationVO">
+Insert into tutor_application (application_num, 
+user_num,
+title,
+content,
+approval,
+attachment_data,
+attachment_size,
+attachment_name,
+attachment_type) 
+
+values(TUTOR_APPLICATION_NUM_SEQ.nextval,
+#{userNum},
+#{title},
+#{content},
+#{approval},
+#{attachmentData,jdbcType=BLOB},
+#{attachmentSize,jdbcType=NUMERIC},
+#{attachmentName,jdbcType=VARCHAR},
+#{attachmentType,jdbcType=VARCHAR})
+<selectKey keyProperty="applicationNum" order="AFTER" resultType="long">
+			select TUTOR_APPLICATION_NUM_SEQ.currval from dual
+</selectKey>
+</insert>
 <!-- 사용자 전체조회 -->
 <select id="selectAllUser"
 				resultType="UserVO">
@@ -107,5 +133,4 @@
 			</otherwise>		
 		</choose> 
 </delete>
-
 </mapper>
