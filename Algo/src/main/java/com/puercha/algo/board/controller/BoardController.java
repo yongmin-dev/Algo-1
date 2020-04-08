@@ -67,13 +67,16 @@ public class BoardController {
 
 	// 게시글보기
 	@GetMapping("/post/{postNum}/{returnPage}")
-	public String view(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum, Model model) {
+	public String view(@ModelAttribute @PathVariable String returnPage, @PathVariable String postNum, Model model,
+			HttpServletRequest request) {
 
 		logger.info("게시글 보기 :" + postNum);
 		Map<String, Object> map = boardService.view(postNum);
 		BoardPostVO boardPostVO = (BoardPostVO) map.get("boardPostVO");
 		logger.info("controller" + boardPostVO);
 		model.addAttribute("boardPostVO", boardPostVO);
+		UserVO userVO = loginService.getLoggedInUser(request.getSession());
+		model.addAttribute("userVO", userVO);
 
 		List<AttachmentVO> attachmentVO = null;
 		if (map.get("attachmentVO") != null) {
@@ -116,6 +119,8 @@ public class BoardController {
 		// UserVO userVO = (UserVO)request.getSession().getAttribute("userInfo");
 		UserVO userVO = loginService.getLoggedInUser(request.getSession());
 
+		logger.info("userVO :" + userVO);
+
 		boardPostVO.setUserName(userVO.getUsername());
 		boardPostVO.setUserNum(userVO.getUserNum());
 
@@ -128,22 +133,25 @@ public class BoardController {
 	// 게시글 작성하기
 	@PostMapping("/posting/{returnPage}")
 	public String write(@PathVariable String returnPage, @Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO,
-			BindingResult result, HttpServletRequest request) {
+			BindingResult result, HttpSession session) {
 
 		logger.info("게시글 작성 :" + boardPostVO.toString());
 
 		if (result.hasErrors()) {
+			logger.info("resultError");
 			return "board/posting";
 		}
 
-		UserVO userVO = (UserVO) request.getSession().getAttribute("userInfo");
+		UserVO userVO = loginService.getLoggedInUser(session);
+
+		logger.info("게시글 작성  userInfo" + userVO);
 		boardPostVO.setUserName(userVO.getUsername());
 		boardPostVO.setUserNum(userVO.getUserNum());
 
 		logger.info("게시글 작성 2" + boardPostVO.toString());
 		boardService.write(boardPostVO);
 
-		return "redirect:/board/list/" + returnPage + "/" + boardPostVO.getPostNum();
+		return "redirect:/board/post/" + boardPostVO.getPostNum() + "/" + returnPage;
 	}
 
 	// 게시글 삭제
@@ -185,7 +193,8 @@ public class BoardController {
 		}
 		logger.info("게시글 수정 내용: " + boardPostVO.toString());
 		boardService.modify(boardPostVO);
-		return "redirect:/board/list/" + returnPage;
+
+		return "redirect:/board/post/" + boardPostVO.getPostNum() + "/" + returnPage;
 	}
 
 	// 답글달기 양식
@@ -206,12 +215,12 @@ public class BoardController {
 	// 답글처리
 	@PostMapping("/reply/{returnPage}")
 	public String reply(@PathVariable String returnPage, @Valid @ModelAttribute("boardPostVO") BoardPostVO boardPostVO,
-			BindingResult result, HttpServletRequest request) {
+			BindingResult result, HttpServletRequest request, HttpSession session) {
 		logger.info("답글달기 실행 :" + boardPostVO.toString());
 		if (result.hasErrors()) {
 			return "/board/posting";
 		}
-		UserVO userVO = (UserVO) request.getSession().getAttribute("userInfo");
+		UserVO userVO = (UserVO) session.getAttribute("user");
 		boardPostVO.setUserNum(userVO.getUserNum());
 		boardPostVO.setUserName(userVO.getUsername());
 		boardService.reply(boardPostVO);

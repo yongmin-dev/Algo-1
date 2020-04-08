@@ -100,7 +100,7 @@
     </ul>
     <ul>
       <li><a href="">게시판</a></li>
-      <li><a href="">· 질문게시판</a></li>
+      <li><a href="${pageContext.request.contextPath}/board/list">· 질문게시판</a></li>
       <li><a href=""></a></li>
       <li><a href=""></a></li>
     </ul>

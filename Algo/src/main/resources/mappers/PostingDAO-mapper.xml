@@ -52,9 +52,9 @@
 
 	<!-- 게시글 수정 -->
 	<update id="update" parameterType="BoardPostVO">
-		UPDATE board
+		UPDATE board_post
 		SET category_num =
-		{#boardCategoryVO.categoryNum},
+		#{category.categoryNum},
 		title = #{title},
 		content = #{content},
 		updated_at = systimestamp
@@ -112,7 +112,7 @@
 		fdata, created_at as "createdAt", updated_at as "updatedAt"
 		FROM
 		post_attachment
-		WHERE post_num = #{postNum}
+		WHERE fid = #{fid}
 		order by fid desc
 
 	</select>

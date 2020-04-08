@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -76,6 +77,7 @@ public class BoardPostVO {
 	// 답변글 들여쓰기
 	private long indent;
 	
+//	@Nullable
 	private List<MultipartFile> files;
 
 }
