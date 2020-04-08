@@ -11,6 +11,12 @@
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/profile.css"/>" />	
 	<script type="text/javascript" src="<c:url value="/resources/js/profile.js"/>"></script>
+	<style>
+	h2{text-align:center;padding:100px 0 0 0;}
+	main{width:480px;margin:0 auto;}
+	#modifyBtn{width:100%;text-align:center;cursor:pointer;padding:10px 0;}
+	</style>
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
@@ -43,11 +49,12 @@
 			<span class="errmsg" id="address_errmsg"></span>
 			<form:errors path="address" cssClass="errmsg"></form:errors>
 			
-			<form:label path="gender">성별</form:label>
+			<form:label path="gender">성별</form:label> <br>
 			<form:radiobuttons path="gender" items="${gender}" itemValue="code" itemLabel ="label"  />
 			<span class="errmsg" id="gender_errmsg"></span>
 			<form:errors path="gender" cssClass="errmsg"></form:errors>
 			
+			<br>	
 			<form:label path="birth">생년월일</form:label>
 			<form:input type="date" path="birth" />
 			<span class="errmsg" id="birth_errmsg"></span>
