@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.puercha.algo.user.vo.TutorApplicationVO;
 import com.puercha.algo.user.vo.UserVO;
 /**
  * UserDAO 인터페이스를 구현하는 클래스
@@ -33,6 +34,15 @@ public class UserDAOImpl implements UserDAO {
 		logger.info("UserDAOImpl.insertUser(UserVO userVO) 호출됨!"+userVO);
 		return sqlSession.insert("mappers.UserDAO-mapper.insertUser",userVO);
 	}
+	
+	// 신청서 생성
+	@Override
+	public int insertApplication(TutorApplicationVO tutorApplication) {
+		logger.info("insertApplication(TutorApplicationVO tutorApplication)호출됨!");
+		return sqlSession.insert("mappers.UserDAO-mapper.insertApplication",tutorApplication);
+	}
+
+
 	/* Read */
 	//사용자 전체조회
 	@Override

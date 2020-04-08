@@ -2,6 +2,7 @@ package com.puercha.algo.user.dao;
 
 import java.util.List;
 
+import com.puercha.algo.user.vo.TutorApplicationVO;
 import com.puercha.algo.user.vo.UserVO;
 
 /**
@@ -14,6 +15,8 @@ public interface UserDAO {
 	/* Create */
 	//사용자 생성
 	int insertUser (UserVO userVO);
+	// 신청서 생성
+	int insertApplication(TutorApplicationVO tutorApplication);
 	
 	/* Read */
 	//사용자 전체조회
@@ -33,6 +36,7 @@ public interface UserDAO {
 	// 사용자 삭제
 	int deleteUser (String email,String pw);
 	int deleteUser (long userNum);
+
 	
 	
 	

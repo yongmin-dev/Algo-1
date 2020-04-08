@@ -2,6 +2,8 @@ package com.puercha.algo.user.vo;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 /**
@@ -21,11 +23,20 @@ public class TutorApplicationVO {
 	//제목
 	private String title;
 	
-	//제목
+	//내용
 	private String content;
 	
 	//첨부파일
-	private byte[] attachment;
+	private byte[] attachmentData;
+	
+	//첨부파일 크기
+	private long attachmentSize;
+	
+	//첨부파일 이름
+	private String attachmentName;
+	
+	//첨부파일 타입
+	private String attachmentType;
 	
 	//승인여부
 	private char approval;
@@ -35,4 +46,8 @@ public class TutorApplicationVO {
 	
 	//변경일시
 	private Date updatedAt;
+	
+	//첨부파일(업로드시)
+	private MultipartFile file;
+	
 }
