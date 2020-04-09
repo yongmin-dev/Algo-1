@@ -1,6 +1,10 @@
 package com.puercha.algo.content.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -199,7 +203,11 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int deleteSubject(long subjectNum, long userNum) {
-		// TODO Auto-generated method stub
+		logger.info("deleteSubject(long subjectNum, long userNum)");
+		SubjectVO subject = learningDAO.selectOneSubject(subjectNum);
+		if(subject !=null && subject.getUserNum() == userNum) {
+			return learningDAO.deleteSubject(subjectNum);
+		}
 		return 0;
 	}
 
@@ -369,17 +377,29 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public QuizVO getQuiz(long quizNum) {
+		logger.info("getQuiz(long quizNum)");
 		return learningDAO.selectOneQuiz(quizNum);
 	}
 
 	/**
 	 * 새 빈 마무리 문제를 생성함 
 	 * @param unitNum 마무리문제가 속한 단원의 번호
+	 * @param userNum 사용자 번호
 	 * @return 새 마무리문제의 번호
 	 */
 	@Override
-	public long createEmptyQuiz(long unitNum) {
-		// TODO Auto-generated method stub
+	public long createEmptyQuiz(long unitNum, long userNum) {
+		QuizVO quiz = new QuizVO();
+		quiz.setTitle("새 퀴즈");
+		quiz.setDifficulty(1);
+		quiz.setSolution("풀이");
+		quiz.setUnitNum(unitNum);
+		quiz.setContent("내용을 추가해주세요");
+		quiz.setUserNum(userNum);// 작성자
+		int result = learningDAO.insertQuiz(quiz);
+		if(result==1) {
+			return quiz.getQuizNum();
+		}
 		return 0;
 	}
 
@@ -391,7 +411,11 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int deleteQuiz(long quizNum, long userNum) {
-		// TODO Auto-generated method stub
+		logger.info("deleteQuiz(long quizNum, long userNum)");
+		QuizVO quiz = learningDAO.selectOneQuiz(quizNum);
+		if(quiz!=null && quiz.getUserNum() == userNum) {
+			return learningDAO.deleteQuiz(quizNum);
+		}
 		return 0;
 	}		
 	
@@ -402,18 +426,54 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int updateQuiz(QuizVO quiz) {
-		return 0;
+		logger.info("updateQuiz(QuizVO quiz)");
+		return learningDAO.updateQuiz(quiz);
 	}
 	
 	
+	
+	/**
+	 * 수정할 수 있는 데이터만 수정함
+	 * @param quizNum 퀴즈 번호
+	 * @param datas 수정할 데이터가 든  map 
+	 * @return 성공 시 1
+	 */
+	@Override
+	public int updateQuiz(long quizNum, Map<String, Object> datas) {
+		logger.info("updateQuiz(long quizNum, Map<String, Object> datas)");
+		QuizVO quiz = learningDAO.selectOneQuiz(quizNum);		
+		if(quiz != null ) {
+			Set<String> keySet = datas.keySet();
+			for(String key :keySet) {
+				Object object = datas.get(key);
+				String methodName = "set"+ key.substring(0,1).toUpperCase()+key.substring(1);
+				Method[] methods = quiz.getClass().getDeclaredMethods();
+				for(Method method : methods) {
+					if(method.getName().equals(methodName) ){
+						try {
+							method.invoke(quiz, object);
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+			}
+			
+			return learningDAO.updateQuiz(quiz);
+		}
+		return 0;
+	}
+
 	/**
 	 * 마무리문제 답안리스트를 가져옴
 	 * @param quizNum 마무리문제 번호
 	 * @return 마무리문제 답안리스트 객체
 	 */
 	@Override
-	public List<QuizVO> getAnswerList(long quizNum){
-		return null;
+	public List<QuizAnswerVO> getAnswerList(long quizNum){
+		logger.info("getAnswerList(long quizNum)");
+		return learningDAO.selectAllAnswer(quizNum);
 	}
 	
 	/**
@@ -422,9 +482,29 @@ public class ContentManager implements ContentManagingService {
 	 * @return 마무리문제 답안 VO
 	 */
 	@Override
-	public QuizAnswerVO createEmptyAnswer(long quizNum) {
-		// TODO Auto-generated method stub
-		return null;
+	public long createEmptyAnswer(long quizNum) {
+		logger.info("createEmptyAnswer(long quizNum)");
+		QuizAnswerVO answer = new QuizAnswerVO();
+		answer.setQuizNum(quizNum);
+		answer.setContent("새 답안");
+		answer.setCorrect(true);	
+		int result = learningDAO.insertAnswer(answer);
+		if(answer!=null && result == 1) {			
+			return answer.getAnswerNum() ;			
+		}
+		return 0;
+	}
+
+	
+	/**
+	 * 답안 내용을 가져온다.
+	 * @param answerNum 답안 번호
+	 * @return 답안의 VO
+	 */
+	@Override
+	public QuizAnswerVO getAnswer(long answerNum) {
+		logger.info("getAnswer(long answerNum)");
+		return learningDAO.selectOneAnswer(answerNum);
 	}
 
 	/**
@@ -434,8 +514,8 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int deleteAnswer(long answerNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteAnswer(long answerNum)");
+		return learningDAO.deleteAnswer(answerNum);
 	}
 
 	
@@ -446,10 +526,42 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int updateAnswer(QuizAnswerVO answer) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("updateAnswer(QuizAnswerVO answer)");
+		return learningDAO.updateAnswer(answer);
 	}
 
 	
+	/**
+	 * 마무리문제 답안을 수정
+	 * @param answerNum 답안 번호
+	 * @param datas 수정할 데이터가 든 map
+	 * @return 성공 시 1
+	 */
+	@Override
+	public int updateAnswer(long answerNum, Map<String,Object> datas) {
+		logger.info("updateAnswer(long answerNum, Map<String,Object> datas)");
+		QuizAnswerVO answer = learningDAO.selectOneAnswer(answerNum);		
+		if(answer != null ) {
+			Set<String> keySet = datas.keySet();
+			for(String key :keySet) {
+				Object object = datas.get(key);
+				String methodName = "set"+ key.substring(0,1).toUpperCase()+key.substring(1);
+				Method[] methods = answer.getClass().getDeclaredMethods();
+				for(Method method : methods) {
+					if(method.getName().equals(methodName) ){
+						try {
+							method.invoke(answer, object);
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+			}
+			
+			return learningDAO.updateAnswer(answer);
+		}
+		return 0;
+	}
 	
 }

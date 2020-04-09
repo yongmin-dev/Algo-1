@@ -27,10 +27,18 @@ public interface LearningDAO {
 	//과목 생성
 	int insertSubject(SubjectVO subject);
 	
-	//마무리문제 생성
+	/**
+	 * 마무리문제 생성
+	 * @param quiz 생성할 데이터 담긴 VO
+	 * @return 성공 시 1
+	 */
 	int insertQuiz(QuizVO quiz);
 	
-	//마무리문제 답안 생성
+	/**
+	 * 마무리문제 답안 생성
+	 * @param quizAnswer 생성할 데이터가 담긴 VO
+	 * @return 성공 시 1
+	 */
 	int insertAnswer(QuizAnswerVO quizAnswer);
 	
 	//진척도
@@ -87,6 +95,13 @@ public interface LearningDAO {
 	 */
 	QuizVO selectOneQuiz(long quizNum);
 	
+	/**
+	 * 답안 하나의 정보를 가져온다.
+	 * @param answerNum 답안번호
+	 * @return 답안의 vo
+	 */
+	QuizAnswerVO selectOneAnswer(long answerNum);
+	
 	/* update */
 	
 	/**
@@ -103,10 +118,18 @@ public interface LearningDAO {
 	 */
 	int updateSubject(SubjectVO subject);
 	
-	//마무리문제 수정
+	/**
+	 * 마무리문제 수정
+	 * @param quiz 수정된 데이터를 가진 VO
+	 * @return 성공 시 1
+	 */
 	int updateQuiz(QuizVO quiz);
 	
-	//마무리문제 답안 수정
+	/**
+	 * 마무리문제 답안 수정
+	 * @param quizAnswer 수정된 데이터를 가진 VO
+	 * @return 성공시 1
+	 */
 	int updateAnswer(QuizAnswerVO quizAnswer);
 	
 	/* delete */
@@ -125,6 +148,8 @@ public interface LearningDAO {
 	
 	//총 레코드 수
 	int countTotalRecord(String searchType, String keyword);
+
+	
 
 	
 

@@ -43,6 +43,48 @@
 			SELECT UNIT_NUM_SEQ.currval FROM dual
 		</selectKey>
 	</insert>
+	<!-- 새로운 마무리문제 생성 -->
+	<insert id="insertQuiz" parameterType="QuizVO">
+		INSERT INTO Quiz (
+		    QUIZ_NUM, 
+		    UNIT_NUM, 
+		    TITLE, 
+		    CONTENT, 
+		    CORRECT_ANSWER, 
+		    SOLUTION, 
+		    USER_NUM
+		    )
+		VALUES (
+		    QUIZ_NUM_SEQ.nextval,
+		    #{unitNum},
+		    #{title},
+		    #{content},
+		    #{correctAnswer,jdbcType=VARCHAR},
+		    #{solution,jdbcType=VARCHAR},
+		    #{userNum}
+		)
+		<selectKey order="AFTER" keyProperty="quizNum" resultType="long">
+			SELECT QUIZ_NUM_SEQ.currval FROM Dual
+		</selectKey>
+	</insert>
+
+	<!-- 새로운 답안 생성 -->
+	<insert id="insertAnswer" parameterType="QuizAnswerVO" >
+		INSERT INTO Quiz_answer (
+		    ANSWER_NUM, 
+		    QUIZ_NUM, 
+		    CONTENT, 
+		    IS_CORRECT
+		) VALUES (
+		    ANSWER_NUM_SEQ.nextval,
+		    #{quizNum},
+		    #{content},
+		    #{correct}
+		)
+		<selectKey resultType="long" order="AFTER" keyProperty="answerNum">
+			SELECT ANSWER_NUM_SEQ.currval FROM dual
+		</selectKey>
+	</insert>
 
 	<!-- 과목목록 -->
 	<!-- 1/전체목록 -->
@@ -270,9 +312,45 @@
 
 	<!-- 한 개의 마무리문제를 열람 -->
 	<select id="selectOneQuiz" parameterType="long" resultType="QuizVO">
-		
+		SELECT 
+		    QUIZ_NUM AS "quizNum", 
+		    UNIT_NUM AS "unitNum", 
+		    TITLE AS "title", 
+		    CONTENT AS "content", 
+		    CORRECT_ANSWER AS "correctAnswer", 
+		    SOLUTION AS "solution", 
+		    CREATED_AT AS "createdAt", 
+		    UPDATED_AT AS "updatedAt",
+		    USER_NUM AS "userNum"
+		FROM Quiz
+		WHERE quiz_num =#{quizNum}
 	</select>
-
+	
+<!-- 퀴즈(마무리문제) 답안	 -->
+	<select id="selectAnswerList" parameterType="long" resultType="QuizAnswerVO">
+		SELECT 
+		    ANSWER_NUM AS "answerNum", 
+		    QUIZ_NUM AS "quizNum", 
+		    CONTENT AS "content", 
+		    IS_CORRECT AS "isCorrect", 
+		    CREATED_AT AS "createdAt", 
+		    UPDATED_AT AS "updatedAt"
+		FROM Quiz_answer
+		WHERE quiz_num = #{quizNum}
+	</select>
+	<!-- 답안 한개 조회	 -->
+	<select id="selectOneAnswer" parameterType="long" resultType="QuizAnswerVO">
+		SELECT 
+		    ANSWER_NUM AS "answerNum", 
+		    QUIZ_NUM AS "quizNum", 
+		    CONTENT AS "content", 
+		    IS_CORRECT AS "isCorrect", 
+		    CREATED_AT AS "createdAt", 
+		    UPDATED_AT AS "updatedAt"
+		FROM Quiz_answer
+		WHERE ANSWER_NUM = #{answerNum}
+	</select>
+	
 <!--  Update  -->
 	<!-- 과목 내용 변경 -->
 	<update id="updateSubject" parameterType="SubjectVO">
@@ -297,20 +375,52 @@
 		    CHAPTER_DEPTH = #{chapterDepth},
 		    UPDATED_AT = SYSTIMESTAMP
 		WHERE UNIT_NUM = #{unitNum}	
-	</update>	
-
-
-
+	</update>
+	<!-- 마무리문제 내용 편집	 -->
+	<update id="updateQuiz" parameterType="QuizVO">
+		UPDATE Quiz 
+		SET
+		    UNIT_NUM = #{unitNum}, 
+		    TITLE = #{title}, 
+		    CONTENT =#{content}, 
+		    CORRECT_ANSWER = #{correctAnswer}, 
+		    SOLUTION = #{solution},
+		    UPDATED_AT = SYSTIMESTAMP
+		WHERE QUIZ_NUM = #{quizNum}
+	</update>
+	<!-- 마무리문제 답안 수정 -->
+	<update id="updateAnswer" parameterType="QuizAnswerVO">
+		UPDATE Quiz_answer
+		SET   
+		    QUIZ_NUM = #{quizNum}, 
+		    CONTENT = #{content}, 
+		    IS_CORRECT = #{correct}, 
+		    UPDATED_AT = SYSTIMESTAMP
+		WHERE ANSWER_NUM = #{answerNum}
+	</update>
 
 
 <!-- Delete -->
-<!-- 단원 삭제 -->
-<delete id="deleteUnit" parameterType="long" >
-	DELETE FROM unit 
-	WHERE unit_num = #{unitNum}
-</delete>
-
-
+	<!-- 과목 삭제 -->
+	<delete id="deleteSubject" parameterType="long">
+		DELETE FROM Subject
+		WHERE subject_num = #{subjectNum}
+	</delete>
+	<!-- 단원 삭제 -->
+	<delete id="deleteUnit" parameterType="long" >
+		DELETE FROM unit 
+		WHERE unit_num = #{unitNum}
+	</delete>
+	<!-- 마무리문제 삭제 -->
+	<delete id="deleteQuiz" parameterType="long">
+		DELETE FROM Quiz
+		WHERE quiz_num = #{quizNum} 
+	</delete>
+	<!-- 마무리문제 답안 삭제	 -->
+	<delete id="deleteAnswer" parameterType="long">
+		DELETE FROM QUIZ_ANSWER
+		WHERE answer_num = #{answerNum}
+	</delete>
 
 
 

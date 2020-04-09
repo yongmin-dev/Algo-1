@@ -86,7 +86,6 @@ public class LearningContentController {
 		UserVO sessionUser = loginService.getLoggedInUser(session);
 		int result = contentManager.deleteSubject(subjectNum, sessionUser.getUserNum());
 		if (result != 1) {
-
 			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		} else {
 			body.put("msg", "success");
@@ -270,13 +269,15 @@ public class LearningContentController {
 	}
 
 	// 빈 마무리문제 생성
-	@PostMapping(path = "/quiz/new", produces = "application/json")
+	@PostMapping(path = "/quiz/new/{unitNum}", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> createNewQuiz(
-			@RequestParam(name = "unitNum", required = true) long unitNum,
+			@PathVariable(name = "unitNum", required = true) long unitNum,
 			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
 		logger.info("createNewQuiz():" + unitNum);
-		long newQuizNum = contentManager.createEmptyQuiz(unitNum);
+		UserVO sessionUser = loginService.getLoggedInUser(session);
+
+		long newQuizNum = contentManager.createEmptyQuiz(unitNum,sessionUser.getUserNum());
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("newQuizNum ", newQuizNum);
 		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
@@ -303,16 +304,16 @@ public class LearningContentController {
 	}
 
 	// 마무리문제 수정
-	@PutMapping(path = { "/quiz/{quizNum}", "/quiz" }, consumes = "application/json", produces = "application/json")
+	@PutMapping(path = { "/quiz/{quizNum}" }, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateQuiz(
+			@PathVariable(name = "quizNum") long quizNum,
 			@RequestBody Map<String, Object> reqBody,
 			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
 		Map<String, Object> resBody = new HashMap<String, Object>();
 		logger.info("updateQuiz():" + reqBody);
-		QuizVO quiz = new QuizVO();
-		contentManager.updateQuiz(quiz);
-		int result = 0;
+		
+		int result = contentManager.updateQuiz(quizNum,reqBody);
 		if (result != 1) {
 			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -323,62 +324,77 @@ public class LearningContentController {
 	}
 
 	// 마무리문제 답안 리스트
-		@GetMapping(path = "/answer/list", produces = "application/json")
-		public ResponseEntity<List<QuizAnswerVO>> getAnswerList(
-				@RequestParam(name = "quizNum", required = true) long quizNum) {
-			ResponseEntity<List<QuizAnswerVO>> res = null;
-			List<QuizVO> list = contentManager.getAnswerList(quizNum);
-			logger.info("quizNum:" + quizNum);
-//			res = new ResponseEntity<List<QuizAnswerVO>>(list, HttpStatus.OK);
-			return res;
-		}
+	@GetMapping(path = "/answer/list", produces = "application/json")
+	public ResponseEntity<List<QuizAnswerVO>> getAnswerList(
+			@RequestParam(name = "quizNum", required = true) long quizNum) {
+		ResponseEntity<List<QuizAnswerVO>> res = null;
+		List<QuizAnswerVO> list = contentManager.getAnswerList(quizNum);
+		logger.info("quizNum:" + quizNum);
+		return res;
+	}
 
-		// 새 답안 생성
-		@PostMapping(path = "/answer/new", produces = "application/json")
-		public ResponseEntity<Map<String, Object>> createNewAnswer(
-				@RequestParam(name = "quizNum", required = true) long quizNum,
-				HttpSession session) {
-			ResponseEntity<Map<String, Object>> res = null;
-			logger.info("createNewAnswer():" + quizNum);
-			QuizAnswerVO newAnswer = contentManager.createEmptyAnswer(quizNum); 
-			Map<String, Object> body = new HashMap<String, Object>();
+	// 새 답안 생성
+	@PostMapping(path = "/answer/new/{quizNum}", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> createNewAnswer(
+			@PathVariable(name = "quizNum", required = true) long quizNum,
+			HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		logger.info("createNewAnswer():" + quizNum);
+		long newAnswerNum = contentManager.createEmptyAnswer(quizNum); 
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("newAnswerNum",newAnswerNum);
+		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
+		return res;
+	}
+	// 마무리문제 답안 내용
+	@GetMapping(path = "/answer/{answerNum}", produces = "application/json")
+	public ResponseEntity<QuizAnswerVO> getQuizAnswer(
+			@PathVariable(name = "answerNum") long answerNum) {
+		ResponseEntity<QuizAnswerVO> res = null;
+		QuizAnswerVO answer = contentManager.getAnswer(answerNum);
+		logger.info("answerNum:" + answerNum);
+		res = new ResponseEntity<QuizAnswerVO>(answer, HttpStatus.OK);
+		return res;
+	}
+
+	// 마무리문제 답안 삭제
+	@DeleteMapping(path = "/answer/{answerNum}", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteAnswer(
+			@PathVariable(name = "answerNum") long answerNum,
+			HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		Map<String, Object> body = new HashMap<String, Object>();
+		int result = contentManager.deleteAnswer(answerNum);
+		if (result != 1) {
+			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
+		} else {
+			body.put("msg", "success");
 			res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
-			return res;
 		}
 
-		// 마무리문제 답안 삭제
-		@DeleteMapping(path = "/answer/{answerNum}", produces = "application/json")
-		public ResponseEntity<Map<String, Object>> deleteAnswer(
-				@PathVariable(name = "answerNum") long answerNum,
-				HttpSession session) {
-			ResponseEntity<Map<String, Object>> res = null;
-			int result = contentManager.deleteAnswer(answerNum);
-			Map<String, Object> body = new HashMap<String, Object>();
-			UserVO sessionUser = loginService.getLoggedInUser(session);
-
-			return res;
-		}
+		return res;
+	}
+	
+	
+	// 마무리문제 답 수정
+	@PutMapping(path = { "/answer/{answerNum}"}, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateAnswer(
+			@PathVariable(name = "answerNum" ) long answerNum,
+			@RequestBody Map<String, Object> reqBody,
+			HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		Map<String, Object> resBody = new HashMap<String, Object>();		
+		int result = contentManager.updateAnswer(answerNum,reqBody);
+		logger.info("updateAnswer():" + reqBody);
 		
-		
-		// 마무리문제 답 수정
-		@PutMapping(path = { "/answer/{answerNum}", "/answer" }, consumes = "application/json", produces = "application/json")
-		public ResponseEntity<Map<String, Object>> updateAnswer(
-				@RequestBody Map<String, Object> reqBody,
-				HttpSession session) {
-			ResponseEntity<Map<String, Object>> res = null;
-			Map<String, Object> resBody = new HashMap<String, Object>();
-			QuizAnswerVO answer = new QuizAnswerVO(); 
-			int result = contentManager.updateAnswer(answer);
-			logger.info("updateAnswer():" + reqBody);
-			
-			if (result != 1) {
-				res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
-			} else {
-				resBody.put("msg", "success");
-				res = new ResponseEntity<Map<String, Object>>(resBody, HttpStatus.OK);
-			}
-			return res;
+		if (result != 1) {
+			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
+		} else {
+			resBody.put("msg", "success");
+			res = new ResponseEntity<Map<String, Object>>(resBody, HttpStatus.OK);
 		}
+		return res;
+	}
 		
 		
 		

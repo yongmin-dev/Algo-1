@@ -4,7 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.Target;
+
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Yongmin
@@ -26,7 +30,7 @@ public class QuizAnswerVO {
 	private String content;
 	
 	//정답여부
-	private char isCorrect;
+	private boolean isCorrect;
 	
 	//생성일시
 	private Date createdAt;
@@ -34,4 +38,36 @@ public class QuizAnswerVO {
 	//수정일시
 	private Date updatedAt;
 	
+	/**
+	 *  character로 부터 correct를 set함
+	 * @param c 문자형이 T이면 'true' 나머지는 'false'
+	 */
+	public void setCorrectFromCharacter(char c) {
+		if(c=='t' || c=='T') {
+			this.isCorrect = true;
+		}
+		else {
+			this.isCorrect =false;
+		}
+	}
+	/**
+	 * String으로 부터 correct를 set함
+	 * @param correct 문자열이 'true'이거나 't'이면 'true' 나머지는 'false' (대소문자 상관없음)
+	 */
+	public void setCorrectFromString(String correct) {
+		if(correct.toUpperCase().equals("TRUE") ||
+			correct.toUpperCase().equals("T")
+				) {
+			this.isCorrect = true;
+		} else {
+			this.isCorrect = false;
+		}
+	}
+	
+	public char getCorrect() {
+		if(this.isCorrect)
+			return 't';
+		else 
+			return 'f';					
+	}
 }

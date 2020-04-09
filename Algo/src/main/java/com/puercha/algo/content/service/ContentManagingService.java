@@ -1,6 +1,7 @@
 package com.puercha.algo.content.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
@@ -202,9 +203,10 @@ public interface ContentManagingService {
 	/**
 	 * 새 빈 마무리 문제를 생성함 
 	 * @param unitNum 마무리문제가 속한 단원의 번호
+	 * @param userNum 사용자 번호
 	 * @return 새 마무리문제의 번호
 	 */
-	long createEmptyQuiz(long unitNum);
+	long createEmptyQuiz(long unitNum, long userNum);
 
 	/**
 	 * 마무리문제 를 삭제함
@@ -220,20 +222,27 @@ public interface ContentManagingService {
 	 * @return 성공시 1
 	 */
 	int updateQuiz(QuizVO quiz);
+	/**
+	 * 수정할 수 있는 데이터만 수정함
+	 * @param quizNum 퀴즈 번호
+	 * @param datas 수정할 데이터가 든  map 
+	 * @return 성공 시 1
+	 */
+	int updateQuiz(long quizNum, Map<String,Object> datas);
 	
 	/**
 	 * 마무리문제 답안리스트를 가져옴
 	 * @param quizNum 마무리문제 번호
 	 * @return 마무리문제 답안리스트 객체
 	 */
-	List<QuizVO> getAnswerList(long quizNum);
+	List<QuizAnswerVO> getAnswerList(long quizNum);
 
 	/**
 	 * 새 마무리문제 답안을 생성함
 	 * @param quizNum 마무리문제 번호
 	 * @return 마무리문제 답안 VO
 	 */
-	QuizAnswerVO createEmptyAnswer(long quizNum);
+	long createEmptyAnswer(long quizNum);
 
 	/**
 	 * 마무리문제 답안을 삭제함
@@ -250,6 +259,13 @@ public interface ContentManagingService {
 	int updateAnswer(QuizAnswerVO answer);
 
 	/**
+	 * 마무리문제 답안을 수정
+	 * @param answerNum 답안 번호
+	 * @param datas 수정할 데이터가 든 map
+	 * @return 성공 시 1
+	 */
+	int updateAnswer(long answerNum, Map<String,Object> datas);
+	/**
 	 * 단원의 depth를 설정한다.
 	 * @param unitNum 단원 번호
 	 * @param depth 
@@ -257,5 +273,12 @@ public interface ContentManagingService {
 	 * @return 성공 시 1 
 	 */
 	int updateUnitDepth(long unitNum, String depth, long userNum);
+
+	/**
+	 * 답안 내용을 가져온다.
+	 * @param answerNum 답안 번호
+	 * @return 답안의 VO
+	 */
+	QuizAnswerVO getAnswer(long answerNum);
 
 }

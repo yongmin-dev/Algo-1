@@ -60,16 +60,26 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.insert("mappers.learningDAO-mapper.insertSubject",subject);
 	}
 
-	@Override
+	/**
+	 * 마무리문제 생성
+	 * @param quiz 생성할 데이터 담긴 VO
+	 * @return 성공 시 1
+	 */
+	@Override	
 	public int insertQuiz(QuizVO quiz) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertQuiz(QuizVO quiz)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertQuiz",quiz);
 	}
 
+	/**
+	 * 마무리문제 답안 생성
+	 * @param quizAnswer 생성할 데이터가 담긴 VO
+	 * @return 성공 시 1
+	 */
 	@Override
 	public int insertAnswer(QuizAnswerVO quizAnswer) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertAnswer(QuizAnswerVO quizAnswer)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertAnswer",quizAnswer);
 	}
 
 	@Override
@@ -158,7 +168,18 @@ public class LearningDAOImpl implements LearningDAO {
 	@Override
 	public QuizVO selectOneQuiz(long quizNum) {
 		logger.info("selectOneQuiz(long quizNum)");
-		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneQuiz");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneQuiz",quizNum);
+	}
+	
+	/**
+	 * 답안 하나의 정보를 가져온다.
+	 * @param answerNum 답안번호
+	 * @return 답안의 vo
+	 */
+	@Override
+	public QuizAnswerVO selectOneAnswer(long answerNum) {
+		logger.info("selectOneAnswer(long answerNum)");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneAnswer", answerNum);
 	}
 
 
@@ -185,16 +206,26 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.update("mappers.learningDAO-mapper.updateSubject",subject);
 	}
 
+	/**
+	 * 마무리문제 수정
+	 * @param quiz 수정된 데이터를 가진 VO
+	 * @return 성공 시 1
+	 */
 	@Override
 	public int updateQuiz(QuizVO quiz) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("updateQuiz(QuizVO quiz)");
+		return sqlSession.update("mappers.learningDAO-mapper.updateQuiz",quiz);
 	}
 
+	/**
+	 * 마무리문제 답안 수정
+	 * @param quizAnswer 수정된 데이터를 가진 VO
+	 * @return 성공시 1
+	 */
 	@Override
 	public int updateAnswer(QuizAnswerVO quizAnswer) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("updateAnswer(QuizAnswerVO quizAnswer)");
+		return sqlSession.update("mappers.learningDAO-mapper.updateAnswer",quizAnswer);
 	}
 
 	@Override
@@ -205,20 +236,20 @@ public class LearningDAOImpl implements LearningDAO {
 
 	@Override
 	public int deleteSubject(long subjectNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteUnit(long unitNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteSubject",subjectNum);
 	}
 
 	@Override
 	public int deleteQuiz(long quizNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteQuiz(long quizNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteQuiz",quizNum);
 	}
 
 	@Override
 	public int deleteAnswer(long answerNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteAnswer(long answerNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteAnswer",answerNum);
 	}
 
 	// 총 리코드 수
