@@ -20,29 +20,20 @@
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 		<div>
 
-			<table>
-				<tr>
-					<th>제목</th>
-					<th>과목명</th>
-					<th>과목명</th>
-					<th>과목명</th>
-					<th>과목명</th>
-				</tr>
-				
-				<c:forEach var="quiz" items="${quizList }">
-					<tr>
-						<td>${quiz.content }</td>
-						
-						<c:forEach var="answer" items="${quiz.answerList }">
-						<td>
-						${answer.content }
-						</td>
-						</c:forEach>
-						
-						
-					</tr>
-				</c:forEach>
-			</table>
+
+
+			<c:forEach var="quiz" items="${quizList }">
+			${quiz.content }
+		<ul>
+
+
+					<c:forEach var="answer" items="${quiz.answerList }">
+
+						<li>${answer.content }
+					</c:forEach>
+				</ul>
+			</c:forEach>
+
 
 		</div>
 

@@ -19,31 +19,22 @@
 	<div class="container">
 
 		<div>
-			<table>
-				<tr>
-					<th>번호</th>
-					<th>과목명</th>
-					<th>출제자</th>
-					<th>작성일</th>
-					<th>사진데이터</th>
 
-				</tr>
-
-				<c:forEach var="subject" items="${subjectList }">
-					<fmt:formatDate value="${subject.createdAt }"
-						pattern="yyyy/MM/dd HH:mm" var="cdate" />
-					<tr>
-						<td>${subject.subjectNum }</td>
-						<td>${subject.userNum }</td>
-						<td><a
+			<c:forEach var="subject" items="${subjectList }">
+				<fmt:formatDate value="${subject.createdAt }"
+					pattern="yyyy/MM/dd HH:mm" var="cdate" />
+				<div>
+					<h2>과목 : ${subject.title }</h2>
+					<div>
+						<a
 							href="${pageContext.request.contextPath }/learning/subject/${subject.subjectNum }">
-								${subject.title }</a>
-						<td>${cdate }</td>
-<%-- 						<td><img src ="${pageContext.request.contextPath }/images/${subject.imageData }" width="120px" height="110px"></td> --%>
-						<td><img src ="http://localhost:9080/algo/board/selectFile/1" width="120px" height="110px"></td>
-					</tr>
-				</c:forEach>
-			</table>
+							<img src="http://localhost:9080/algo/board/selectFile/1"
+							width="120px" height="120px">
+						</a>
+					</div>
+				</div>
+			</c:forEach>
+
 		</div>
 
 		<div class="paging">

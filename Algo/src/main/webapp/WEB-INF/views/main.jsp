@@ -79,7 +79,7 @@
 						<li>NO.1</li>
 						<li>사용자1</li>									
 					</ul>
-										<ul>
+					<ul>
 						<li>NO.1</li>
 						<li>사용자1</li>									
 					</ul>

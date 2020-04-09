@@ -69,9 +69,10 @@ public class LearningController {
 	}
 
 	// 단원열기
-	@GetMapping("/unit/{unitNum}")
-	public String viewUnit(@PathVariable String unitNum, HttpSession session, Model model) {
-
+	@GetMapping("/unit/{subjectNum}/{unitNum}")
+	public String viewUnit(@PathVariable String unitNum, @PathVariable String subjectNum, HttpSession session, Model model) {
+		
+		model.addAttribute("unitList", learningService.unitList(subjectNum));
 		Map<String, Object> map = learningService.viewUnit(unitNum);
 		UnitVO unitVO = (UnitVO) map.get("UnitVO");
 		model.addAttribute("unitVO", unitVO);
