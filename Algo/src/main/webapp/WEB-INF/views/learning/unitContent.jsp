@@ -20,38 +20,25 @@
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 
 		<div>
-			<table>
-				<tr>
-					<th>단원명</th>
-					<th>단원명</th>
-					<th>내용</th>
-					<th>단원제목</th>
-					<th>챕터뎁스</th>
-
-				</tr>
-
-				<c:forEach var="unit" items="${unitList }">
-					<fmt:formatDate value="${unit.createdAt }"
-						pattern="yyyy/MM/dd HH:mm" var="cdate" />
-					<tr>
-						<td>${unit.unitNum }</td>
-						<td>${unit.content }</td>
-						<td><a
-							href="${pageContext.request.contextPath }/learning/unit/${unit.unitNum }">
-								${unit.title }</a>
-						<td>${cdate }</td>
-					</tr>
-				</c:forEach>
-			</table>
+			<c:forEach var="unit" items="${unitList }">
+				<h1>
+					<a
+						href="${pageContext.request.contextPath }/learning/unit/${subjectNum}/${unit.unitNum }">${unit.title }</a>
+				</h1>
+			</c:forEach>
+		</div>
+		<div>
+			<div id="unitContent">
+				<h1>단원 내용보기 : ${unitVO.content }</h1>
+			</div>
+			<div>
+				<h1><a style="background-color : red"
+					href="${pageContext.request.contextPath }/learning/quiz/${unitVO.unitNum }">
+					마무리 문제 풀기</a></h1>
+			</div>
 		</div>
 
-		<!-- 단워 내용보기는 unitVO로 불러옴 -->
-		단원 내용보기 : ${unitVO.title } <a
-			href="${pageContext.request.contextPath }/learning/quiz/${unitVO.unitNum }">
-			마무리 문제 풀기</a>
-			
-			
-			
+
 
 	</main>
 	<%@include file="/WEB-INF/views/include/footer.jsp"%>

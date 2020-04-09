@@ -96,7 +96,8 @@ function init() {
 		
 	}
 	
-	
+	//첨부파일 1건 삭제 : ajax 구현
+	let fileList = document.getElementById("fileList");
 	
 	
 	

@@ -86,6 +86,7 @@
 			</foreach>
 		</if>
 		)
+		order by "subjectNum" asc
 	</select>
 	<!-- 사용자가 작성한 모든과목들가져오기 -->
 	<select id="selectAllUserSubjects" parameterType="hashmap" resultType="SubjectVO">
@@ -167,6 +168,7 @@
 		created_at as "createdAt",
 		updated_at as "updatedAt"
 		from unit where subject_num like #{subjectNum}
+		order by "unitNum" asc
 
 
 	</select>
