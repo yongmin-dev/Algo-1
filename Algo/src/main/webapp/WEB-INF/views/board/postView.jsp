@@ -23,6 +23,7 @@
 	
 	button{padding:5px 15px;cursor:pointer;float:left;display:inline-block;}
 	.btn_wrap{overflow:hidden;float:right;}
+	#title{border-style:none; background:none; font-size: 1.5em;}
 	</style>
 	
 </head>
@@ -39,7 +40,8 @@
 <div class="board_wrap">
     
     <div class="board_list_header">
-      <h3 id="title">${boardPostVO.title }</h3>
+
+      <h3><form:input id="title" type="text" path="title" readOnly="readOnly"/></h3>
     </div>
     <div class="board_summary">
       <div>
