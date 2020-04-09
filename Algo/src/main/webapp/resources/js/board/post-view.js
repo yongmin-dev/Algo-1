@@ -73,7 +73,7 @@ function init() {
 		
 		// 수정모드
 		if(flag){
-			document.getElementById("boardTitle").textContent = "게시글 수정";
+//			document.getElementById("boardTitle").textContent = "게시글 수정";
 			document.getElementById("category.categoryNum").removeAttribute("disabled");
 			document.getElementById("title").removeAttribute("readOnly");
 			document.getElementById("content").removeAttribute("readOnly");
@@ -83,7 +83,7 @@ function init() {
 			
 		// 읽기 모드
 		}else{
-			document.getElementById("boardTitle").textContent = "게시글 보기";
+//			document.getElementById("boardTitle").textContent = "게시글 보기";
 			document.getElementById("category.categoryNum").setAttribute("disabled",true);
 			document.getElementById("title").setAttribute("readOnly",true);
 			document.getElementById("content").setAttribute("readOnly", true);

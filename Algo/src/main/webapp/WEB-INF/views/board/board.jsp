@@ -15,6 +15,14 @@
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
 <script type="text/javascript"
 	src="<c:url value="/resources/js/board.js"/>"></script>
+	
+	<style>
+	.container{background:#fff;height:auto;}
+	.paging{height:100px;}
+	.footer{width:100%;}
+	</style>
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
@@ -22,7 +30,7 @@
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 
 
-<div class="container">
+<div class="container clear">
 <div class="board_wrap clear">
       <form action="">
     <div class="board_header">
@@ -142,7 +150,8 @@
 				</c:forEach>
 			</table>
 		</div> --%>
-
+</div>
+</div>
 
 	
 	<%@include file="/WEB-INF/views/include/footer.jsp"%>
