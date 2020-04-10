@@ -10,12 +10,17 @@
 <%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<style type="text/css">
 		#case-list li.selected{
-			background:lime;
+			background:#f2ebff;
 		}
 		
 		main{width:980px;margin:0 auto;}
 		button{    padding: 10px 20px;cursor:pointer;}
 		#content{height:400px;}
+		.case-list{height:300px;overflow:scroll;}
+		
+		
+		
+		
 	</style>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/content-manager.js"></script>
 </head>
