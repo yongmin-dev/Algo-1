@@ -9,6 +9,7 @@ import org.hibernate.annotations.Target;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Tolerate;
 
 /**
  * @author Yongmin
@@ -30,6 +31,7 @@ public class QuizAnswerVO {
 	private String content;
 	
 	//정답여부
+	@Getter @Setter
 	private boolean isCorrect;
 	
 	//생성일시
@@ -63,7 +65,7 @@ public class QuizAnswerVO {
 			this.isCorrect = false;
 		}
 	}
-	
+	@Tolerate
 	public char getCorrect() {
 		if(this.isCorrect)
 			return 't';

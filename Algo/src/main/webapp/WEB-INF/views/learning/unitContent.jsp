@@ -17,23 +17,28 @@
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
 	<main>
-		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
-
-		<div>
+		
+		<!-- 다른 단원의 목록		 -->
+		<nav>
 			<c:forEach var="unit" items="${unitList }">
 				<h1>
 					<a
-						href="${pageContext.request.contextPath }/learning/unit/${subjectNum}/${unit.unitNum }">${unit.title }</a>
+						href="${pageContext.request.contextPath }/learning/unit/${subjectNum}/${unit.unitNum }"><span>${unit.chapterDepth}</span>${unit.title }</a>
 				</h1>
 			</c:forEach>
-		</div>
+		</nav>
 		<div>
 			<div id="unitContent">
-				<h1>단원 내용보기 : ${unitVO.content }</h1>
+			<!-- 단원 제목-->
+				<h1 id="unit-title"><span class="depth">${unitVO.chapterDepth} </span>${unitVO.title}</h1>
 			</div>
+			<!-- 단원 내용-->
 			<div>
-				<h1><a style="background-color : red"
-					href="${pageContext.request.contextPath }/learning/quiz/${unitVO.unitNum }">
+				${unitVO.content}
+			</div>
+			<!-- 마무리 문제 풀기-->
+			<div>
+				<h1><a href="${pageContext.request.contextPath }/learning/quiz/${unitVO.unitNum }">
 					마무리 문제 풀기</a></h1>
 			</div>
 		</div>

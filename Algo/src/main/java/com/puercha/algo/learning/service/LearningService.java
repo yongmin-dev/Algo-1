@@ -35,4 +35,13 @@ public interface LearningService {
 	//마무리문제 답지 불러오기
 	List<QuizAnswerVO> viewQuizAnswer(String unitNum);
 	
+	/**
+	 * 마무리문제 답안 체크하기
+	 * @param quizNum 문제 번호
+	 * @param answers 답
+	 * @param userNum 사용자 번호
+	 * @return 결과 데이터
+	 */
+	Map<String,Object> checkAnswers(long quizNum, List<Long> answers, long userNum);
+	
 }

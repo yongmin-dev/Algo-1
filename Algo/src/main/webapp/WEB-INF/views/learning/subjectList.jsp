@@ -17,26 +17,28 @@
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
 	<div class="container">
-
+		<!-- 과목 리스트가 표시 됨 -->
 		<div>
-
+			
 			<c:forEach var="subject" items="${subjectList }">
 				<fmt:formatDate value="${subject.createdAt }"
 					pattern="yyyy/MM/dd HH:mm" var="cdate" />
 				<div>
-					<h2>과목 : ${subject.title }</h2>
 					<div>
 						<a
 							href="${pageContext.request.contextPath }/learning/subject/${subject.subjectNum }">
-							<img src="http://localhost:9080/algo/board/selectFile/1"
-							width="120px" height="120px">
+							<!-- 과목 이미지 -->
+							<img src="${pageContext.request.contextPath }/learning/subject/image/${subject.subjectNum }"width="120px" height="120px">
+							<!-- 과목 제목-->
+							<span class="title"><strong class="title">${subject.title }</strong></span>
+							<span class="progress-rate">${subject.progressRate }%</span>
 						</a>
 					</div>
 				</div>
 			</c:forEach>
 
 		</div>
-
+		<!-- 과목 페이징 -->
 		<div class="paging">
 			<i class="fas fa-chevron-left"></i>
 			<div id="paging">
