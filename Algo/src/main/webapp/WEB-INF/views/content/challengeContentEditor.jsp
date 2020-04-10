@@ -9,18 +9,17 @@
 <title>도전과제 편집</title>
 <%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<style type="text/css">
-		#case-list li.selected{
-			background:#f2ebff;
-		}
+
+		#case-list li.selected{background: #555273;color: #fff;}
+		#case-list li {margin-top:10px;}
+		#case-list{height:200px;overflow:scroll;-ms-overflow-style: 10px; /* IE and Edge */
+    scrollbar-width: 10px; /* Firefox */margin:20px 0;}
+		#case-list::-webkit-scrollbar { width:10px; /* Chrome, Safari, Opera*/}
+		
 		
 		main{width:980px;margin:0 auto;}
 		button{    padding: 10px 20px;cursor:pointer;}
 		#content{height:400px;}
-		.case-list{height:300px;overflow:scroll;}
-		
-		
-		
-		
 	</style>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/content-manager.js"></script>
 </head>

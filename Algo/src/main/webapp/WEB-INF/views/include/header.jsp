@@ -8,7 +8,7 @@
 <div class="header clear" style="border-bottom:1px solid #555273;">
   <div class="header_inner clear">
   <h1 class="logo">
-    <a href="#"><img src="<c:url value="/resources/images/HatchfulExport-All (2)/logo_transparent.png"/>" alt=""></a>
+    <a href="${pageContext.request.contextPath}/"><img src="<c:url value="/resources/images/HatchfulExport-All (2)/logo_transparent.png"/>" alt=""></a>
   </h1>
   
 <%
