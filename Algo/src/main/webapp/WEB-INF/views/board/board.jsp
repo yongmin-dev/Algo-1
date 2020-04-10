@@ -24,6 +24,12 @@
 	
 	
 </head>
+
+<script>
+
+</script>
+
+
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
 	
@@ -80,7 +86,7 @@
     
   </div>
   <div class="btn_write clear">
-    <input type="submit" value="글쓰기">
+  	<a href="${pageContext.request.contextPath}/board/posting/${(empty pageNum)? '1': pageNum}">글쓰기</a>    
   </div>
 
    <div class="paging">
