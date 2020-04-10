@@ -8,9 +8,11 @@
 	<title>학습 컨텐츠 관리</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<style type="text/css">
+	
+	*{box-sizing:border-box;}
 		#subject-list hidden{display: none;}
-		#subject-list li.selected{background:#daf3da;}
-		#unit-list li.selected{	background:#daf3da;	}
+		#subject-list li.selected{background: #555273;color: #fff;}
+		#unit-list li.selected{background: #555273;color: #fff;	}
 		#subject-list li img{width:7em;	height:7em;}
 		main{width:980px;margin:0 auto;padding:20px 0;overflow:hidden;}
 		img,button{cursor:pointer;}
@@ -18,7 +20,7 @@
 		.btn_wrap{float:right;}
 		
 		#suject-list{width:50%;float:left;}
-		#unit-list{width:50%;float:left;}
+		#unit-list{width:50%;float:left;padding: 0 0 0 15px;}
 		
 		.cont_subject01{width:50%;float:left;}
 		

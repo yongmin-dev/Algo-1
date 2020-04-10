@@ -9,7 +9,8 @@
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>	
 	<style type="text/css">
 		#challenge-list li.selected{
-			background:lime;
+			    background: #555273;
+    color: #fff;
 		}
 		  .chg_cont{width: 980px;margin: 0 auto;}
   #challenge-list{overflow: hidden;padding: 50px 0;}
