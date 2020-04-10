@@ -11,6 +11,18 @@
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/tutor-application.css"/>" />	
 	<script type="text/javascript" src="<c:url value="/resources/js/tutor-application.js"/>"></script>
+	
+	
+	<style>
+	
+	main{width:980px;margin:0 auto;}
+	textarea{height:500px;}
+	input[type="submit"]{padding:10px 15px;cursor:pointer;}
+	input[type="button"]{padding:10px 15px;cursor:pointer;}
+	.submit_wrap{float:right;}
+	h2{padding:15px 0;}
+	</style>
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
@@ -30,8 +42,10 @@
 		  <form:input type="file" path="file" />
 		  <form:errors path="file" />
 		</form:form>
-		<input type="submit" value="신청" />
-		<input type="button" value="취소" />
+		<div class="submit_wrap">
+			<input type="submit" value="신청" />
+			<input type="button" value="취소" />
+		</div>
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>

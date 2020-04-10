@@ -18,8 +18,9 @@
 	
 	<style>
 	.container{background:#fff;height:auto;}
-	.paging{height:100px;}
+	.paging{height:100px;clear:both;}
 	.footer{width:100%;}
+	.btn_write{display:inline-block;padding:5px 10px;float:right;background:#ededed;}
 	</style>
 	
 	

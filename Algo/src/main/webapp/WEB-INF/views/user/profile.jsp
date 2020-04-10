@@ -15,6 +15,9 @@
 	h2{text-align:center;padding:100px 0 0 0;}
 	main{width:480px;margin:0 auto;}
 	#modifyBtn{width:100%;text-align:center;cursor:pointer;padding:10px 0;}
+	
+	#applyTutor{padding:10px 20px; cursor:pointer;float:right;margin:10px 0 0 0;}
+	
 	</style>
 	<script type="text/javascript">
 	window.addEventListener('click',e=>{

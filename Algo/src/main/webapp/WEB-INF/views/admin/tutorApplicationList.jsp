@@ -11,6 +11,14 @@
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/tutor-application-list.css"/>" />	
 	<script type="text/javascript" src="<c:url value="/resources/js/tutor-application-list.js"/>"></script>
+	
+	<style>
+	main{width:980px;margin:0 auto;}
+	main table th,td{padding:15px;}
+	main table tr{border:1px solid #ededed;text-align:center;}
+	main table .ok {text-align:center;}
+	main table .ok button{padding:10px 20px;cursor:pointer;margin:0 5px 0 0;}
+	</style>
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
@@ -30,7 +38,7 @@
 				<td>${application.content }</td>
 				<td>${application.username }</td>
 				<td>${cdate}</td>
-				<td><button>승인</button><button>거부</button></td>
+				<td class="ok"><button>승인</button><button>거부</button></td>
 				</tr>
 			</c:forEach>
 		</table>
