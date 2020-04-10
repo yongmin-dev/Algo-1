@@ -87,31 +87,45 @@
 			SELECT ANSWER_NUM_SEQ.currval FROM dual
 		</selectKey>
 	</insert>
-
+	<!-- 마무리문제 결과 생성 -->
+	<insert id="insertQuisResult" parameterType="QuizResultVO">
+	INSERT INTO quiz_result(
+		RESULT_NUM, 
+		QUIZ_NUM, 
+		ANSWER, 
+		user_num,
+		STATUS
+		) values (
+		    RESULT_NUM_SEQ.nextval,
+		    #{quizNum},
+		    #{answer},
+		    #{userNum},
+		    #{status}    
+		)
+		<selectKey keyProperty="resultNum" order="AFTER" resultType="long">
+			SELECT RESULT_NUM_SEQ.currval FROM dual
+		</selectKey>
+	</insert>
 	<!-- 과목목록 -->
 	<!-- 1/전체목록 -->
 	<select id="selectSubjectList" resultType="SubjectVO">
 		select
-		subject_num as "subjectNum",
-		title,
-		created_at as "createdAt",
-		updated_at as "updatedAt",
-		user_num as "userNum",
-		image_data as
-		"imageData"
-		FROM(select row_number() over(order by
+		*
+		FROM(
+		select row_number() over(order by
 		subject_num desc) as
 		num,
-		subject_num,
+		subject_num as "subjectNum",
 		title,
-		created_at,
-		updated_at,
-		user_num,
-		image_data from
-		subject
+		subject.created_at  as "createdAt",
+		subject.updated_at as "updatedAt",
+		subject.user_num as "userNum",
+		app_user.username AS "username"
+<!-- 		image_data as "imageData" -->
+		FROM subject, app_user
+		where subject.user_num = app_user.user_num
 		<if test="searchType != null and keywords != null">
-			where
-			<foreach item="keyword" collection="keywords" open="("
+			<foreach item="keyword" collection="keywords" open="and ("
 				separator="or" close=")">
 				<choose>
 					<!-- 제목 -->
@@ -129,8 +143,8 @@
 				</choose>
 			</foreach>
 		</if>
+			order by title asc
 		)
-		order by "subjectNum" asc
 	</select>
 	
 	<!-- 사용자가 작성한 모든과목들가져오기 -->
@@ -143,7 +157,7 @@
 			created_at as "createdAt",
 			updated_at as "updatedAt",
 			user_num as "userNum"
-			from subject
+			FROM subject
 			where user_num = #{userNum}
 			<if test="searchType != null and keywords != null">
 				<foreach item="keyword" collection="keywords" open="AND ("
@@ -337,7 +351,7 @@
 		    ANSWER_NUM AS "answerNum", 
 		    QUIZ_NUM AS "quizNum", 
 		    CONTENT AS "content", 
-		    IS_CORRECT AS "isCorrect", 
+		    IS_CORRECT AS "correctFromString", 
 		    CREATED_AT AS "createdAt", 
 		    UPDATED_AT AS "updatedAt"
 		FROM Quiz_answer
@@ -349,7 +363,7 @@
 		    ANSWER_NUM AS "answerNum", 
 		    QUIZ_NUM AS "quizNum", 
 		    CONTENT AS "content", 
-		    IS_CORRECT AS "isCorrect", 
+		    IS_CORRECT AS "correctFromString", 
 		    CREATED_AT AS "createdAt", 
 		    UPDATED_AT AS "updatedAt"
 		FROM Quiz_answer

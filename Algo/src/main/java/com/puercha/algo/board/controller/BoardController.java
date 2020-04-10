@@ -90,7 +90,7 @@ public class BoardController {
 	@GetMapping("selectFile/{fid}")
 	public ResponseEntity<byte[]> getFile(@PathVariable String fid) {
 		AttachmentVO attachmentVO = boardService.viewFile(fid);
-		logger.info("getFile" + attachmentVO.toString());
+//		logger.info("getFile" + attachmentVO.toString());
 
 		final HttpHeaders headers = new HttpHeaders();
 		String[] mtypes = attachmentVO.getFtype().split("/");

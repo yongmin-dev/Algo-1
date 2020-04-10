@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.puercha.algo.learning.vo.QuizAnswerVO;
+import com.puercha.algo.learning.vo.QuizResultVO;
 import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitCompletionVO;
@@ -340,5 +341,17 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.selectOne("mappers.learningDAO-mapper.countTotalRecord", map);
 
 	}
+
+	/**
+	 * 퀴즈 결과를 생성함
+	 * @param quizResult 퀴즈 결과 VO
+	 * @return 성공시 1
+	 */
+	@Override
+	public int insertQuisResult(QuizResultVO quizResult) {
+		logger.info("insertQuisResult(QuizResultVO quizResult)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertQuisResult",quizResult);
+	}
+	
 	
 }

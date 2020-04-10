@@ -149,6 +149,13 @@ public interface LearningDAO {
 	//총 레코드 수
 	int countTotalRecord(String searchType, String keyword);
 
+	/**
+	 * 퀴즈 결과를 생성함
+	 * @param quizResult 퀴즈 결과 VO
+	 * @return 성공시 1
+	 */
+	int insertQuisResult(QuizResultVO quizResult);
+
 	
 
 	

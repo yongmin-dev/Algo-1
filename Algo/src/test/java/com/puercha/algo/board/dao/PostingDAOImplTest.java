@@ -4,6 +4,7 @@ package com.puercha.algo.board.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -262,4 +263,12 @@ public class PostingDAOImplTest {
 		assertEquals(1, cnt);
 	}
 
+	@Test
+	public void testLongList() {
+		List<Long> longList = new ArrayList<Long>();
+		longList.add((long) 1);
+		longList.add((long) 7);
+		longList.add((long) 5);
+		logger.info("longList:"+longList);
+	}
 }

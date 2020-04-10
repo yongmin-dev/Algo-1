@@ -50,11 +50,13 @@
 <!-- 			<mapping path="/board/**/"/> -->
 			<mapping path="/board/**"/>
 			<mapping path="/challenge/**/"/>
+			<mapping path="/learning/**/"/>
 			<mapping path="/content/**"/>
 			<mapping path="/admin/**"/>
 			<mapping path="/user/**"/>
 			<exclude-mapping path="/board/list/**"/>
 			<exclude-mapping path="/board/post/**"/>
+			<exclude-mapping path="/learning/subject/**"/>
 			<exclude-mapping path="/challenge/list/**"/>
 			<exclude-mapping path="/learning/list/**"/>
 			<exclude-mapping path="/user/sign*"/>			
