@@ -214,11 +214,11 @@ public class UserController {
 			
 			logger.info("튜터 신청2" + tutorApplicationVO.toString());
 			logger.info("user:"+userVO);
-			if(tutorApplicationVO.getApplicationNum() != userVO.getUserNum()) {
-				return "redirect:/";
-			}else {
-				
+			logger.info("newApplicationNum:"+newApplicationNum);
+			if(tutorApplicationVO.getApplicationNum() == 0 ) {
 				return "user/tutorApplication";
+			}else {
+				return "redirect:/";				
 			}
 			
 		}
