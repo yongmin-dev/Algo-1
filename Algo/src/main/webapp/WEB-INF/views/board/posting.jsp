@@ -35,8 +35,7 @@
 			method="post">
 			<form:select path="category.categoryNum">
 				<option value="0">=선택=</option>
-				<form:options path="category.categoryNum" items="${boardCategoryVO }"
-					itemValue="categoryNum" itemLabel="name" />
+				<form:options items="${boardCategoryVO}" 	itemValue="categoryNum" itemLabel="name" />
 			</form:select>
 			<div>
 				<form:label path="title">제목</form:label>
