@@ -13,17 +13,29 @@
 	href="<c:url value="/resources/css/subject-list.css"/>" />
 <script type="text/javascript"
 	src="<c:url value="/resources/js/subject-list.js"/>"></script>
+	
+	<style>
+	.container{background:#fff;height:auto;width:980px;margin:0 auto;}
+	.container div a {font-size:20px;}
+	.progress-rate{font-size:13px;}
+	.subject_wrap{overflow:hidden;}
+	.subject_cont{width:50%;float:left;}
+	
+	</style>
+	
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
 	<div class="container">
 		<!-- 과목 리스트가 표시 됨 -->
-		<div>
+		<div class="subject_wrap">
 			
 			<c:forEach var="subject" items="${subjectList }">
 				<fmt:formatDate value="${subject.createdAt }"
 					pattern="yyyy/MM/dd HH:mm" var="cdate" />
-				<div>
+				<div class="subject_cont">
 					<div>
 						<a
 							href="${pageContext.request.contextPath }/learning/subject/${subject.subjectNum }">

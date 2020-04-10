@@ -22,6 +22,15 @@
 	ul.answer-list > li.correct-answer{
 		background:#11ffbb;
 	}
+	
+	
+	main{width:980px;margin:0 auto;}
+	main h2{padding:15px 0;}
+	button{cursor:pointer;padding:10px 20px;float:right;}
+	.quiz-list{overflow:hidden;}
+	.quiz-item{width:50%;float:left;border:1px solid #ededed;box-sizing:border-box;padding:10px;}
+	
+	
 </style>
 <script type="text/javascript" src="<c:url value="/resources/js/learning/quiz.js"/>"></script>
 </head>
