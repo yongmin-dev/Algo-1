@@ -8,20 +8,15 @@
 	<title>학습 컨텐츠 관리</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<style type="text/css">
-		#subject-list hidden{
-			display: none;
-		}
-		#subject-list li.selected{
-			background:lime;
-		}
-		#unit-list li.selected{
-			background:lime;
-		}
-		#subject-list li img{
-			width:7em;
-			height:7em;
-			
-		}
+		#subject-list hidden{display: none;}
+		#subject-list li.selected{background:#daf3da;}
+		#unit-list li.selected{	background:#daf3da;	}
+		#subject-list li img{width:7em;	height:7em;}
+		main{width:980px;margin:0 auto;padding:20px 0;}
+		img,button{cursor:pointer;}
+		button{padding:5px 15px;}
+		.btn_wrap{float:right;}
+		
 	</style>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/content-manager.js"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/learning-content-manager.js"/>"></script>
@@ -31,11 +26,12 @@
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
 		<!-- 과목 추가 버튼 -->
-		<button id="btn-new-subject">새 과목</button>
+		<button id="btn-new-subject">새과목 추가</button>
 		<!-- 과목리스트 -->
 		<ul id="subject-list">
 		</ul>
 		
+		<div class="btn_wrap">
 		<!-- 단원 depth 왼쪽 -->
 		<button id="btn-move-left">왼쪽</button>
 		
@@ -48,6 +44,7 @@
 		<!-- 단원 추가 버튼 -->
 		<button id="btn-new-unit">새 단원</button>
 		
+		</div>
 		<!-- 단원리스트 -->
 		<ul id="unit-list">
 		</ul>

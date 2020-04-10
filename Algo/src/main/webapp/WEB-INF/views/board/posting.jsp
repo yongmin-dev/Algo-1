@@ -15,6 +15,11 @@
 	src="<c:url value="/resources/js/common.js"/>"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/js/board/posting.js"/>"></script>
+	<style>
+		main{width:980px;margin:0 auto;}
+	</style>
+	
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
