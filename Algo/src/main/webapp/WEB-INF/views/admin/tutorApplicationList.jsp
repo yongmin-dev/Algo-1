@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>튜터 등록</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/tutor-application-list.css"/>" />	
 	<script type="text/javascript" src="<c:url value="/resources/js/tutor-application-list.js"/>"></script>
