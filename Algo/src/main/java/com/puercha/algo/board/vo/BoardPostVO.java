@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -35,6 +36,7 @@ public class BoardPostVO {
 	private long postNum;
 
 	// 분류 카테고리
+	@Valid
 	private BoardCategoryVO category;
 	
 	

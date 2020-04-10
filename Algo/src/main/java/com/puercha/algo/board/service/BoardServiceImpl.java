@@ -36,10 +36,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	//
-//	@Transactional
+	@Transactional
 	@Override
 	public int write(BoardPostVO boardPostVO) {
-
+		logger.info("boardPostVO"+boardPostVO);
 		// 1) 게시글 작성
 		int cnt = postingDAO.insert(boardPostVO);
 
