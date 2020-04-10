@@ -1,6 +1,7 @@
 package com.puercha.algo.learning.dao;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,16 +61,26 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.insert("mappers.learningDAO-mapper.insertSubject",subject);
 	}
 
-	@Override
+	/**
+	 * 마무리문제 생성
+	 * @param quiz 생성할 데이터 담긴 VO
+	 * @return 성공 시 1
+	 */
+	@Override	
 	public int insertQuiz(QuizVO quiz) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertQuiz(QuizVO quiz)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertQuiz",quiz);
 	}
 
+	/**
+	 * 마무리문제 답안 생성
+	 * @param quizAnswer 생성할 데이터가 담긴 VO
+	 * @return 성공 시 1
+	 */
 	@Override
 	public int insertAnswer(QuizAnswerVO quizAnswer) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertAnswer(QuizAnswerVO quizAnswer)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertAnswer",quizAnswer);
 	}
 
 	@Override
@@ -80,6 +91,7 @@ public class LearningDAOImpl implements LearningDAO {
 	/* Read */
 	@Override
 	public UnitVO selectOneUnit(long unitNum) {
+		logger.info("selectOneUnit(long unitNum)");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("unitNum", unitNum);
 		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneUnit", map);
@@ -89,7 +101,40 @@ public class LearningDAOImpl implements LearningDAO {
 	public List<UnitVO> selectAllUnits(long subjectNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subjectNum", subjectNum);
-		return sqlSession.selectList("mappers.learningDAO-mapper.selectUnitList", map);
+		List<UnitVO> unitList = sqlSession.selectList("mappers.learningDAO-mapper.selectUnitList", map);
+		unitList.sort( new Comparator<UnitVO>() {
+
+			@Override
+			public int compare(UnitVO o1, UnitVO o2) {
+				logger.info("comapre(UnitVO o1, UnitVO o2)");
+				String o1Depth = o1.getChapterDepth().substring(0, o1.getChapterDepth().length()-1);
+				String o2Depth = o2.getChapterDepth().substring(0, o2.getChapterDepth().length()-1);
+				String[] o1Tokens = o1Depth.split("\\.");
+				String[] o2Tokens = o2Depth.split("\\.");
+				logger.info("o1Tokens :"+Arrays.toString(o1Tokens) );
+				logger.info("o2Tokens :"+Arrays.toString(o2Tokens) );
+				int commonIdx = 0;
+				int end = Math.min(o1Tokens.length,o2Tokens.length);
+				
+				for(commonIdx =0;commonIdx<end;commonIdx++ ) {
+					int o1Num = Integer.parseInt(o1Tokens[commonIdx]);
+					int o2Num = Integer.parseInt(o2Tokens[commonIdx]);
+					logger.info("o1Num: "+o1Num+", o2Num:"+o2Num);
+					if(o1Num<o2Num)
+						return -1;
+					else if(o1Num>o2Num) {
+						return 1;
+					}							
+				}
+				// 지금까지 똑같은 상황 길이가 짧은 쪽이 더 빠름
+				if(o1Tokens.length<o2Tokens.length) {
+					return -1;
+				}else {
+					return 1;					
+				}
+			}			
+		});
+		return unitList;
 	}
 	/**
 	 * 내용을 제외한 unit의 데이터들의 리스트를 가져옴
@@ -98,9 +143,44 @@ public class LearningDAOImpl implements LearningDAO {
 	 */
 	@Override
 	public List<UnitVO> selectAllUnitMetadatas(long subjectNum){
+		logger.info("selectAllUnitMetadatas(long subjectNum)");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subjectNum", subjectNum);
-		return sqlSession.selectList("mappers.learningDAO-mapper.selectAllUnitMetadatas", map);
+		List<UnitVO> unitList = sqlSession.selectList("mappers.learningDAO-mapper.selectAllUnitMetadatas", map);
+		unitList.sort( new Comparator<UnitVO>() {
+
+			@Override
+			public int compare(UnitVO o1, UnitVO o2) {
+				logger.info("comapre(UnitVO o1, UnitVO o2)");
+				String o1Depth = o1.getChapterDepth().substring(0, o1.getChapterDepth().length()-1);
+				String o2Depth = o2.getChapterDepth().substring(0, o2.getChapterDepth().length()-1);
+				String[] o1Tokens = o1Depth.split("\\.");
+				String[] o2Tokens = o2Depth.split("\\.");
+				logger.info("o1Tokens :"+Arrays.toString(o1Tokens) );
+				logger.info("o2Tokens :"+Arrays.toString(o2Tokens) );
+				int commonIdx = 0;
+				int end = Math.min(o1Tokens.length,o2Tokens.length);
+				
+				for(commonIdx =0;commonIdx<end;commonIdx++ ) {
+					int o1Num = Integer.parseInt(o1Tokens[commonIdx]);
+					int o2Num = Integer.parseInt(o2Tokens[commonIdx]);
+					logger.info("o1Num: "+o1Num+", o2Num:"+o2Num);
+					if(o1Num<o2Num)
+						return -1;
+					else if(o1Num>o2Num) {
+						return 1;
+					}							
+				}
+				// 지금까지 똑같은 상황 길이가 짧은 쪽이 더 빠름
+				if(o1Tokens.length<o2Tokens.length) {
+					return -1;
+				}else {
+					return 1;					
+				}
+			}			
+		});
+		logger.info("unitList:"+unitList);
+		return unitList;
 	}
 	
 	@Override
@@ -158,7 +238,18 @@ public class LearningDAOImpl implements LearningDAO {
 	@Override
 	public QuizVO selectOneQuiz(long quizNum) {
 		logger.info("selectOneQuiz(long quizNum)");
-		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneQuiz");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneQuiz",quizNum);
+	}
+	
+	/**
+	 * 답안 하나의 정보를 가져온다.
+	 * @param answerNum 답안번호
+	 * @return 답안의 vo
+	 */
+	@Override
+	public QuizAnswerVO selectOneAnswer(long answerNum) {
+		logger.info("selectOneAnswer(long answerNum)");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneAnswer", answerNum);
 	}
 
 
@@ -185,16 +276,26 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.update("mappers.learningDAO-mapper.updateSubject",subject);
 	}
 
+	/**
+	 * 마무리문제 수정
+	 * @param quiz 수정된 데이터를 가진 VO
+	 * @return 성공 시 1
+	 */
 	@Override
 	public int updateQuiz(QuizVO quiz) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("updateQuiz(QuizVO quiz)");
+		return sqlSession.update("mappers.learningDAO-mapper.updateQuiz",quiz);
 	}
 
+	/**
+	 * 마무리문제 답안 수정
+	 * @param quizAnswer 수정된 데이터를 가진 VO
+	 * @return 성공시 1
+	 */
 	@Override
 	public int updateAnswer(QuizAnswerVO quizAnswer) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("updateAnswer(QuizAnswerVO quizAnswer)");
+		return sqlSession.update("mappers.learningDAO-mapper.updateAnswer",quizAnswer);
 	}
 
 	@Override
@@ -205,20 +306,20 @@ public class LearningDAOImpl implements LearningDAO {
 
 	@Override
 	public int deleteSubject(long subjectNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteUnit(long unitNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteSubject",subjectNum);
 	}
 
 	@Override
 	public int deleteQuiz(long quizNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteQuiz(long quizNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteQuiz",quizNum);
 	}
 
 	@Override
 	public int deleteAnswer(long answerNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("deleteAnswer(long answerNum)");
+		return sqlSession.delete("mappers.learningDAO-mapper.deleteAnswer",answerNum);
 	}
 
 	// 총 리코드 수
@@ -239,5 +340,5 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.selectOne("mappers.learningDAO-mapper.countTotalRecord", map);
 
 	}
-
+	
 }

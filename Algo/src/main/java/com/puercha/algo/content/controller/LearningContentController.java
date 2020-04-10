@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.puercha.algo.content.service.ContentManagingService;
 import com.puercha.algo.learning.vo.QuizAnswerVO;
@@ -64,6 +65,55 @@ public class LearningContentController {
 		return res;
 	}
 
+	// 과목 이미지
+	@GetMapping(path="/subject/image/{subjectNum}")
+	public ResponseEntity<byte[]> getSubjectImage(
+		@PathVariable(name = "subjectNum") long subjectNum
+			){
+		ResponseEntity<byte[]> res = null;
+		SubjectVO subject = contentManager.getSubject(subjectNum);
+		if(subject!=null && 
+				subject.getImageSize()>0 && 
+				subject.getImageType().startsWith("image") &&
+				subject.getImageData().length>0) {
+			
+			res = new ResponseEntity<byte[]>(subject.getImageData(),HttpStatus.OK);
+		}else {
+			res = new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+		}
+		return res;
+	}
+	
+	
+	// 이미지 변경 팝업 열기
+	@GetMapping(path="/subject/image/editor/{subjectNum}")
+	public String getImageEditor(
+		@PathVariable("subjectNum") long subjectNum,
+		Model model
+			) {
+		SubjectVO subject =  contentManager.getSubject(subjectNum);
+		if(subject.getImageData() != null && subject.getImageSize() >0)
+			model.addAttribute("hasImage", true);
+		model.addAttribute("subjectNum", subjectNum);
+		return "content/image-change-popup";
+	}
+	
+	// 이미지 변경하기
+	@PostMapping(path="/subject/image/{subjectNum}")
+	public ResponseEntity<String> updateSubjectImage(
+			@PathVariable("subjectNum") long subjectNum,
+			@RequestParam(name = "file") MultipartFile file
+		){
+		int result = 0;
+		if(file!=null) {
+			result = contentManager.changeImage(subjectNum, file);
+		}
+		ResponseEntity<String> res = null;
+		
+		logger.info("file:"+file);
+		return res;
+	}
+	
 	// 빈 과목 생성
 	@PostMapping(path = "/subject/new", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> createNewSubject(HttpSession session) {
@@ -86,7 +136,6 @@ public class LearningContentController {
 		UserVO sessionUser = loginService.getLoggedInUser(session);
 		int result = contentManager.deleteSubject(subjectNum, sessionUser.getUserNum());
 		if (result != 1) {
-
 			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		} else {
 			body.put("msg", "success");
@@ -153,7 +202,7 @@ public class LearningContentController {
 		chapterDepth = (String) requestBody.get("chapterDepth");
 		long newUnitNum = contentManager.createEmptyUnit(subjectNum,chapterDepth);
 		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("newUnitNum", newUnitNum);
+		body.put("newUnitNum:", newUnitNum);
 		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
 		return res;
 	}
@@ -270,13 +319,15 @@ public class LearningContentController {
 	}
 
 	// 빈 마무리문제 생성
-	@PostMapping(path = "/quiz/new", produces = "application/json")
+	@PostMapping(path = "/quiz/new/{unitNum}", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> createNewQuiz(
-			@RequestParam(name = "unitNum", required = true) long unitNum,
+			@PathVariable(name = "unitNum", required = true) long unitNum,
 			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
 		logger.info("createNewQuiz():" + unitNum);
-		long newQuizNum = contentManager.createEmptyQuiz(unitNum);
+		UserVO sessionUser = loginService.getLoggedInUser(session);
+
+		long newQuizNum = contentManager.createEmptyQuiz(unitNum,sessionUser.getUserNum());
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("newQuizNum ", newQuizNum);
 		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
@@ -303,16 +354,16 @@ public class LearningContentController {
 	}
 
 	// 마무리문제 수정
-	@PutMapping(path = { "/quiz/{quizNum}", "/quiz" }, consumes = "application/json", produces = "application/json")
+	@PutMapping(path = { "/quiz/{quizNum}" }, consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> updateQuiz(
+			@PathVariable(name = "quizNum") long quizNum,
 			@RequestBody Map<String, Object> reqBody,
 			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
 		Map<String, Object> resBody = new HashMap<String, Object>();
 		logger.info("updateQuiz():" + reqBody);
-		QuizVO quiz = new QuizVO();
-		contentManager.updateQuiz(quiz);
-		int result = 0;
+		
+		int result = contentManager.updateQuiz(quizNum,reqBody);
 		if (result != 1) {
 			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
 		} else {
@@ -323,62 +374,77 @@ public class LearningContentController {
 	}
 
 	// 마무리문제 답안 리스트
-		@GetMapping(path = "/answer/list", produces = "application/json")
-		public ResponseEntity<List<QuizAnswerVO>> getAnswerList(
-				@RequestParam(name = "quizNum", required = true) long quizNum) {
-			ResponseEntity<List<QuizAnswerVO>> res = null;
-			List<QuizVO> list = contentManager.getAnswerList(quizNum);
-			logger.info("quizNum:" + quizNum);
-//			res = new ResponseEntity<List<QuizAnswerVO>>(list, HttpStatus.OK);
-			return res;
-		}
+	@GetMapping(path = "/answer/list", produces = "application/json")
+	public ResponseEntity<List<QuizAnswerVO>> getAnswerList(
+			@RequestParam(name = "quizNum", required = true) long quizNum) {
+		ResponseEntity<List<QuizAnswerVO>> res = null;
+		List<QuizAnswerVO> list = contentManager.getAnswerList(quizNum);
+		logger.info("quizNum:" + quizNum);
+		return res;
+	}
 
-		// 새 답안 생성
-		@PostMapping(path = "/answer/new", produces = "application/json")
-		public ResponseEntity<Map<String, Object>> createNewAnswer(
-				@RequestParam(name = "quizNum", required = true) long quizNum,
-				HttpSession session) {
-			ResponseEntity<Map<String, Object>> res = null;
-			logger.info("createNewAnswer():" + quizNum);
-			QuizAnswerVO newAnswer = contentManager.createEmptyAnswer(quizNum); 
-			Map<String, Object> body = new HashMap<String, Object>();
+	// 새 답안 생성
+	@PostMapping(path = "/answer/new/{quizNum}", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> createNewAnswer(
+			@PathVariable(name = "quizNum", required = true) long quizNum,
+			HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		logger.info("createNewAnswer():" + quizNum);
+		long newAnswerNum = contentManager.createEmptyAnswer(quizNum); 
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("newAnswerNum",newAnswerNum);
+		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
+		return res;
+	}
+	// 마무리문제 답안 내용
+	@GetMapping(path = "/answer/{answerNum}", produces = "application/json")
+	public ResponseEntity<QuizAnswerVO> getQuizAnswer(
+			@PathVariable(name = "answerNum") long answerNum) {
+		ResponseEntity<QuizAnswerVO> res = null;
+		QuizAnswerVO answer = contentManager.getAnswer(answerNum);
+		logger.info("answerNum:" + answerNum);
+		res = new ResponseEntity<QuizAnswerVO>(answer, HttpStatus.OK);
+		return res;
+	}
+
+	// 마무리문제 답안 삭제
+	@DeleteMapping(path = "/answer/{answerNum}", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> deleteAnswer(
+			@PathVariable(name = "answerNum") long answerNum,
+			HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		Map<String, Object> body = new HashMap<String, Object>();
+		int result = contentManager.deleteAnswer(answerNum);
+		if (result != 1) {
+			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
+		} else {
+			body.put("msg", "success");
 			res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
-			return res;
 		}
 
-		// 마무리문제 답안 삭제
-		@DeleteMapping(path = "/answer/{answerNum}", produces = "application/json")
-		public ResponseEntity<Map<String, Object>> deleteAnswer(
-				@PathVariable(name = "answerNum") long answerNum,
-				HttpSession session) {
-			ResponseEntity<Map<String, Object>> res = null;
-			int result = contentManager.deleteAnswer(answerNum);
-			Map<String, Object> body = new HashMap<String, Object>();
-			UserVO sessionUser = loginService.getLoggedInUser(session);
-
-			return res;
-		}
+		return res;
+	}
+	
+	
+	// 마무리문제 답 수정
+	@PutMapping(path = { "/answer/{answerNum}"}, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Map<String, Object>> updateAnswer(
+			@PathVariable(name = "answerNum" ) long answerNum,
+			@RequestBody Map<String, Object> reqBody,
+			HttpSession session) {
+		ResponseEntity<Map<String, Object>> res = null;
+		Map<String, Object> resBody = new HashMap<String, Object>();		
+		int result = contentManager.updateAnswer(answerNum,reqBody);
+		logger.info("updateAnswer():" + reqBody);
 		
-		
-		// 마무리문제 답 수정
-		@PutMapping(path = { "/answer/{answerNum}", "/answer" }, consumes = "application/json", produces = "application/json")
-		public ResponseEntity<Map<String, Object>> updateAnswer(
-				@RequestBody Map<String, Object> reqBody,
-				HttpSession session) {
-			ResponseEntity<Map<String, Object>> res = null;
-			Map<String, Object> resBody = new HashMap<String, Object>();
-			QuizAnswerVO answer = new QuizAnswerVO(); 
-			int result = contentManager.updateAnswer(answer);
-			logger.info("updateAnswer():" + reqBody);
-			
-			if (result != 1) {
-				res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
-			} else {
-				resBody.put("msg", "success");
-				res = new ResponseEntity<Map<String, Object>>(resBody, HttpStatus.OK);
-			}
-			return res;
+		if (result != 1) {
+			res = new ResponseEntity<Map<String, Object>>(HttpStatus.UNAUTHORIZED);
+		} else {
+			resBody.put("msg", "success");
+			res = new ResponseEntity<Map<String, Object>>(resBody, HttpStatus.OK);
 		}
+		return res;
+	}
 		
 		
 		
