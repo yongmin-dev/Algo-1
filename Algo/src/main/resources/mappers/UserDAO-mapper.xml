@@ -61,7 +61,7 @@ values(TUTOR_APPLICATION_NUM_SEQ.nextval,
 <!-- 사용자 전체조회 -->
 <select id="selectAllUser"
 				resultType="UserVO">
-		SELECT user_num as "uesrNum", email, pw, tel, username, 
+		SELECT user_num as "uesrNum", email, pw, tel, username, type,
 		       gender,  address,  birth, created_at AS "createdAt", updated_at AS "updatedAt" 
 		FROM APP_USER 
 </select>
@@ -71,7 +71,7 @@ values(TUTOR_APPLICATION_NUM_SEQ.nextval,
 <select id="selectUser" 
 				parameterType="hashmap"
 				resultType="UserVO">
-		SELECT user_num as "userNum", email, pw, tel, username, 
+		SELECT user_num as "userNum", email, pw, tel, username, type,
 		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
 		  FROM APP_USER    
 		 where email = #{email} 
@@ -83,7 +83,7 @@ values(TUTOR_APPLICATION_NUM_SEQ.nextval,
 <select id="selectUser2" 
 				parameterType="hashmap"
 				resultType="UserVO">
-		SELECT user_num as "uesrNum", email, pw, tel, username, 
+		SELECT user_num as "uesrNum", email, pw, tel, username, type,
 		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
 		  FROM APP_USER    
 		 where user_Num = #{userNum} 
@@ -98,6 +98,7 @@ values(TUTOR_APPLICATION_NUM_SEQ.nextval,
 					 address = #{address},
 					 birth = #{birth},
 					 email = #{email},
+					 type = ${type},
 					 updated_at = systimestamp
 		 where user_num = #{userNum}
 </update>
