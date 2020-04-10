@@ -23,7 +23,8 @@
 			SELECT SUBJECT_NUM_SEQ.currval FROM dual
 		</selectKey>	
 	</insert>
-
+	
+	<!-- 단원 생성하기 -->
 	<insert id="insertUnit" parameterType="UnitVO">		
 		INSERT INTO Unit (
 		    UNIT_NUM, 
@@ -43,6 +44,7 @@
 			SELECT UNIT_NUM_SEQ.currval FROM dual
 		</selectKey>
 	</insert>
+	
 	<!-- 새로운 마무리문제 생성 -->
 	<insert id="insertQuiz" parameterType="QuizVO">
 		INSERT INTO Quiz (
@@ -130,6 +132,7 @@
 		)
 		order by "subjectNum" asc
 	</select>
+	
 	<!-- 사용자가 작성한 모든과목들가져오기 -->
 	<select id="selectAllUserSubjects" parameterType="hashmap" resultType="SubjectVO">
 		select	*
@@ -141,8 +144,8 @@
 			updated_at as "updatedAt",
 			user_num as "userNum"
 			from subject
+			where user_num = #{userNum}
 			<if test="searchType != null and keywords != null">
-				where user_num = #{userNum}
 				<foreach item="keyword" collection="keywords" open="AND ("
 					separator="or" close=")">
 					<choose>
@@ -210,8 +213,8 @@
 		created_at as "createdAt",
 		updated_at as "updatedAt"
 		from unit where subject_num like #{subjectNum}
-		order by "unitNum" asc
-
+<!-- 		order by "unitNum" asc -->
+		ORDER BY chapter_depth ASC
 
 	</select>
 	
@@ -226,12 +229,12 @@
 		updated_at as "updatedAt"
 		FROM unit 
 		WHERE subject_num = #{subjectNum}
+		ORDER BY chapter_depth ASC
 	</select>
 
 	<select id="selectOneUnit" resultType="UnitVO">
 		select
-		Unit_num as
-		"unitNum",
+		Unit_num as	"unitNum",
 		subject_num as "subjectNum",
 		content,
 		title,
@@ -241,7 +244,7 @@
 		updated_at
 		as "updatedAt"
 		from
-		unit where unit_num like #{unitNum}
+		unit where unit_num = #{unitNum}
 
 
 	</select>
@@ -364,7 +367,7 @@
 		    IMAGE_DATA = #{imageData, jdbcType=BLOB}, 
 		    IMAGE_SIZE = #{imageSize, jdbcType=NUMERIC}, 
 		    IMAGE_TYPE = #{imageType, jdbcType=VARCHAR}, 
-		    IMAGE_NAME = #{imageType, jdbcType=VARCHAR}
+		    IMAGE_NAME = #{imageName, jdbcType=VARCHAR}
 		WHERE subject_num = #{subjectNum}	
 	</update>
 	<!-- 단원 내용 편집 -->

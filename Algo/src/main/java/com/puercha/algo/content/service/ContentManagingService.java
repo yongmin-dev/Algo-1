@@ -3,6 +3,8 @@ package com.puercha.algo.content.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
 import com.puercha.algo.challenge.vo.ChallengeVO;
 import com.puercha.algo.learning.vo.QuizAnswerVO;
@@ -280,5 +282,20 @@ public interface ContentManagingService {
 	 * @return 답안의 VO
 	 */
 	QuizAnswerVO getAnswer(long answerNum);
+
+	/**
+	 * 과목번호로 과목의 데이터를 조회한다.
+	 * @param subjectNum 조회할 과목 번호
+	 * @return 과목 VO
+	 */
+	SubjectVO getSubject(long subjectNum);
+
+	/**
+	 * 과목의 이미지를 변경함
+	 * @param subjectNum 변경할 과목의 번호
+	 * @param file 이미지 파일
+	 * @return 성공시 1
+	 */
+	int changeImage(long subjectNum, MultipartFile file);
 
 }

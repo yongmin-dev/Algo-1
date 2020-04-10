@@ -7,12 +7,31 @@
 	<meta charset="UTF-8">
 	<title>학습 컨텐츠 관리</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
+	<style type="text/css">
+		#subject-list hidden{
+			display: none;
+		}
+		#subject-list li.selected{
+			background:lime;
+		}
+		#unit-list li.selected{
+			background:lime;
+		}
+		#subject-list li img{
+			width:7em;
+			height:7em;
+			
+		}
+	</style>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/content-manager.js"></script>
 	<script type="text/javascript" src="<c:url value="/resources/js/learning-content-manager.js"/>"></script>
+	
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
+		<!-- 과목 추가 버튼 -->
+		<button id="btn-new-subject">새 과목</button>
 		<!-- 과목리스트 -->
 		<ul id="subject-list">
 		</ul>
@@ -25,6 +44,9 @@
 		
 		<!-- 단원 편집기 -->
 		<button id="btn-unit-editor">편집기</button>
+		
+		<!-- 단원 추가 버튼 -->
+		<button id="btn-new-unit">새 단원</button>
 		
 		<!-- 단원리스트 -->
 		<ul id="unit-list">

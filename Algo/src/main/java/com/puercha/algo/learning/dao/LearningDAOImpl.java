@@ -1,6 +1,7 @@
 package com.puercha.algo.learning.dao;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +91,7 @@ public class LearningDAOImpl implements LearningDAO {
 	/* Read */
 	@Override
 	public UnitVO selectOneUnit(long unitNum) {
+		logger.info("selectOneUnit(long unitNum)");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("unitNum", unitNum);
 		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneUnit", map);
@@ -99,7 +101,40 @@ public class LearningDAOImpl implements LearningDAO {
 	public List<UnitVO> selectAllUnits(long subjectNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subjectNum", subjectNum);
-		return sqlSession.selectList("mappers.learningDAO-mapper.selectUnitList", map);
+		List<UnitVO> unitList = sqlSession.selectList("mappers.learningDAO-mapper.selectUnitList", map);
+		unitList.sort( new Comparator<UnitVO>() {
+
+			@Override
+			public int compare(UnitVO o1, UnitVO o2) {
+				logger.info("comapre(UnitVO o1, UnitVO o2)");
+				String o1Depth = o1.getChapterDepth().substring(0, o1.getChapterDepth().length()-1);
+				String o2Depth = o2.getChapterDepth().substring(0, o2.getChapterDepth().length()-1);
+				String[] o1Tokens = o1Depth.split("\\.");
+				String[] o2Tokens = o2Depth.split("\\.");
+				logger.info("o1Tokens :"+Arrays.toString(o1Tokens) );
+				logger.info("o2Tokens :"+Arrays.toString(o2Tokens) );
+				int commonIdx = 0;
+				int end = Math.min(o1Tokens.length,o2Tokens.length);
+				
+				for(commonIdx =0;commonIdx<end;commonIdx++ ) {
+					int o1Num = Integer.parseInt(o1Tokens[commonIdx]);
+					int o2Num = Integer.parseInt(o2Tokens[commonIdx]);
+					logger.info("o1Num: "+o1Num+", o2Num:"+o2Num);
+					if(o1Num<o2Num)
+						return -1;
+					else if(o1Num>o2Num) {
+						return 1;
+					}							
+				}
+				// 지금까지 똑같은 상황 길이가 짧은 쪽이 더 빠름
+				if(o1Tokens.length<o2Tokens.length) {
+					return -1;
+				}else {
+					return 1;					
+				}
+			}			
+		});
+		return unitList;
 	}
 	/**
 	 * 내용을 제외한 unit의 데이터들의 리스트를 가져옴
@@ -108,9 +143,44 @@ public class LearningDAOImpl implements LearningDAO {
 	 */
 	@Override
 	public List<UnitVO> selectAllUnitMetadatas(long subjectNum){
+		logger.info("selectAllUnitMetadatas(long subjectNum)");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subjectNum", subjectNum);
-		return sqlSession.selectList("mappers.learningDAO-mapper.selectAllUnitMetadatas", map);
+		List<UnitVO> unitList = sqlSession.selectList("mappers.learningDAO-mapper.selectAllUnitMetadatas", map);
+		unitList.sort( new Comparator<UnitVO>() {
+
+			@Override
+			public int compare(UnitVO o1, UnitVO o2) {
+				logger.info("comapre(UnitVO o1, UnitVO o2)");
+				String o1Depth = o1.getChapterDepth().substring(0, o1.getChapterDepth().length()-1);
+				String o2Depth = o2.getChapterDepth().substring(0, o2.getChapterDepth().length()-1);
+				String[] o1Tokens = o1Depth.split("\\.");
+				String[] o2Tokens = o2Depth.split("\\.");
+				logger.info("o1Tokens :"+Arrays.toString(o1Tokens) );
+				logger.info("o2Tokens :"+Arrays.toString(o2Tokens) );
+				int commonIdx = 0;
+				int end = Math.min(o1Tokens.length,o2Tokens.length);
+				
+				for(commonIdx =0;commonIdx<end;commonIdx++ ) {
+					int o1Num = Integer.parseInt(o1Tokens[commonIdx]);
+					int o2Num = Integer.parseInt(o2Tokens[commonIdx]);
+					logger.info("o1Num: "+o1Num+", o2Num:"+o2Num);
+					if(o1Num<o2Num)
+						return -1;
+					else if(o1Num>o2Num) {
+						return 1;
+					}							
+				}
+				// 지금까지 똑같은 상황 길이가 짧은 쪽이 더 빠름
+				if(o1Tokens.length<o2Tokens.length) {
+					return -1;
+				}else {
+					return 1;					
+				}
+			}			
+		});
+		logger.info("unitList:"+unitList);
+		return unitList;
 	}
 	
 	@Override
@@ -270,5 +340,5 @@ public class LearningDAOImpl implements LearningDAO {
 		return sqlSession.selectOne("mappers.learningDAO-mapper.countTotalRecord", map);
 
 	}
-
+	
 }

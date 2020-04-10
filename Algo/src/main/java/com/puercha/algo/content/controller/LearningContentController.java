@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.puercha.algo.content.service.ContentManagingService;
 import com.puercha.algo.learning.vo.QuizAnswerVO;
@@ -64,6 +65,55 @@ public class LearningContentController {
 		return res;
 	}
 
+	// 과목 이미지
+	@GetMapping(path="/subject/image/{subjectNum}")
+	public ResponseEntity<byte[]> getSubjectImage(
+		@PathVariable(name = "subjectNum") long subjectNum
+			){
+		ResponseEntity<byte[]> res = null;
+		SubjectVO subject = contentManager.getSubject(subjectNum);
+		if(subject!=null && 
+				subject.getImageSize()>0 && 
+				subject.getImageType().startsWith("image") &&
+				subject.getImageData().length>0) {
+			
+			res = new ResponseEntity<byte[]>(subject.getImageData(),HttpStatus.OK);
+		}else {
+			res = new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+		}
+		return res;
+	}
+	
+	
+	// 이미지 변경 팝업 열기
+	@GetMapping(path="/subject/image/editor/{subjectNum}")
+	public String getImageEditor(
+		@PathVariable("subjectNum") long subjectNum,
+		Model model
+			) {
+		SubjectVO subject =  contentManager.getSubject(subjectNum);
+		if(subject.getImageData() != null && subject.getImageSize() >0)
+			model.addAttribute("hasImage", true);
+		model.addAttribute("subjectNum", subjectNum);
+		return "content/image-change-popup";
+	}
+	
+	// 이미지 변경하기
+	@PostMapping(path="/subject/image/{subjectNum}")
+	public ResponseEntity<String> updateSubjectImage(
+			@PathVariable("subjectNum") long subjectNum,
+			@RequestParam(name = "file") MultipartFile file
+		){
+		int result = 0;
+		if(file!=null) {
+			result = contentManager.changeImage(subjectNum, file);
+		}
+		ResponseEntity<String> res = null;
+		
+		logger.info("file:"+file);
+		return res;
+	}
+	
 	// 빈 과목 생성
 	@PostMapping(path = "/subject/new", produces = "application/json")
 	public ResponseEntity<Map<String, Object>> createNewSubject(HttpSession session) {
@@ -152,7 +202,7 @@ public class LearningContentController {
 		chapterDepth = (String) requestBody.get("chapterDepth");
 		long newUnitNum = contentManager.createEmptyUnit(subjectNum,chapterDepth);
 		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("newUnitNum", newUnitNum);
+		body.put("newUnitNum:", newUnitNum);
 		res = new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
 		return res;
 	}
