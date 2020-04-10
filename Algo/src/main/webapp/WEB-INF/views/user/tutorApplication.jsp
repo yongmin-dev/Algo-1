@@ -16,28 +16,22 @@
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
-		<form:form action="${pageContext.request.contextPath }/user/apply" 
-		method="post" 
+		<form:form action="${pageContext.request.contextPath}/user/apply" method="post" 
 		enctype="multipart/form-data"
 		modelAttribute="tutorApplicationVO">
 		<h2>튜터 신청</h2>		
-		<input type="submit" value="신청" />
-		<input type="button" value="취소" />
-		<table>
-			<tr>
-			  <td><label>제목</label><td>
-			  <td><form:input path="title" type="text"/>
-			  <form:errors path="title" /></td>
-			 </tr>
-			 <tr>
-			  <td><form:label path="content">본문</form:label></td>
-			  <td><textarea name="content" wrap="off" ></textarea><errors path="content" /></td>			  
-			</tr>
-		</table>
+		<form:label path="title">제목</form:label>
+		  <form:input path="title" type="text"/>
+		  <form:errors path="title" />			 
+		  <form:label path="content">본문</form:label>
+		  <textarea name="content" wrap="off" ></textarea><errors path="content" />
+			
 		  <form:label path="file">첨부</form:label>
 		  <form:input type="file" path="file" />
 		  <form:errors path="file" />
 		</form:form>
+		<input type="submit" value="신청" />
+		<input type="button" value="취소" />
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>

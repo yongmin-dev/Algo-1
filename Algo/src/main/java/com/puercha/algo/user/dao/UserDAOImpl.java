@@ -73,6 +73,33 @@ public class UserDAOImpl implements UserDAO {
 		para.put("userNum",userNum);
 		return sqlSession.selectOne("mappers.UserDAO-mapper.selectUser2",para);
 	}
+	
+	
+	/**
+	 *  튜터 신청서의 총 개수를 가져온다.
+	 * @return 신청서 총 row개수
+	 */
+	@Override
+	public long getTotalApplicationNum() {
+		logger.info("getTotalApplicationNum()");
+		return sqlSession.selectOne("mappers.UserDAO-mapper.getTotalApplicationNum");
+	}
+	
+	/**
+	 * 튜터신청서 목록을 가져옴
+	 * @param startRowNum 시작 번호
+	 * @param endRowNum 끝 번호
+	 * @return 리스트
+	 */
+	@Override
+	public List<TutorApplicationVO> selectAllTutorApplication(long startRowNum, long endRowNum){
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("startRowNum",startRowNum);
+		params.put("endRowNum",endRowNum);
+		logger.info("selectAllTutorApplication(long startRowNum, long endRowNum)");
+		return sqlSession.selectList("mappers.UserDAO-mapper.selectAllTutorApplication",params );
+	}
+
 	/* Update */
 	// 사용자 수정
 	@Override
@@ -99,6 +126,8 @@ public class UserDAOImpl implements UserDAO {
 		pass.put("newPw",newPw);
 		return sqlSession.update("mappers.UserDAO-mapper.changePW2",pass);
 	}
+	
+	
 	/* Delete */
 	// 사용자 삭제
 	@Override

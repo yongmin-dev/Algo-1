@@ -81,7 +81,7 @@
 	    </ul>
     </c:if>
     
-    <c:if test="${(!empty userInfo) and (!empty userInfo.type ) and ((userInfo.type eq 'M'.charAt(0)) or userInfo.type eq 'm'.charAt(0))}">
+    <c:if test="${(!empty userInfo) and (!empty userInfo.type ) and ((userInfo.type eq 'M'.charAt (0)) or userInfo.type eq 'm'.charAt(0))}">
 	    <ul>
 	      <li><a href="">관리자</a></li>
 	      <li><a href="${rootPath}/admin/application-list">· 튜터 신청서 관리</a></li>
@@ -91,7 +91,7 @@
       <li><a href="">게시판</a></li>      
       <li><a href="${rootPath}/board/list">· 질문게시판</a></li>
     </ul>
-    ${userInfo.type }
+    
 </div>
 </div>
 </div>

@@ -19,7 +19,7 @@ public class TutorApplicationVO {
 	
 	//유저번호
 	private long userNum;
-	
+	private String username; // 사용자명
 	//제목
 	private String title;
 	

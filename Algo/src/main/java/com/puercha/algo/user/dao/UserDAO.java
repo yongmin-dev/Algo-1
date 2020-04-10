@@ -26,6 +26,18 @@ public interface UserDAO {
 	UserVO selectUser(String email);	
 	UserVO selectUser(String email, String pw);
 	
+	/**
+	 * 튜터신청서 목록을 가져옴
+	 * @param startRowNum 시작 번호
+	 * @param endRowNum 끝 번호
+	 * @return 리스트
+	 */
+	List<TutorApplicationVO> selectAllTutorApplication(long startRowNum, long endRowNum);
+	/**
+	 *  튜터 신청서의 총 개수를 가져온다.
+	 * @return 신청서 총 row개수
+	 */
+	long getTotalApplicationNum();
 	/* Update */
 	// 사용자 수정
 	int updateUser (UserVO userVO);
