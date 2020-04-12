@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html data-contextpath="${pageContext.request.contextPath}">
 <head>
@@ -45,28 +46,17 @@
 	<main class="container">
 		<div class="cont_left">
 			<div class="cont_left_inner">
-				<h3>진행중인 문제</h3>
+				<h3>인기 문제(통과수/도전자수)</h3>
 				<ul>
-					<li style="width:100%;">
-						<span><a href="#">자바란 무엇인가?</a></span>
-						<span style="font-size:12px;">작성자: admin</span>
-					</li>
-					<li style="width:100%;">
-						<span><a href="#">자바란 무엇인가?</a></span>
-						<span style="font-size:12px;">작성자: admin</span>
-					</li>
-					<li style="width:100%;">
-						<span><a href="#">자바란 무엇인가?</a></span>
-						<span style="font-size:12px;">작성자: admin</span>
-					</li>
-					<li style="width:100%;">
-						<span><a href="#">자바란 무엇인가?</a></span>
-						<span style="font-size:12px;">작성자: admin</span>
-					</li>
-					<li style="width:100%;">
-						<span><a href="#">자바란 무엇인가?</a></span>
-						<span style="font-size:12px;">작성자: admin</span>
-					</li>
+					<c:forEach items="${hotChallenges}" var="challenge">
+						<li style="width:100%;">
+							<span><a href="#">${challenge.title }</a></span>
+							<span style="font-weight:bold;font-size:16px;color:#88dd99">(${challenge.passer}</span>
+							<span style="font-weight:bold;font-size:16px;color:#aabbcc">/${challenge.challenger})</span>
+						</li>
+					
+					
+					</c:forEach>
 					
 																
 				</ul>
@@ -74,44 +64,29 @@
 		</div>
 		<div class="cont_center">
 			<div class="cont_center_inner">
-				<h3>랭킹 순위</h3>				
-					<ul>
-						<li>NO.1</li>
-						<li>사용자1</li>									
-					</ul>
-					<ul>
-						<li>NO.1</li>
-						<li>사용자1</li>									
-					</ul>
-					<ul>
-						<li>NO.1</li>
-						<li>사용자1</li>									
-					</ul>
-					<ul>
-						<li>NO.1</li>
-						<li>사용자1</li>									
-					</ul>										
+				<h3>랭킹 순위</h3>
+					<c:forEach items="${rankers}" var="ranker" varStatus="status">
+						<ul>
+							<li><strong style="font-size:14px">NO.${status.count}</strong></li>
+							<li><strong style="font-size:16px">${ranker.username}</strong><small>(${ranker.userNum}) </small></li>									
+							<li>${ranker.passedNum}개</li>									
+						</ul>
+					
+					</c:forEach>								
 			</div>
 		</div>
 		<div class="cont_right">
 			<div class="cont_right_inner">
-				<h3>질문 게시판</h3>				
-					<ul>
-						<li><a href="#"> 도대체 자바란 무엇인가요?  </a> </li>						
-						<li style="float:right;">2020-03-20</li>										
-					</ul>
-					<ul>
-						<li><a href="#"> 도대체 자바란 무엇인가요?  </a> </li>						
-						<li style="float:right;">2020-03-20</li>										
-					</ul>
-					<ul>
-						<li><a href="#"> 도대체 자바란 무엇인가요?  </a> </li>						
-						<li style="float:right;">2020-03-20</li>										
-					</ul>
-					<ul>
-						<li><a href="#"> 도대체 자바란 무엇인가요?  </a> </li>						
-						<li style="float:right;">2020-03-20</li>										
-					</ul>										
+				<h3>질문 게시판</h3>
+					<c:forEach items="${ boardListDatas.list}" var="boardItem" end="5">
+						<ul>
+							<fmt:formatDate value="${boardItem.createdAt}" pattern="yyyy/MM/dd" var="cdate" />
+						
+							<li><a href="#"> ${boardItem.title }  </a> </li>						
+							<li style="float:right;">${cdate}</li>										
+						</ul>
+					</c:forEach>				
+														
 			</div>
 		</div>
 		

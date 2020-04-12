@@ -1,6 +1,7 @@
 package com.puercha.algo.challenge.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -121,5 +122,13 @@ public class ChallengeController {
 		return res;
 	}	
 	
-
+	@GetMapping("/hotchallenges")
+	ResponseEntity<List<Map<String,Object>>> getHotChallenges(
+		@RequestParam(name = "num",defaultValue = "5") long num
+			){
+		ResponseEntity<List<Map<String, Object>>> res = null;
+		List<Map<String,Object>> list = challengeService.getHotChalllenges(num);
+		res = new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
+		return res;
+	}
 }

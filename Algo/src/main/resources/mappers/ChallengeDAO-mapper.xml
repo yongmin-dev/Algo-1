@@ -72,37 +72,45 @@
 	<!-- 도전과제 row 1개 열람	 -->
 	<select id="selectOneChallenge" parameterType="hashmap" resultType="ChallengeVO">
 		SELECT 
-		    c_num AS "cNum",
-		    content,
-		    title,
-		    limit_memory AS "limitMemory",
-		    limit_time AS "limitTime" ,
+		    challenge.c_num AS "cNum",
+		    challenge.content,
+		    challenge.title,
+		    challenge.limit_memory AS "limitMemory",
+		    challenge.limit_time AS "limitTime" ,
 		    challenge.user_num AS "userNum",
 			app_user.username as "username",
-		    pass_num AS "passNum",
+		    "passer" as "passNum",
+			 "challenger",
         	challenge.created_at AS "createdAt",
         	challenge.updated_at AS "updatedAt"    
-		FROM challenge, app_user
-		WHERE challenge.user_num  = app_user.user_num
-		AND c_num = #{cNum}
+		FROM challenge, app_user , (SELECT challenge.c_num, COUNT( DISTINCT (CASE WHEN challenge_result.status = 'S' THEN challenge_result.user_num ELSE NULL END)) "passer", COUNT(DISTINCT challenge_result.user_num ) "challenger"
+				FROM challenge LEFT OUTER JOIN challenge_result
+				ON challenge.c_num = challenge_result.c_num
+				GROUP BY challenge.c_num ) pass	
+		WHERE challenge.user_num  = app_user.user_num AND pass.c_num = challenge.c_num
+		AND challenge.c_num = #{cNum}
 	</select>
 	<!-- 도전과제 목록 검색	 -->
 	<select id="selectAllChallenge" parameterType="hashmap" resultType="ChallengeVO">
 		SELECT *
 			FROM (SELECT 
 			    ROW_NUMBER() OVER (ORDER BY title asc) as "num" ,
-			    c_num as "cNum" ,
+			    challenge.c_num as "cNum" ,
 			    content as "content",
 			    title as "title",
 			    limit_memory as "limitMemory",
 			    limit_time as "limitTime",
 			    challenge.user_num as "userNum",
 			    app_user.username as "username",
-			    pass_num as "passNum",
+			    "passer" as "passNum",
+			    "challenger",
 			    challenge.created_at as "createdAt",
 			    challenge.updated_at as "updatedAt"
-			FROM challenge, app_user
-			WHERE challenge.user_num  = app_user.user_num
+			FROM challenge, app_user, (SELECT challenge.c_num, COUNT( DISTINCT (CASE WHEN challenge_result.status = 'S' THEN challenge_result.user_num ELSE NULL END)) "passer", COUNT(DISTINCT challenge_result.user_num ) "challenger"
+				FROM challenge LEFT OUTER JOIN challenge_result
+				ON challenge.c_num = challenge_result.c_num
+				GROUP BY challenge.c_num ) pass	
+			WHERE challenge.user_num  = app_user.user_num AND pass.c_num = challenge.c_num
 				<if test="types != null and keywords != null and types.size() > 0 and keywords.size() >0">
 					
 					<foreach collection="types" item="type" index="i" open="AND (" separator="or" close=")">						
@@ -400,6 +408,48 @@
 			)
 		WHERE "num" = 1
 	</select>
+	<!-- 핫한 문제 n개	 -->
+	<select id="selectHotChallenge" resultType="hashmap" parameterType="long">
+		SELECT * FROM(
+		SELECT
+		"pass".* ,
+		ROW_NUMBER() OVER (ORDER BY "pass"."challenger" desc) "num"
+		FROM(
+		SELECT 
+			challenge.c_num AS "cNum", 
+			challenge.title AS "title",
+			COUNT( DISTINCT (CASE WHEN challenge_result.status = 'S' THEN challenge_result.user_num ELSE NULL END)) "passer", 
+			COUNT(DISTINCT challenge_result.user_num ) "challenger"
+			FROM challenge LEFT OUTER JOIN challenge_result
+			ON challenge.c_num = challenge_result.c_num
+			GROUP BY challenge.c_num, challenge.title
+			ORDER BY "challenger" desc, "passer" asc) "pass"
+		)
+		WHERE "num" <![CDATA[<= ]]> #{topNum}
+	
+	</select>
+	<!-- 탑 랭커들을 불러옴	 -->
+	<select id="selectTopRanker" parameterType="long" resultType="hashmap">
+		SELECT * 
+		FROM (
+		SELECT 
+		pass.*,
+		row_number() over(order by "passedNum" desc) AS "num"
+		FROM (
+		SELECT 
+		app_user.user_num AS "userNum", 
+		app_user.username AS "username",
+		COUNT(DISTINCT CASE WHEN challenge_result.status='S' then app_user.user_num ELSE null END) "passedNum"
+		FROM APP_USER, CHALLENGE_RESULT
+		WHERE APP_USER.user_num = challenge_result.user_num
+		GROUP BY app_user.username, app_user.user_num		
+		ORDER BY "passedNum"
+		) pass )
+		WHERE "num" <![CDATA[<=]]>  5
+	
+	</select>
+	
+	
 	
 	<!-- Update -->
 	<!-- 도전과제 변경 -->

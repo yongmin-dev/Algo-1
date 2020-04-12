@@ -5,8 +5,15 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/css/default.css"/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/css/slick.css"/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/common/css/slick-theme.css"/>" />
-<link rel="stylesheet" type="text/css" href="<c:url value="/resources/codemirror/codemirror.css"/>" />
+<%-- <link rel="stylesheet" type="text/css" href="<c:url value="/resources/codemirror/doc/docs.css"/>" /> --%>
+<link rel="stylesheet" type="text/css" href="<c:url value="/resources/codemirror/lib/codemirror.css"/>" />
+<link rel="stylesheet" type="text/css" href="<c:url value="/resources/codemirror/addon/hint/show-hint.css"/>" />
+
 <script type="text/javascript" src="<c:url value="/resources/common/js/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/js/slick.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/js/common.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/codemirror/codemirror.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/codemirror/lib/codemirror.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/codemirror/addon/edit/matchbrackets.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/codemirror/addon/hint/show-hint.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/codemirror/mode/javascript/javascript.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/codemirror/clike.js"/>"></script>

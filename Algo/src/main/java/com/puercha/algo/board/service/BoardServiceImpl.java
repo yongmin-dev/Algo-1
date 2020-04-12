@@ -175,6 +175,28 @@ public class BoardServiceImpl implements BoardService {
 		return postingDAO.selectList(rowCriteria.getStartRec(), rowCriteria.getEndRec(), searchType, keyword);
 	}
 
+	
+	/**
+	 * 게시글 불러오기
+	 * @param page 요청 페이지
+	 * @param searchType 검색타입
+	 * @param keyword 검색어
+	 * @return 검색결과
+	 */
+	@Override
+	public Map<String, Object> getBoardList(long page, String searchType, String keyword) {
+		Map<String,Object> result = new HashMap<String, Object>();
+		logger.info("list param :" + page + " " + searchType + " " + keyword);
+		
+		// 요청 페이지 정보가 없으면 1로 초기화		
+		PageManager pageManager = getPageManager(""+page,searchType,keyword);
+		result.put("pageManager",pageManager);
+		logger.info("pageManager:"+pageManager);
+		List<BoardPostVO> list =  postingDAO.selectList(pageManager.getRc().getStartRec(), pageManager.getRc().getEndRec(), searchType, keyword);
+		result.put("list",list);
+		return result;
+	}
+
 	// 페이지 제어
 	@Override
 	public PageManager getPageManager(String reqPage, String searchType, String keyword) {

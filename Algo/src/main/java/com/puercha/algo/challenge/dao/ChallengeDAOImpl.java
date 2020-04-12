@@ -287,6 +287,32 @@ public class ChallengeDAOImpl implements ChallengeDAO {
 	}
 
 
+	/**
+	 * 가장 핫한 문제 n개 가져오기
+	 * @param topNum n
+	 * @return map객체 리스트
+	 */
+	@Override
+	public List<Map<String, Object>> selectHotChallenge(long topNum) {
+		logger.info("selectHotChallenge(long topNum): "+ topNum);
+		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectHotChallenge",topNum);
+	}
+
+	
+
+	/**
+	 * 상위랭커 불러오기
+	 * @param rankerNum 불러올 랭커 수
+	 * @return 랭커 정보 map의 리스트
+	 */
+	@Override
+	public List<Map<String, Object>> selectTopRanker(long rankerNum) {		
+		logger.info("selectTopRanker(long rankerNum): "+ rankerNum);
+		return sqlSession.selectList("mappers.ChallengeDAO-mapper.selectTopRanker",rankerNum);
+
+	}
+
+
 
 	/* Update */
 	/**

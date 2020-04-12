@@ -35,6 +35,8 @@ public class ChallengeVO {
 	// 통과한 사람수
 	private long passNum;
 
+	private long challenger; // 도전자 수
+	
 	// 생성 일시
 	private Date createdAt;
 

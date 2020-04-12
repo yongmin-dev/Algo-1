@@ -27,7 +27,7 @@
 	
 </head>
 <body>
-	<%@include file="/WEB-INF/views/include/header.jsp"%>
+	<%@include file="/WEB-INF/views/include/header.jsp"%> 
 	<div class="container">
 		<!-- 과목 리스트가 표시 됨 -->
 		<div class="subject_wrap">
@@ -43,7 +43,9 @@
 							<img src="${pageContext.request.contextPath }/learning/subject/image/${subject.subjectNum }"width="120px" height="120px">
 							<!-- 과목 제목-->
 							<span class="title"><strong class="title">${subject.title }</strong></span>
-							<span class="progress-rate">${subject.progressRate }%</span>
+							<c:if test="${!empty userInfo }">
+								<span class="progress-rate">${subject.progressRate }%</span>
+							</c:if>
 						</a>
 					</div>
 				</div>
