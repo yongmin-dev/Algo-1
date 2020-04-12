@@ -69,7 +69,7 @@ public class LearningDAOImplTest {
 	@Disabled
 	public void unitContent() {
 		UnitVO unitVO = new UnitVO();
-		unitVO = learningDAO.selectOneUnit(1);
+//		unitVO = learningDAO.selectOneUnit(1);
 		logger.info(unitVO.toString());
 	}
 	
@@ -91,4 +91,9 @@ public class LearningDAOImplTest {
 		}
 	}
 	
+	@Test
+	public void testGetNextUnitNum() {
+		
+		logger.info("unitNum:"+learningDAO.getNextUnitNum(6));
+	}
 }

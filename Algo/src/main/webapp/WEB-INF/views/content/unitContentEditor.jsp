@@ -47,13 +47,26 @@
 	</style>
 	
 	
-	
+	<script type="text/javascript">
+		window.addEventListener('load',e=>{
+			 ClassicEditor
+             .create( document.querySelector( '#ckeditor' ) )
+             .then( editor => {
+                     console.log( editor );
+             } )
+             .catch( error => {
+                     console.error( error );
+             } );
+		});
+	</script>
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main id="unit-editor-main" data-num="${unit.unitNum}" data-subjectnum="${unit.subjectNum }">
 		<form:form modelAttribute="unit" method="POST"
 			action="${pageContext.request.contextPath}/content/learning/unit/edit">
+			<form:hidden path="unitNum"/>
+			<form:hidden path="subjectNum"/>
 <!-- 제출 -->
 			<button type="submit" class="save_all">전체저장</button>
 							
@@ -62,6 +75,7 @@
 				<div class="title-content-wrap">
 				<!-- 단원번호-->
 					<div class="chapter-depth">
+						<form:hidden path="chapterDepth"/>
 						<form:input disabled="true" type="text" value="${unit.chapterDepth}" path="chapterDepth" placeholder="단원 번호를 입력해주세요"/>			
 					</div>
 				
@@ -73,7 +87,8 @@
 			</div>
 				<!-- 내용 -->
 				<form:label path="content">내용</form:label>
-				<textarea path="content">${unit.content}</textarea>
+				<form:textarea path="content" id="ckeditor"></form:textarea>
+<%-- 				<form:textarea path="content">${unit.content}</form:textarea> --%>
 		</form:form>
 		
 		

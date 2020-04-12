@@ -1,6 +1,7 @@
 package com.puercha.algo.learning.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.puercha.algo.learning.vo.QuizAnswerVO;
 import com.puercha.algo.learning.vo.QuizResultVO;
@@ -61,10 +62,13 @@ public interface LearningDAO {
 	 */
 	List<UnitVO> selectAllUnits(long subjectNum);
 	//단원 열람, 단원내용관리화면
-	UnitVO selectOneUnit(long unitNum);
+//	UnitVO selectOneUnit(long unitNum);
+	UnitVO selectOneUnit(long unitNum, long userNum);
 
 	//과목리스트, 과목 조회(검색)
 	List<SubjectVO> selectAllSubjects(long pageNum,  String searchType,String keyword);
+	List<SubjectVO> selectAllSubjects(long pageNum,  String searchType,String keyword,long userNum);
+	List<SubjectVO> selectAllSubjects(long startRowNum, long endRowNum,  String searchType,String keyword,long userNum);
 	
 	//과목리스트,자기가 작성한 과목 조회(관리)	
 	List<SubjectVO> selectAllUserSubjects(long userNum);	
@@ -83,9 +87,10 @@ public interface LearningDAO {
 	/**
 	 * 내용을 제외한 unit의 데이터들의 리스트를 가져옴
 	 * @param subjectNum 과목번호
+	 * @param userNum 사용자 번호
 	 * @return unit vo의 리스트 객체
 	 */
-	List<UnitVO> selectAllUnitMetadatas(long subjectNum);
+	List<UnitVO> selectAllUnitMetadatas(long subjectNum, long userNum);
 	
 	
 	/**
@@ -156,6 +161,29 @@ public interface LearningDAO {
 	 */
 	int insertQuisResult(QuizResultVO quizResult);
 
+	/**
+	 * 단원의 마무리문제 전체 통과 여부 조회
+	 * @param unitNum 단원 번호
+	 * @param userNum 사용자 번호 
+	 * @return 통과여부,총문제 수, 통과문제 수 등
+	 */
+	Map<String, Object> selectUnitProgress(long unitNum, long userNum);
+
+	/**
+	 * 각 마무리문제의 통과여부 조회
+	 * @param unitNum 단원 번호
+	 * @param userNum 사용자 번호
+	 * @return Map단위의 리스트객체(row는 통과여부, 퀴즈번호, 통과결과 개수)
+	 */
+	List<Map<String,Object>> selectAllPassFailOfQuiz(long unitNum, long userNum);
+
+	
+	/**
+	 * 다음 unitNum을 가져온다.
+	 * @param unitNum 현재 단원번호
+	 * @return 다음 단원번호
+	 */
+	long getNextUnitNum(long unitNum);
 	
 
 	

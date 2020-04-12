@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.puercha.algo.content.service.ContentManagingService;
 import com.puercha.algo.learning.service.LearningService;
+import com.puercha.algo.learning.vo.QuizVO;
 import com.puercha.algo.learning.vo.SubjectVO;
 import com.puercha.algo.learning.vo.UnitVO;
 import com.puercha.algo.user.service.LoginService;
@@ -44,14 +45,20 @@ public class LearningController {
 	public String learningList(@PathVariable(required = false) String reqPage,
 			@PathVariable(required = false) String searchType, @PathVariable(required = false) String keyword,
 			HttpSession session, Model model) {
-		UserVO user = (UserVO) session.getAttribute("user");
+		UserVO user = loginService.getLoggedInUser(session);
 		logger.info("learning Controller 작동");
-
+//		"progressRate"
 		// 과목 목록 불러오기
 		model.addAttribute("subjectList", learningService.subjectList(reqPage, searchType, keyword));
 		// 페이지 제어
 		model.addAttribute("pm", learningService.getPageManager(reqPage, searchType, keyword));
+		long userNum = 0;
+		if(user!=null)
+			userNum = user.getUserNum();
 
+		Map<String,Object> datas = learningService.getSubjectList(reqPage, searchType, keyword,userNum);
+		model.addAttribute("datas", datas);
+		
 		return "/learning/subjectList";
 	}
 
@@ -62,10 +69,36 @@ public class LearningController {
 		List<UnitVO> list = learningService.unitList(subjectNum);
 		model.addAttribute("unitList", list);
 		if(list.size()>0)
-			model.addAttribute("unitVO", list.get(0));
+			model.addAttribute("unit", list.get(0));
 		return "/learning/unitContent";
 	}
 
+	// 단원열기
+//	@GetMapping(path={"/unit/{unitNum}","/subject/{subjectNum}"})
+	@GetMapping(path={"/unit/{unitNum}"})
+	public String viewUnitPage(
+			@PathVariable(value = "unitNum", required = true) long unitNum, 
+			@RequestParam(value = "prevUnitNum", required = false, defaultValue = "0") long prevUnitNum,
+				HttpSession session, 
+				Model model) {
+		UserVO user = loginService.getLoggedInUser(session);
+		long userNum = 0;
+		if(user != null) {			
+			userNum = user.getUserNum();
+		}
+		if(prevUnitNum>0 ) { // 진척도 갱신하기 
+			long completionNum =  learningService.checkCompletion(prevUnitNum,userNum);
+		}		
+		
+		// 단원 컨텐츠 열기
+		UnitVO  unit = learningService.getUnitContent(unitNum,userNum);
+		model.addAttribute("unit", unit);
+		// 단원 리스트 
+		if(unit !=null) {
+			model.addAttribute("unitList", learningService.getUnitList(unit.getSubjectNum(),userNum));			
+		}
+		return "/learning/unitContent";
+	}
 	// 단원열기
 	@GetMapping("/unit/{subjectNum}/{unitNum}")
 	public String viewUnit(@PathVariable String unitNum, @PathVariable String subjectNum, HttpSession session, Model model) {
@@ -74,18 +107,51 @@ public class LearningController {
 		Map<String, Object> map = learningService.viewUnit(unitNum);
 		UnitVO unitVO = (UnitVO) map.get("UnitVO");
 		model.addAttribute("unitVO", unitVO);
-		return "/learning/unitContent";
+		return "learning/unitContent";
 	}
 
 	// 마무리문제풀기화면
 	@GetMapping("/quiz/{unitNum}")
-	public String viewQuiz(@PathVariable String unitNum, HttpSession session, Model model) {
-		model.addAttribute("unit",learningService.viewUnit(unitNum).get("UnitVO"));
-		model.addAttribute("quizList", learningService.viewQuiz(unitNum));
-
-		return "/learning/quiz";
-
+	public String viewQuiz(
+			@PathVariable(name = "unitNum") long unitNum, 
+			HttpSession session, 
+			Model model) {
+		logger.info("viewQuizPage");
+//		model.addAttribute("unit",learningService.viewUnit(unitNumStr).get("UnitVO"));
+		if(unitNum<=0) {
+			return "redirect:/learning/list";
+		}
+		
+		// 다음 번호
+		long nextUnitNum = learningService.getNextUnitNum(unitNum);
+		logger.info("nextUnitNum:"+nextUnitNum);
+		model.addAttribute("nextUnitNum", nextUnitNum);
+		
+		UserVO user = loginService.getLoggedInUser(session);
+		long userNum = 0;
+		if(user!=null) {
+			userNum = user.getUserNum();
+		}
+		UnitVO unit = learningService.getUnitContent(unitNum);
+		model.addAttribute("unit",unit);
+		List<QuizVO> quizList = learningService.getQuizList(unitNum);
+		logger.info("quizList:"+quizList);
+		List<Map<String,Object>> quizMetas = null;
+		logger.info("quizMetas");
+		if(user!=null) {			
+			 quizMetas = learningService.getQuizMatadatas(unitNum,userNum);
+			 model.addAttribute("quizMetas", quizMetas);
+		}
+//		model.addAttribute("quizList", learningService.viewQuiz(unitNumStr));
+		model.addAttribute("quizList", quizList);
+//		long unitNum = Long.valueOf(unitNumStr);
+		if(user!=null && userNum > 0 ) {			
+			model.addAttribute("quizStatus",learningService.getUnitProgress(unitNum, userNum));
+		}
+		return "learning/quiz";
 	}
+	
+	
 
 	// 마무리 문제 정답확인
 	@PostMapping(path = "/quiz/{quizNum}/check"
