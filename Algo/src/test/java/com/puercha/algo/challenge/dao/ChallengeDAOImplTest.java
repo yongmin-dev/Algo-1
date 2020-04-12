@@ -229,4 +229,14 @@ public class ChallengeDAOImplTest {
 		
 	}
 
+	@Test
+	public void testSelectHotChallenge() {
+		logger.info("challenges :"+challengeDAO.selectHotChallenge(4));
+	}
+	
+	@Test
+	public void testSelectTopRanker() {
+		
+		logger.info("rankers:"+challengeDAO.selectTopRanker(5));
+	}
 }

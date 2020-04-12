@@ -25,7 +25,7 @@
 	main{width:980px;margin:0 auto;}
 	main h2{padding:20px 0;}
 	main ul li{display:inline-block;font-size:16px;padding:14px;}
-	main ul li.title{width:79%;text-indent:20px;}
+	main ul li.title{}
 	/* main ul > div:nth-child(2n-1){background:#EDEDFA;} */	
 	main ul > div{border-bottom:2px solid #ededed;}
 	main .paging a{font-size:16px;}
@@ -33,6 +33,9 @@
 	#btn-search-challenge{cursor:pointer;padding:6px 20px;}
 	
 	main ul li span{display:inline-block;font-size:14px;}
+
+	
+	
 	</style>
 </head>
 <body>
@@ -43,27 +46,27 @@
 		
 			<li style="width:100%;">
 			<span>번호</span>
-			<span style="width:79%;text-indent:20px;    ">제목</span>
-			<span style="text-indent:20px;">맞춘사람</span>
-			<span style="text-indent:5px;">작성자</span>
+			<span style="width:70%">제목</span>
+			<span>맞춘사람</span>
+			<span>작성자</span>
 			</li>
 		
 		
 			<c:forEach items="${list}" var="challenge">
-				<div>
-			<li>
+				<div class="menu">
+			<li class="1">
 				<!-- 도전문제 번호 -->
 				${challenge.CNum}								
 			</li>
-			<li class="title">
+			<li class="2" style="width:70%">
 				<!-- 제목 -->
 				<a href="${pageContext.request.contextPath}/challenge/${challenge.CNum}">${challenge.title }				
 			</li>
-			<li>
+			<li class="3">
 				<!-- 통과한 사람 수 -->
 				${challenge.passNum }				
 			</li>
-			<li>
+			<li class="4">
 				<!-- 작성자 -->
 				${challenge.username}				
 			</li>

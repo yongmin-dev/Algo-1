@@ -76,7 +76,7 @@ public class LearningManager implements LearningService {
 	// 단원 리스트 불러오기
 	@Override
 	public List<UnitVO> unitList(String subjectNum) {
-
+		logger.info("unitList(String subjectNum)");
 		return learningDAO.selectAllUnits(Integer.parseInt(subjectNum));
 		
 	}

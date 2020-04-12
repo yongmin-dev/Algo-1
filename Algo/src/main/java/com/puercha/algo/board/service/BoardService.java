@@ -38,13 +38,36 @@ public interface BoardService {
 	
 	//게시글 목록보기
 	//1) 전체
+	/**
+	 * @deprecated
+	 * @return
+	 */
 	List<BoardPostVO> list();
-	
+	/**
+	 * @deprecated
+	 * @param startRec
+	 * @param endRec
+	 * @return
+	 */
 	//2) 검색어 없는 게시글 페이징
 	List<BoardPostVO> list(int startRec, int endRec);
-	
+	/**
+	 * @deprecated
+	 * @param reqPage
+	 * @param searchType
+	 * @param keyword
+	 * @return
+	 */
 	//3) 검색어 있는 게시글 페이징
 	List<BoardPostVO> list(String reqPage, String searchType, String keyword);
+	/**
+	 * 게시글 불러오기
+	 * @param page 요청 페이지
+	 * @param searchType 검색타입
+	 * @param keyword 검색어
+	 * @return 검색결과
+	 */
+	Map<String,Object> getBoardList(long page, String searchType, String keyword);
 	
 	//페이지 제어
 	PageManager getPageManager(String reqPage, String searchType, String keyword);

@@ -9,12 +9,13 @@
 <title>도전과제 편집</title>
 <%@include file="/WEB-INF/views/include/meta.jsp" %>
 	<style type="text/css">
-	
+
 		#case-list li.selected{background: #555273;color: #fff;}
-		#case-list li {margin-top:10px;}
-		#case-list{height:200px;overflow:scroll;-ms-overflow-style: 10px; /* IE and Edge */
-    scrollbar-width: 10px; /* Firefox */margin:20px 0;}
-		#case-list::-webkit-scrollbar { width:10px; /* Chrome, Safari, Opera*/}
+/* 		#case-list li {margin-top:10px;} */
+		#case-list {border :1px dotted gray;}	
+ 		#case-list{height:200px;overflow:auto ;-ms-overflow-style: 10px; /* IE and Edge */
+    		scrollbar-width: 10px; /* Firefox */margin:20px 0;}
+		#case-list::-webkit-scrollbar { height:0pxp; width:0px; /* Chrome, Safari, Opera*/}
 		
 		
 		main{width:980px;margin:0 auto;}
@@ -44,7 +45,7 @@
 			<!-- 도전과제 케이스 추가버튼 -->
 			<button type="button" id="btn-new-case">추가</button>
 			<!-- 도전과제 케이스 -->
-			<ul id="case-list">
+			<ul class="content-list"  id="case-list">
 				
 			</ul>
 			<!-- 케이스 저장 버튼 -->

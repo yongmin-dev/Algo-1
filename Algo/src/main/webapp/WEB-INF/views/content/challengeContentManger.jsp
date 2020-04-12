@@ -13,7 +13,7 @@
     color: #fff;
 		}
 		  .chg_cont{width: 980px;margin: 0 auto;}
-  #challenge-list{overflow: hidden;padding: 50px 0;}
+  #challenge-list{ border:none; overflow: hidden;padding: 50px 0;}
   #challenge-list li{width: 50%;float: left;border:1px solid #e2e2e2;box-sizing: border-box;padding: 50px;text-align: center;}
   #challenge-list li span.title{font-size:20px;font-weight: bold;}
   #challenge-list li button{cursor: pointer;padding: 10px 20px;margin: 0 2px;}
@@ -36,7 +36,7 @@
       <button id="btn-new-challenge" type="button">새 도전과제</button>
     </div>
 		<!-- 도전과제 리스트 -->
-		<ul id="challenge-list">
+		<ul class="content-list" id="challenge-list">
 			
 		</ul>
 	</main>	

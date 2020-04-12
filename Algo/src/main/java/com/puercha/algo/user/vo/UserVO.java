@@ -71,6 +71,10 @@ public class UserVO {
 	// 유형(학습자, 튜터)
 	private char type;
 	
-
+	
+	// String 형으로 타입 얻기
+	public String getTypeAsString() {
+		return ""+this.type;
+	}
 
 }

@@ -73,7 +73,7 @@
       <li><a href="">도전과제</a></li>
       <li><a href="${rootPath}/challenge/list">· 도전과제조회</a></li>      
     </ul>
-    <c:if test="${!empty userInfo and userInfo.type ne 'S'.charAt(0)}">
+    <c:if test="${!empty userInfo and userInfo.typeAsString ne 'S'}">
 	    <ul>
 	      <li><a href="">컨텐츠 관리</a></li>
 	      <li><a href="${rootPath}/content/learning">· 이론학습 관리</a></li>
@@ -81,7 +81,7 @@
 	    </ul>
     </c:if>
     
-    <c:if test="${(!empty userInfo) and (!empty userInfo.type ) and ((userInfo.type eq 'M'.charAt (0)) or userInfo.type eq 'm'.charAt(0))}">
+    <c:if test="${(!empty userInfo) and (!empty userInfo.type ) and (((userInfo.typeAsString) eq 'M') or userInfo.type.typeAsString eq 'm')}">
 	    <ul>
 	      <li><a href="">관리자</a></li>
 	      <li><a href="${rootPath}/admin/application-list">· 튜터 신청서 관리</a></li>

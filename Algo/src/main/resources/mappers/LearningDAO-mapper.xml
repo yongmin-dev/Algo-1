@@ -81,7 +81,7 @@
 		    ANSWER_NUM_SEQ.nextval,
 		    #{quizNum},
 		    #{content},
-		    #{correct}
+		    #{correctAsString}
 		)
 		<selectKey resultType="long" order="AFTER" keyProperty="answerNum">
 			SELECT ANSWER_NUM_SEQ.currval FROM dual
@@ -413,7 +413,7 @@
 		SET   
 		    QUIZ_NUM = #{quizNum}, 
 		    CONTENT = #{content}, 
-		    IS_CORRECT = #{correct}, 
+		    IS_CORRECT = #{correctAsString}, 
 		    UPDATED_AT = SYSTIMESTAMP
 		WHERE ANSWER_NUM = #{answerNum}
 	</update>

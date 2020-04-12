@@ -6,6 +6,7 @@ package com.puercha.algo.challenge.dao;
  */
 
 import java.util.List;
+import java.util.Map;
 
 import com.puercha.algo.challenge.vo.ChallengeCaseVO;
 import com.puercha.algo.challenge.vo.ChallengeResultVO;
@@ -148,6 +149,19 @@ public interface ChallengeDAO {
 	 */
 	List<ChallengeCaseVO> selectAllCaseMetaDatas(long cNum);
 	
+	/**
+	 * 가장 핫한 문제 n개 가져오기
+	 * @param topNum n
+	 * @return map객체 리스트
+	 */
+	List<Map<String,Object>> selectHotChallenge(long topNum);
+	
+	/**
+	 * 상위랭커 불러오기
+	 * @param rankerNum 불러올 랭커 수
+	 * @return 랭커 정보 map의 리스트
+	 */
+	List<Map<String,Object>> selectTopRanker(long rankerNum);
 	
 	
 	/* Update */

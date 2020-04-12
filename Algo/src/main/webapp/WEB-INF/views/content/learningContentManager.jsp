@@ -17,10 +17,13 @@
 		main{width:980px;margin:0 auto;padding:20px 0;overflow:hidden;}
 		img,button{cursor:pointer;}
 		button{padding:5px 15px;}
-		.btn_wrap{float:right;}
+		.btn_wrap{float:right; }
+ 		.btn_wrap{margin-bottom:1em; } 
 		
 		#suject-list{width:50%;float:left;}
 		#unit-list{width:50%;float:left;padding: 0 0 0 15px;}
+		#subject-list li{padding:0.5em 1.0em;}
+		#unit-list li{padding:1em}
 		
 		.cont_subject01{width:50%;float:left;}
 		
@@ -41,7 +44,7 @@
 			<!-- 과목 추가 버튼 -->
 			<button id="btn-new-subject">새과목 추가</button>
 			<!-- 과목리스트 -->
-			<ul id="subject-list">
+			<ul class="content-list" class="content-list" id="subject-list">
 			</ul>
 		</div>
 		<div class="btn_wrap">
@@ -56,7 +59,7 @@
 		
 		</div>
 		<!-- 단원리스트 -->
-		<ul id="unit-list">
+		<ul class="content-list" class="content-list" id="unit-list">
 		</ul>
 		<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 	</main>	

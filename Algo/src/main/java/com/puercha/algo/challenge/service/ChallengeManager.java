@@ -159,5 +159,30 @@ public class ChallengeManager implements ChallengeService {
 		logger.info("getMyRank(long cNum, long userNum, String type)");
 		return challengeDAO.selectOneRank( cNum,  userNum,  type);
 	}
+
+	/**
+	 * 핫한 문제들을 가져옴
+	 * @param num 문제 개수
+	 * @return 문제 리스트 
+	 */
+	@Override
+	public List<Map<String, Object>> getHotChalllenges(long num) {
+		logger.info("getHotChalllenges(long num)");
+		return challengeDAO.selectHotChallenge(num);
+	}
+
+	/**
+	 * 탑 랭커들의 정보를 가져옴
+	 * @param rankers 랭커의 수
+	 * @return 랭커 정보의 리스트
+	 */
+	@Override
+	public List<Map<String, Object>> getTopRankers(long rankersNum) {
+		logger.info("getTopRankers(long rankersNum)");
+		return challengeDAO.selectTopRanker(rankersNum);
+	}
+
+	
+	
 	
 }

@@ -12,6 +12,10 @@
 			margin:0px;
 			height:100%;
 		}
+		img{
+			height:400px;
+			width:500px;
+		}
 	</style>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/image-changer.js"></script>
 </head>

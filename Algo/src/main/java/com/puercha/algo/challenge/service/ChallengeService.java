@@ -95,4 +95,17 @@ public interface ChallengeService {
 	 * @return 내 랭킹 결과 VO
 	 */
 	ChallengeResultVO getMyRank(long cNum, long userNum, String type);
+	
+	/**
+	 * 핫한 문제들을 가져옴
+	 * @param num 문제 개수
+	 * @return 문제 리스트 
+	 */
+	List<Map<String, Object>> getHotChalllenges(long num);
+	/**
+	 * 탑 랭커들의 정보를 가져옴
+	 * @param rankers 랭커의 수
+	 * @return 랭커 정보의 리스트
+	 */
+	List<Map<String, Object>> getTopRankers(long rankersNum);
 }

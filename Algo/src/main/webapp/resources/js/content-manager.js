@@ -288,7 +288,7 @@ function makeChallengeItem(data){
 
 // 삭제 편집 버튼 넣기
 function makeListItemTools(){
-    return `<button class="btn-delete">삭제</button><button class="btn-edit">편집</button><button class="btn-save">저장</button>`;
+    return `<div class="list-toolbox"><button class="btn-delete">삭제</button><button class="btn-edit">편집</button><button class="btn-save">저장</button></div>`;
 }
 
 // event경로 상 모든 'data'로 시작하는 attribute 를 긁어옴

@@ -281,6 +281,7 @@ public class LearningContentController {
 			HttpSession session,
 			Model model) {
 		UnitVO unit = contentManager.getUnitContent(unitNum);
+		logger.info("편집할 단원:"+unit);
 		model.addAttribute("unit", unit);
 		return "content/unitContentEditor";
 	}
@@ -380,6 +381,7 @@ public class LearningContentController {
 		ResponseEntity<List<QuizAnswerVO>> res = null;
 		List<QuizAnswerVO> list = contentManager.getAnswerList(quizNum);
 		logger.info("quizNum:" + quizNum);
+		res = new ResponseEntity<List<QuizAnswerVO>>(list,HttpStatus.OK);
 		return res;
 	}
 

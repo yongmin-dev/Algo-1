@@ -65,11 +65,11 @@ public class QuizAnswerVO {
 			this.isCorrect = false;
 		}
 	}
-	@Tolerate
-	public char getCorrect() {
+//	@Tolerate
+	public String getCorrectAsString() {
 		if(this.isCorrect)
-			return 't';
+			return "t";
 		else 
-			return 'f';					
+			return "f";					
 	}
 }
