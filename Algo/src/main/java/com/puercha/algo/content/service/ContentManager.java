@@ -264,8 +264,8 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public UnitVO getUnitContent(long unitNum) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("getUnitContent(long unitNum)");
+		return learningDAO.selectOneUnit(unitNum);
 	}
 
 	/**

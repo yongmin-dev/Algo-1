@@ -84,4 +84,20 @@
 
 
 
+/* list */
+ul.content-list {
+	padding:0.14em;
 
+	
+}
+.content-list li {
+	outline: dotted 1px gray;
+	padding:0.2em;
+	display:flex;
+	align-items:center;
+	column-gap: 0.3em;
+	justify-content: space-between;
+}
+.content-list li.selected{
+
+}

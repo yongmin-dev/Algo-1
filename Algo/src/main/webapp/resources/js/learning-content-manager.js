@@ -22,16 +22,35 @@ e=>{
 	if(moveLeftBtn){
 		moveLeftBtn.addEventListener('click',e=>{
 			const li = unitList.querySelector('li.selected');
-			let prevDepth = selectedUnit.getAttribute('data-depth');
-			prevDepth = prevDepth.substr(0,prevDepth.length-1)
+			let curDepth = li.getAttribute('data-depth')
+			if(!li.previousSibling)
+				return;
+			
+			let prevDepth = li.previousSibling.getAttribute('data-depth');// 이전항목
+			prevDepth = prevDepth.substr(0,prevDepth.length-1);
 			console.log("prevDepth:"+prevDepth);
-			const depthTokens = prevDepth.split('.');
-			const length = depthTokens.length;
-			if(depthTokens.length >0)
-				depthTokens[length -1] = parseInt(depthTokens[length -1])+1;
-			newChapterDepth = depthTokens.join('.')+"."
-			changeFollowingUnitDepth(length-1,selectedUnit, +1,"next");
-			changeFollowingUnitDepth(length-1,selectedUnit, +1,"next");
+			const prevDepthTokens = prevDepth.split('.');
+			curDepth = curDepth.substr(0,curDepth.length-1);
+			console.log("curDepth:"+curDepth);
+			const curDepthTokens = curDepth.split('.');
+			const curDepthIdx = curDepthTokens.length-2;
+		
+			if(curDepthTokens.length>1){// 1보다 커야함
+				
+				curDepthTokens.pop();
+			
+				for(let i =0;i<curDepthTokens.length;i++){
+					if(!isNaN(parseInt(prevDepthTokens[i]))){
+						curDepthTokens[i]=prevDepthTokens[i];
+						if(i === curDepthTokens.length-1){//마지막일 때						
+							curDepthTokens[i]= parseInt(curDepthTokens[i])+1;
+						}										
+					}
+				}
+				newChapterDepth = curDepthTokens.join('.')+"."
+				changeUnitDepth(li, newChapterDepth);
+				changeFollowingUnitDepth(curDepthIdx,li, +1,"next");
+			}
 			
 		});
 	}
@@ -66,25 +85,25 @@ e=>{
 			changeFollowingUnitDepth(curDepthIdx,li, -1,"next");
 		});
 	}
-	// 단원 편집기 
+	// 에디터 열기 버튼
 	const unitEditorBtn = document.getElementById('btn-unit-editor');
-	
+	if(unitEditorBtn){
+		unitEditorBtn.addEventListener('click',
+			e=>{
+				const li = unitList.querySelector('li.selected');
+				if(li){
+					const num = li.getAttribute('data-num');
+					location.href=`${contextPath}/content/learning/unit/editor/${num}`;
+				}
+				else {
+					alert("편집할 단원을 선택해 주세요")
+				}
+				
+			}
+		);
+	}
 
-	  // 에디터 열기 버튼
-    const editorBtn = document.querySelector('#btn-editor');  
-    if(editorBtn){    	
-    	editorBtn.addEventListener('click',
-		e=>{
-			const li = challengeList.querySelector('li.selected');
-			if(li){
-				const cnum = li.getAttribute('data-num');
-				location.href=`${contextPath}/content/challenge/editor/${cnum}`;
-			}
-			else {
-				alert("편집할 도전과제를 선택해 주세요")
-			}
-		});
-    }
+  
     
     // 새 과목 추가 버튼
     const addNewSubjectBtn = document.querySelector("#btn-new-subject");
@@ -227,6 +246,10 @@ function updateUnitList(unitListEle, subjectNum){
 		console.error(e);
 	}	
 }
+// 단원 하나 갱신하기
+function updateOneUnit(){
+	
+}
 
 
 // 과목 선택
@@ -264,6 +287,7 @@ function makeSubjectItem(data){
     item.innerHTML= `<img src="${imageUrl}"><span class="title">${data.title}</span> ${makeListItemTools()}`;    
     return item;
 }
+
 // 단원 항목 만들기
 function makeUnitItem(data){
 	const item = document.createElement('li');
@@ -381,6 +405,7 @@ function unitListHandler(e){
 	
 	e.preventDefault()
 }
+
 // 이미지 변경 팝업
 function imageEditPopup(subjectNum){
     var url = `${getContextRootPath()}/content/learning/subject/image/editor/${subjectNum}`;
@@ -396,6 +421,13 @@ function changeUnitDepth(listItemElement, depth){
 //	console.dir(attributes);
 	const li = listItemElement.closest('li');
 	const num = li.getAttribute('data-num');
+	
+	// 요소의 내용 변경
+	li.setAttribute('data-depth',depth);
+	if(li.querySelector('.chapter-depth')){
+		li.querySelector('.chapter-depth').innerText=depth;
+	}
+	
 	const xhr = new XMLHttpRequest();
 	xhr.open("PUT",`${contextPath}/content/learning/unit/depth/${num}`);
 	xhr.addEventListener('load',e=>{
