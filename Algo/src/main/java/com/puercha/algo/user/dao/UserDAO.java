@@ -38,11 +38,14 @@ public interface UserDAO {
 	 * @return 신청서 총 row개수
 	 */
 	long getTotalApplicationNum();
+	// 신청서 하나 조회
+	TutorApplicationVO selectOneTutorApplication(long applicationNum);
 	/* Update */
 	// 사용자 수정
 	int updateUser (UserVO userVO);
 	int changePW(long userNum,String oldPw,String newPw);
 	int changePW(String email,String oldPw,String newPw);
+	int updateApplication(TutorApplicationVO appli);
 	
 	/* Delete */
 	// 사용자 삭제

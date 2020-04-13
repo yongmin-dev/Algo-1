@@ -85,7 +85,7 @@
 <select id="selectUser2" 
 				parameterType="hashmap"
 				resultType="UserVO">
-		SELECT user_num as "uesrNum", email, pw, tel, username, type,
+		SELECT user_num as "userNum", email, pw, tel, username, type,
 		       gender, address, birth, created_at AS  "createdAt", updated_at AS "updatedAt"
 		  FROM APP_USER    
 		 where user_Num = #{userNum} 
@@ -97,6 +97,7 @@
 		(SELECT 
 			ROW_NUMBER() OVER(ORDER BY tutor_application.CREATED_AT DESC) AS "num",
 			tutor_application.UPDATED_AT AS "updatedAt", 
+			app_user.username AS "username",
 			TITLE,  
 			CONTENT, 
 			tutor_application.USER_NUM AS "userNum", 
@@ -106,9 +107,26 @@
 			FROM tutor_application, APP_USER
 			WHERE app_user.user_num = tutor_application.user_num)
 	WHERE 
-	 "num" between #{startRowNum} and #{endRowNum}
-	 
+	 "num" between #{startRowNum} and #{endRowNum}	 
 </select>
+<!-- 튜터신청서 하나 조회 -->
+<select id="selectOneTutorApplication" parameterType="long" resultType="TutorApplicationVO">
+	
+	SELECT		
+		tutor_application.UPDATED_AT AS "updatedAt",
+		TITLE,  
+		CONTENT, 
+		tutor_application.USER_NUM AS "userNum",
+		APP_USER.username AS "username", 
+		APPLICATION_NUM AS "applicationNum", 
+		tutor_application.CREATED_AT AS "createdAt",
+		APPROVAL
+	FROM tutor_application, APP_USER
+	WHERE APP_USER.user_num = tutor_application.user_num
+	AND tutor_application.APPLICATION_NUM = #{applicationNum}		 
+</select>
+
+
 <!-- 튜터신청서 총 개수 -->
 <select id="getTotalApplicationNum" resultType="long">
 	SELECT count(*) 
@@ -125,7 +143,7 @@
 					 address = #{address},
 					 birth = #{birth},
 					 email = #{email},
-					 type = ${type},
+					 type = #{type},
 					 updated_at = systimestamp
 		 where user_num = #{userNum}
 </update>
@@ -144,6 +162,22 @@
 		 where user_num=#{userNum}
 		 AND pw =#{oldPw} 
 </update>
+
+<update id="updateApplication" parameterType="TutorApplicationVO">
+	update TUTOR_APPLICATION
+		set  
+		USER_NUM = #{userNum}, 
+		TITLE = #{title}, 
+		CONTENT = #{content}, 
+		ATTACHMENT_DATA = #{attachmentData,jdbcType=BLOB}, 
+		APPROVAL = #{approval},
+		UPDATED_AT = SYSTIMESTAMP, 
+		ATTACHMENT_SIZE = #{attachmentSize}, 
+		ATTACHMENT_NAME = #{attachmentName,jdbcType=VARCHAR}, 
+		ATTACHMENT_TYPE = #{attachmentType,jdbcType=VARCHAR}
+	WHERE APPLICATION_NUM = #{applicationNum}
+</update>
+
 <!-- 사용자 삭제 -->
 <delete id="deleteUser" 
 				parameterType="hashmap">

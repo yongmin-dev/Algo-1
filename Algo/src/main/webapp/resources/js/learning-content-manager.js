@@ -12,7 +12,7 @@ e=>{
 		subjectList.addEventListener('error',requestBasicImage,true);
 		updateSubjectList(subjectList);
 	}
-	// 단원 리스트 
+	// 단원 리스트
 	const unitList = document.getElementById('unit-list');
 	if(unitList){
 		unitList.addEventListener('click',unitListHandler);

@@ -30,7 +30,7 @@
 		<c:otherwise>
 			<ul>    
 		      <li><a href="${pageContext.request.contextPath}/login/log-out">로그아웃</a></li>
-		      <li><a href="${pageContext.request.contextPath}/user/updating">${userInfo.username} 마이페이지</a></li>		      
+		      <li><a href="${pageContext.request.contextPath}/user/updating">${userInfo.username}(${userInfo.type}) 마이페이지</a></li>		      
 		    </ul>
 		</c:otherwise>
 	</c:choose>
