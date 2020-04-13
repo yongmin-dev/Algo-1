@@ -96,7 +96,7 @@
 			<ul id="quiz-nav-list">
 				<c:forEach items="${quizMetas}" var="meta" varStatus="status">						
 					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }  ${status.count eq 1 ? 'selected' : ''  }" data-num="${meta.quizNum}">
-						<span  >${status.count}</span>
+						<span class="msg"></span>
 					</li>															
 				</c:forEach>
 			</ul>
