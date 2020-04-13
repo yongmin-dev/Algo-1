@@ -19,7 +19,7 @@ window.addEventListener('load',e=>{
 				removeSelectedFromListItems(quizNavList);
 				// selected 추가
 				quizItem.classList.add('selected');
-				li.classList.add('selected');
+				li.classList.add('selected');				
 				
 			}
 		});
