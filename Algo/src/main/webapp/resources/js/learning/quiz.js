@@ -3,9 +3,31 @@
  */
 window.addEventListener('load',e=>{
 	const quizList = document.getElementById('quiz-list');
+	const quizNavList = document.getElementById('quiz-nav-list');
 	const mainEle = document.querySelector('main');
+	if(quizNavList){
+		quizNavList.addEventListener('click',e=>{
+			if(e.target.classList.contains('quiz-nav')){
+				const li = e.target.closest('li');
+				const num = li.getAttribute('data-num');
+				const quizList = document.querySelector('#quiz-list');
+				const quizNavList = document.querySelector('#quiz-nav-list')				
+				const quizItem = document.querySelector(`#quiz-item-${num}`);
+				
+				// 다 지우기
+				removeSelectedFromListItems(quizList);
+				removeSelectedFromListItems(quizNavList);
+				// selected 추가
+				quizItem.classList.add('selected');
+				li.classList.add('selected');				
+				
+			}
+		});
+		
+	}
 	
-	if(quizList){
+	
+	if(quizList){ // 퀴즈 리스트
 		quizList.addEventListener('click',e=>{
 			const contextPath = getContextRootPath(); // context path
 			if(e.target.classList.contains('btn-submit-answer')){ // 삭제 버튼
@@ -30,7 +52,7 @@ window.addEventListener('load',e=>{
 		                	const quizNavLiEle = document.querySelector(`#quiz-nav-${num}`);
 		                	quizNavLiEle.classList.add('passed');
 		                	if(li.querySelector('.btn-submit-answer')){ // 버튼 없애기
-			                	li.querySelector('.btn-submit-answer').remove();
+//			                	li.querySelector('.btn-submit-answer').remove();
 			                	// checkbox 비활성화
 			                	const nextBtn = document.createElement('button');
 			                	if(li.nextElementSibling){
@@ -42,7 +64,6 @@ window.addEventListener('load',e=>{
 			                					const quizNavList = document.querySelector('#quiz-nav-list')
 			                					
 			                					
-//			                					console.log("li.nextSibling:"+li.nextSibling);
 			                					console.log("li.nextElementSibling:"+li.nextElementSibling);
 			                					removeSelectedFromListItems(quizList);
 			                					removeSelectedFromListItems(quizNavList);			                					

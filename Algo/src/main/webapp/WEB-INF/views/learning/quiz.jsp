@@ -34,7 +34,7 @@
  	/* 	background:#11ffbb; */
 	 	content:'\2713';
 	  display:inline-block;
-	  color:red;
+	  color:#20ff27;
 	  padding:0 6px 0 0;
  	
  	}
@@ -68,17 +68,24 @@
 	#quiz-list li{width:100%;height:500px;}
 	.quiz_container{position:relative;} */
 	
-<<<<<<< HEAD
+	#quiz-nav-list:hover{cursor:pointer;}
 	#quiz-nav-list li{width: 25%!important;text-align: center;}
 	#quiz-nav-list li:first-child{}
-	
-=======
-	#quiz-nav-list li{width: 25%!important;text-align: center;border-right:1px solid #ededed;}
-	#quiz-nav-list li:first-child{border-left:1px solid #ededed;}
-	#quiz-nav-list li.selected{font-size:1em;font-weight:900;} 
-	#quiz-nav-list li.selected>span::before{content:"_"}
-	#quiz-nav-list li.selected>span::after{content:"_"}
->>>>>>> branch 'develop' of https://github.com/team-puertea/Algo.git
+ 	#quiz-nav-list li{
+ 	width: 25%!important;text-align: center;
+/*  	border-right:1px solid #ededed; */
+ 	} 
+	#quiz-nav-list li:first-child{
+/* 	border-left:1px solid #ededed; */
+	}
+	#quiz-nav-list li{
+		font-size:1em;font-weight:900;		
+	} 
+	#quiz-nav-list li.selected ::after{
+		content:"도전중";
+	} 
+/* 	#quiz-nav-list li.selected>span::before{content:"_"} */
+/* 	#quiz-nav-list li.selected>span::after{content:"_"} */
 	#quiz-list{overflow: hidden;}
 	#quiz-list span{display:inline-block;padding: 0 2px;}    
 	#quiz-list li{width:100%;}
@@ -161,13 +168,8 @@
 		<nav id="quiz-nav">
 			<ul id="quiz-nav-list" class="progressbar">
 				<c:forEach items="${quizMetas}" var="meta" varStatus="status">						
-<<<<<<< HEAD
-					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }" data-num="${meta.quizNum}">
-						<span>${status.count}</span>
-=======
 					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }  ${status.count eq 1 ? 'selected' : ''  }" data-num="${meta.quizNum}">
-						<span  >${status.count}</span>
->>>>>>> branch 'develop' of https://github.com/team-puertea/Algo.git
+						<span class="msg"></span>
 					</li>															
 				</c:forEach>
 			</ul>
