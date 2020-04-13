@@ -38,6 +38,12 @@
 	  padding:0 6px 0 0;
  	
  	}
+ 	#quiz-list > li.passed .quiz-title:after{
+ 		content:" 정답!";
+ 	}
+ 	#quiz-list > li.failed .quiz-title:after{
+ 		content:" 오답!";
+ 	}
 	
 	main{width:980px;margin:0 auto;}
 	main h2{padding:15px 0;}
@@ -62,9 +68,17 @@
 	#quiz-list li{width:100%;height:500px;}
 	.quiz_container{position:relative;} */
 	
+<<<<<<< HEAD
 	#quiz-nav-list li{width: 25%!important;text-align: center;}
 	#quiz-nav-list li:first-child{}
 	
+=======
+	#quiz-nav-list li{width: 25%!important;text-align: center;border-right:1px solid #ededed;}
+	#quiz-nav-list li:first-child{border-left:1px solid #ededed;}
+	#quiz-nav-list li.selected{font-size:1em;font-weight:900;} 
+	#quiz-nav-list li.selected>span::before{content:"_"}
+	#quiz-nav-list li.selected>span::after{content:"_"}
+>>>>>>> branch 'develop' of https://github.com/team-puertea/Algo.git
 	#quiz-list{overflow: hidden;}
 	#quiz-list span{display:inline-block;padding: 0 2px;}    
 	#quiz-list li{width:100%;}
@@ -147,8 +161,13 @@
 		<nav id="quiz-nav">
 			<ul id="quiz-nav-list" class="progressbar">
 				<c:forEach items="${quizMetas}" var="meta" varStatus="status">						
+<<<<<<< HEAD
 					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }" data-num="${meta.quizNum}">
 						<span>${status.count}</span>
+=======
+					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }  ${status.count eq 1 ? 'selected' : ''  }" data-num="${meta.quizNum}">
+						<span  >${status.count}</span>
+>>>>>>> branch 'develop' of https://github.com/team-puertea/Algo.git
 					</li>															
 				</c:forEach>
 			</ul>

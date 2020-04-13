@@ -240,8 +240,9 @@ public class LearningManager implements LearningService {
 		logger.info("checkCompletion(long unitNum)");
 		if(unitNum>0 && userNum>0) {			
 			Map<String,Object> result= learningDAO.selectUnitProgress(unitNum, userNum);
-			if(result.containsKey("passes")&& result.get("passesUnit") != null) {
-				if('T' == (char) result.get("passesUnit")) {
+			logger.info("result:"+result);
+			if(result.containsKey("passesUnit")&& result.get("passesUnit") != null) {
+				if("T".equals((String)result.get("passesUnit"))) {
 					UnitCompletionVO unitCompletion = new UnitCompletionVO();
 					unitCompletion.setStatus('C');
 					unitCompletion.setUnitNum(unitNum);

@@ -85,6 +85,14 @@ public class UserDAOImpl implements UserDAO {
 		return sqlSession.selectOne("mappers.UserDAO-mapper.getTotalApplicationNum");
 	}
 	
+	
+	
+	@Override
+	public TutorApplicationVO selectOneTutorApplication(long applicationNum) {
+		logger.info("selectOneTutorApplication(long applicationNum)");
+		return sqlSession.selectOne("mappers.UserDAO-mapper.selectOneTutorApplication",applicationNum);
+	}
+
 	/**
 	 * 튜터신청서 목록을 가져옴
 	 * @param startRowNum 시작 번호
@@ -128,6 +136,13 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	
+	
+	@Override
+	public int updateApplication(TutorApplicationVO application) {
+		logger.info("updateApplication(TutorApplicationVO application)");
+		return sqlSession.update("mappers.UserDAO-mapper.updateApplication",application);
+	}
+
 	/* Delete */
 	// 사용자 삭제
 	@Override

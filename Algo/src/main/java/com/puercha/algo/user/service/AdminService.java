@@ -29,5 +29,7 @@ public interface AdminService {
 	 * @return 신청서 총 개수
 	 */
 	long getTotalApplicationNum();
+
+	int commitApproval(long applicationNum, char approval);
 	
 }

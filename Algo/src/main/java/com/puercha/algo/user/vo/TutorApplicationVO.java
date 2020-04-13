@@ -50,4 +50,7 @@ public class TutorApplicationVO {
 	//첨부파일(업로드시)
 	private MultipartFile file;
 	
+	public String getApprovalAsString() {
+		return ""+this.approval;
+	}
 }

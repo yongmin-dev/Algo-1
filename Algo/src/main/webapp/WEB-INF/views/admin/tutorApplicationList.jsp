@@ -4,12 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
 <!DOCTYPE html>
-<html>
+<html data-contextpath="${pageContext.request.contextPath}">
 <head>
 	<meta charset="UTF-8">
 	<title>튜터 등록</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
-	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/tutor-application-list.css"/>" />	
 	<script type="text/javascript" src="<c:url value="/resources/js/tutor-application-list.js"/>"></script>
 	
 	<style>
@@ -23,7 +22,7 @@
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
-		<table >
+		<table id="application-table" >
 			<tr>
 				<th>제목</th>
 				<th>내용</th>
@@ -33,16 +32,34 @@
 			</tr>
 			<c:forEach items="${datas.list }" var="application">
 				<fmt:formatDate value="${application.createdAt}" pattern="yyyy/MM/dd" var="cdate" />
-				<tr>
+				
+				<tr data-num="${application.applicationNum}">
 				<td>${application.title }</td>
 				<td>${application.content }</td>
 				<td>${application.username }</td>
 				<td>${cdate}</td>
-				<td class="ok"><button>승인</button><button>거부</button></td>
+				<td class="ok">
+					<c:choose>
+						<c:when test="${ application.approvalAsString eq 'p'}">
+							<div class="group-btn">
+								<button data-num="${applicaion.applicationNum}" class="btn-approval">승인</button>
+								<button data-num="${applicaion.applicationNum}" class="btn-reject">거부</button>						
+							</div>
+						</c:when>
+						<c:when test="${ application.approvalAsString eq 'r'}">
+							<span>거절</span>						
+						</c:when>
+						<c:when test="${ application.approvalAsString eq 'a'}">
+							<span>승인</span>												
+						</c:when>
+					</c:choose>
+				</td>
 				</tr>
 			</c:forEach>
 		</table>
 	</main>	
+	
+<%-- 	${datas.list .get(0) } --%>
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
 </body>
 </html>

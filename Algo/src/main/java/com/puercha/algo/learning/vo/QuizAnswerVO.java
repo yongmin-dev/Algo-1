@@ -65,6 +65,9 @@ public class QuizAnswerVO {
 			this.isCorrect = false;
 		}
 	}
+	public void setCorrectness(boolean correctness) {
+		this.isCorrect = correctness;
+	}
 //	@Tolerate
 	public String getCorrectAsString() {
 		if(this.isCorrect)
