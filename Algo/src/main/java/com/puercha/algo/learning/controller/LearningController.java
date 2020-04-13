@@ -82,12 +82,15 @@ public class LearningController {
 				HttpSession session, 
 				Model model) {
 		UserVO user = loginService.getLoggedInUser(session);
+		logger.info("unitNum, prevUnitNum:"+unitNum+", "+prevUnitNum);
 		long userNum = 0;
 		if(user != null) {			
 			userNum = user.getUserNum();
+			logger.info("userNum:"+userNum);
 		}
 		if(prevUnitNum>0 ) { // 진척도 갱신하기 
 			long completionNum =  learningService.checkCompletion(prevUnitNum,userNum);
+			logger.info("completionNum:"+completionNum);
 		}		
 		
 		// 단원 컨텐츠 열기

@@ -263,8 +263,8 @@ function answerListHandler(e){
 		li.parentElement.removeChild(li);
 	} else if(e.target.classList.contains('btn-edit')){ // 편집 버튼
 		console.log('편집')
-		li.querySelector('span.title').setAttribute('contenteditable',true);
-		li.querySelector('span.title').focus();
+		li.querySelector('span.content').setAttribute('contenteditable',true);
+		li.querySelector('span.content').focus();
 		
 	}else if(e.target.classList.contains('btn-save')){ // 저장버튼
 		const xhr = new XMLHttpRequest();
@@ -273,11 +273,11 @@ function answerListHandler(e){
 				e=>{
 					
 				});
-		const title = li.querySelector('span.title').innerText;
+		const content = li.querySelector('span.content').innerText;
 		xhr.setRequestHeader('Content-Type',"application/json;charset=UTF-8")
 		// xhr.send(JSON.stringify({"title":title}));
-		xhr.send(JSON.stringify({"title":title}));
-		li.querySelector('span.title').setAttribute('contenteditable',false);
+		xhr.send(JSON.stringify({"content":content}));
+		li.querySelector('span.content').setAttribute('contenteditable',false);
 		
 	}else if(e.target.classList.contains('correctness')){ // 저장버튼
 		const xhr = new XMLHttpRequest();
