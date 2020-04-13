@@ -149,7 +149,10 @@
 		<if test="userNum != null and userNum > 0">
 			,(SELECT subject.subject_num, count(distinct unit.unit_num), 
 			count(distinct case when unit_completion.status='C' AND unit_completion.user_num = #{userNum} then unit_completion.unit_num else null end),
-	count(distinct case when unit_completion.status='C' AND unit_completion.user_num = #{userNum} then unit_completion.unit_num else null end)/ count(distinct unit.unit_num) *100 AS "progressRate"
+	CASE WHEN count(distinct unit.unit_num) <![CDATA[ <> ]]> 0 THEN
+	count(distinct case when unit_completion.status='C' 
+		AND unit_completion.user_num = #{userNum} 
+		then unit_completion.unit_num else null end)/ count(distinct unit.unit_num) *100 ELSE 0 END AS "progressRate"
 	FROM  subject, unit, unit_completion
 	WHERE subject.subject_num = unit.subject_num (+)
 	AND  unit.unit_num = unit_completion.unit_num(+)

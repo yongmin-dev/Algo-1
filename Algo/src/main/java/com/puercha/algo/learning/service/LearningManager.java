@@ -263,7 +263,7 @@ public class LearningManager implements LearningService {
 	 */
 	@Override
 	public List<QuizVO> getQuizList(long unitNum) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("unitNum", unitNum);
 
 //		return learningDAO.selectAllQuiz(Integer.parseInt(unitNum));
