@@ -20,10 +20,12 @@
 	
 	</style>
 	<script type="text/javascript">
-	window.addEventListener('click',e=>{
+	window.addEventListener('load',e=>{
 		const applyTutorBtn = document.getElementById('applyTutor');
 		if(applyTutorBtn){
-			location.href = '${pageContext.request.contextPath }/user/applying'
+			applyTutorBtn.addEventListener('load',e=>{
+				location.href = '${pageContext.request.contextPath }/user/applying'
+			});
 		}
 	})
 	</script>
