@@ -44,6 +44,11 @@ public class UserManager implements UserService {
 		logger.info("UserManager.selectUser(String email) 호출됨");
 		return UserDAO.selectUser(email);
 	}
+	@Override
+	public UserVO selectUser(long userNum) {
+		logger.info("UserManager.selectUser(long userNum) 호출됨");
+		return UserDAO.selectUser(userNum);
+	}
 	//사용자 삭제
 	@Override
 	public int outUser(String email, String pw) {
