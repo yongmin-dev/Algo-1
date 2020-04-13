@@ -92,11 +92,13 @@ public class UserController {
 	public String profileForm(Model model, HttpSession session) {
 		
 		//1) 현재 로그인한 사용자정보 읽어오기
-//		UserVO userVO = userService.selectUser(email);
+		
 		UserVO userVO = loginService.getLoggedInUser(session);
 		logger.info("userVO:" + userVO);
+//		userVO  = userService.selectUser(userVO.getEmail());
+		userVO  = userService.selectUser(userVO.getUserNum());
 //		//비밀번호 제거
-//		userVO.setPw(null);
+		userVO.setPw(null);
 		model.addAttribute("uvo",userVO);
 	
 		return "user/profile";
@@ -118,7 +120,7 @@ public class UserController {
 		}		
 		//사용자정보 수정
 		UserVO sessionUser = loginService.getLoggedInUser(session);
-		logger.info("sessionUser:"+sessionUser);
+		logger.info("sessionUser:"+sessionUser + " " + (sessionUser.getUserNum() == userVO.getUserNum()));
 		if(sessionUser.getUserNum() == userVO.getUserNum()) {
 			int cnt = userService.modifyUser(userVO);
 			logger.info("수정처리결과 :"+ cnt);

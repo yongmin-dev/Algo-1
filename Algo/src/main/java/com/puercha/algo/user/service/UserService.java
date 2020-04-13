@@ -22,6 +22,7 @@ public interface UserService {
 	
 	//사용자 개별조회
 	UserVO selectUser(String email);
+	UserVO selectUser(long userNum);
 	
 	//사용자 삭제
 	int outUser(String email, String pw);
