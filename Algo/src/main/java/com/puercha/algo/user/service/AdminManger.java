@@ -16,6 +16,7 @@ import com.puercha.algo.common.PageManager;
 import com.puercha.algo.common.RowCriteria;
 import com.puercha.algo.user.dao.UserDAO;
 import com.puercha.algo.user.vo.TutorApplicationVO;
+import com.puercha.algo.user.vo.UserVO;
 
 @Service
 public class AdminManger implements AdminService {
@@ -65,6 +66,10 @@ public class AdminManger implements AdminService {
 		return datas;
 	}
 
+	/**
+	 * 모든 신청서의 개수를 가져온다.
+	 * @return 신청서 총 개수
+	 */
 
 	@Override
 	public long getTotalApplicationNum() {
@@ -72,9 +77,26 @@ public class AdminManger implements AdminService {
 		return userDAO.getTotalApplicationNum();
 	}
 
-	/**
-	 * 모든 신청서의 개수를 가져온다.
-	 * @return 신청서 총 개수
-	 */
+
+	@Override
+	public int commitApproval(long applicationNum, char approval) {
+		logger.info("comitApproval(long applicationNum, char approval)");
+		TutorApplicationVO appli = userDAO.selectOneTutorApplication(applicationNum);
+		if(appli!=null) {
+			logger.info("application:"+appli);
+			appli.setApproval(approval);
+			if(approval=='a') {
+				UserVO user = userDAO.selectUser(appli.getUserNum());
+				logger.info("user:"+user);
+				user.setType('T');
+				userDAO.updateUser(user);
+			}
+			return userDAO.updateApplication(appli );			
+		}
+		return 0;
+	}
+
+
+	
 	
 }
