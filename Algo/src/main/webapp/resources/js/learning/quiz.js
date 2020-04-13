@@ -27,6 +27,8 @@ window.addEventListener('load',e=>{
 		                
 		                if(responseData.quizResult.status==='t'){
 		                	li.classList.add('passed');
+		                	const quizNavLiEle = document.querySelector(`#quiz-nav-${num}`);
+		                	quizNavLiEle.classList.add('passed');
 		                	if(li.querySelector('.btn-submit-answer')){ // 버튼 없애기
 			                	li.querySelector('.btn-submit-answer').remove();
 			                	// checkbox 비활성화
@@ -37,10 +39,15 @@ window.addEventListener('load',e=>{
 			                				e=>{
 			                					// selected 삭제
 			                					const quizList = document.querySelector('#quiz-list');
-			                					console.log("li.nextSibling:"+li.nextSibling);
+			                					const quizNavList = document.querySelector('#quiz-nav-list')
+			                					
+			                					
+//			                					console.log("li.nextSibling:"+li.nextSibling);
 			                					console.log("li.nextElementSibling:"+li.nextElementSibling);
 			                					removeSelectedFromListItems(quizList);
+			                					removeSelectedFromListItems(quizNavList);			                					
 			                					li.nextElementSibling.classList.add('selected');
+			                					quizNavLiEle.nextElementSibling.classList.add('selected');
 			                					// 다음요소 selected; 
 			                				});
 			                		li.appendChild(nextBtn);			                		
@@ -55,7 +62,7 @@ window.addEventListener('load',e=>{
 			                		li.appendChild(nextBtn);
 			                	}
 			                }
-		                }else if(responseData.quizResult.status==='f'){		                	
+		                }else if(responseData.quizResult.status==='f'){	// 틀렸을 경우               	
 		                	li.classList.add('failed')
 		                	if(li.querySelector('.btn-submit-answer')){ // 
 			                	li.querySelector('.btn-submit-answer').innerText="다시 제출";

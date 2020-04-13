@@ -33,6 +33,12 @@
  	#quiz-nav-list > li.passed{
  		background:#11ffbb;
  	}
+ 	#quiz-list > li.passed .quiz-title:after{
+ 		content:" 정답!";
+ 	}
+ 	#quiz-list > li.failed .quiz-title:after{
+ 		content:" 오답!";
+ 	}
 	
 	main{width:980px;margin:0 auto;}
 	main h2{padding:15px 0;}
@@ -59,7 +65,9 @@
 	
 	#quiz-nav-list li{width: 25%!important;text-align: center;border-right:1px solid #ededed;}
 	#quiz-nav-list li:first-child{border-left:1px solid #ededed;}
-	
+	#quiz-nav-list li.selected{font-size:1em;font-weight:900;} 
+	#quiz-nav-list li.selected>span::before{content:"_"}
+	#quiz-nav-list li.selected>span::after{content:"_"}
 	#quiz-list{overflow: hidden;}
 	#quiz-list span{display:inline-block;padding: 0 2px;}    
 	#quiz-list li{width:100%;}
@@ -87,7 +95,7 @@
 		<nav id="quiz-nav">
 			<ul id="quiz-nav-list">
 				<c:forEach items="${quizMetas}" var="meta" varStatus="status">						
-					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }" data-num="${meta.quizNum}">
+					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }  ${status.count eq 1 ? 'selected' : ''  }" data-num="${meta.quizNum}">
 						<span  >${status.count}</span>
 					</li>															
 				</c:forEach>
