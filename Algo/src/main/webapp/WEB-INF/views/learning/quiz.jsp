@@ -20,25 +20,30 @@
 		background #ff1111;
 	}
 	ul.answer-list > li.correct-answer{
-		background:#11ffbb;
+		/* background:#11ffbb; */
 	}
 	#quiz-nav-list{
 		display:flex;
 		justify-content: center;
 	}
-	#quiz-nav-list > li.quiz-nav{
+	#quiz-nav-list > left: ;i.quiz-nav{
 		width:auto;
 		padding:1em;
 	}
- 	#quiz-nav-list > li.passed{
- 		background:#11ffbb;
+ 	#quiz-nav-list > li.passed ::before{
+ 	/* 	background:#11ffbb; */
+	 	content:'\2713';
+	  display:inline-block;
+	  color:red;
+	  padding:0 6px 0 0;
+ 	
  	}
 	
 	main{width:980px;margin:0 auto;}
 	main h2{padding:15px 0;}
 	button{cursor:pointer;padding:10px 20px;float:right;}
 	.quiz-list{overflow:hidden;}
-	.quiz-item{width:50%;float:left;border:1px solid #ededed;box-sizing:border-box;padding:10px;}
+	.quiz-item{width:50%;float:left;box-sizing:border-box;padding:10px;}
 	
 	#quiz-nav-list{
 		padding:1em;
@@ -57,8 +62,8 @@
 	#quiz-list li{width:100%;height:500px;}
 	.quiz_container{position:relative;} */
 	
-	#quiz-nav-list li{width: 25%!important;text-align: center;border-right:1px solid #ededed;}
-	#quiz-nav-list li:first-child{border-left:1px solid #ededed;}
+	#quiz-nav-list li{width: 25%!important;text-align: center;}
+	#quiz-nav-list li:first-child{}
 	
 	#quiz-list{overflow: hidden;}
 	#quiz-list span{display:inline-block;padding: 0 2px;}    
@@ -70,6 +75,61 @@
 	
 	.answer-list li{padding:10px;}
 	.answer-list li span{vertical-align: middle;padding:0 2px;}
+	
+	
+	
+/*progressbar*/
+.progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+	/*CSS counters to number the steps*/
+	counter-reset: step;
+  	text-align: center;
+   	background:#555273;
+  
+}
+.progressbar li {
+	list-style-type: none;
+	color: white;
+	text-transform: uppercase;
+	font-size: 9px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+.progressbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	font-size: 10px;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	margin: 0 auto 5px auto;
+}
+/*progressbar connectors*/
+.progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1; /*put it behind the numbers*/
+}
+.progressbar li:first-child:after {
+	/*connector not needed before the first step*/
+	content: none; 
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+.progressbar li.active:before,  .progressbar li.active:after{
+	background: #27AE60;
+	color: white;
+}
 	
 	
 </style>
@@ -85,10 +145,10 @@
 		<!-- 퀴즈가 표시됨 -->
 <%-- 		${quizMetas} --%>
 		<nav id="quiz-nav">
-			<ul id="quiz-nav-list">
+			<ul id="quiz-nav-list" class="progressbar">
 				<c:forEach items="${quizMetas}" var="meta" varStatus="status">						
 					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }" data-num="${meta.quizNum}">
-						<span  >${status.count}</span>
+						<span>${status.count}</span>
 					</li>															
 				</c:forEach>
 			</ul>
@@ -110,7 +170,6 @@
 				
 				<!-- 풀이가 표시됨	-->				
 				<div class="solution"></div>
-				
 				<button type="button" data-num="${quiz.quizNum}" class="btn-submit-answer">정답확인</button>
 				</form>
 				<!-- 구분선 -->
@@ -120,17 +179,12 @@
 				</li>
 				</c:forEach>
 			</ul>
-
 		</div>
-
-
-
-
-</div>
-
-
-
+	</div>
 	</main>
 	<%@include file="/WEB-INF/views/include/footer.jsp"%>
+	<script>
+	</script>
+	
 </body>
 </html>
