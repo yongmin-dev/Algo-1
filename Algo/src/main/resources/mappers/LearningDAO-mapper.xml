@@ -44,6 +44,25 @@
 			SELECT UNIT_NUM_SEQ.currval FROM dual
 		</selectKey>
 	</insert>
+	<!-- 단원완료 생성 -->
+	<insert id="insertUnitCompletion">
+		INSERT INTO unit_completion( 
+			COM_NUM, 
+			USER_NUM, 
+			UNIT_NUM, 
+			STATUS
+			)
+			VALUES (
+			    COM_NUM_SEQ.nextval,
+			    #{userNum},
+			    #{unitNum},
+			    #{status}
+			)
+		<selectKey keyProperty="comNum" order="AFTER" resultType="long">
+			SELECT COM_NUM_SEQ.currval FROM dual
+		</selectKey>				
+	</insert>
+	
 	
 	<!-- 새로운 마무리문제 생성 -->
 	<insert id="insertQuiz" parameterType="QuizVO">
@@ -108,21 +127,34 @@
 	</insert>
 	<!-- 과목목록 -->
 	<!-- 1/전체목록 -->
-	<select id="selectSubjectList" resultType="SubjectVO">
+	<!-- 진척도도 조회함 -->
+	<select id="selectSubjectList" resultType="SubjectVO" parameterType="hashmap">
 		select
 		*
 		FROM(
 		select row_number() over(order by
-		subject_num desc) as
+		subject.subject_num desc) as
 		num,
-		subject_num as "subjectNum",
+		<if test="userNum != null and userNum > 0">
+			progress."progressRate",
+		</if>
+		subject.subject_num as "subjectNum",
 		title,
 		subject.created_at  as "createdAt",
 		subject.updated_at as "updatedAt",
 		subject.user_num as "userNum",
 		app_user.username AS "username"
 <!-- 		image_data as "imageData" -->
-		FROM subject, app_user
+		FROM subject, app_user 
+		<if test="userNum != null and userNum > 0">
+			,(SELECT subject.subject_num, count(distinct unit.unit_num), 
+			count(distinct case when unit_completion.status='C' AND unit_completion.user_num = #{userNum} then unit_completion.unit_num else null end),
+	count(distinct case when unit_completion.status='C' AND unit_completion.user_num = #{userNum} then unit_completion.unit_num else null end)/ count(distinct unit.unit_num) *100 AS "progressRate"
+	FROM  subject, unit, unit_completion
+	WHERE subject.subject_num = unit.subject_num (+)
+	AND  unit.unit_num = unit_completion.unit_num(+)
+	GROUP BY subject.subject_num) progress
+		</if>
 		where subject.user_num = app_user.user_num
 		<if test="searchType != null and keywords != null">
 			<foreach item="keyword" collection="keywords" open="and ("
@@ -142,6 +174,9 @@
 					</otherwise>
 				</choose>
 			</foreach>
+		</if>
+		<if test="userNum != null and userNum > 0">
+			and progress.subject_num = subject.subject_num(+)
 		</if>
 			order by title asc
 		)
@@ -235,31 +270,71 @@
 	<!-- 내용을 제외한 unit의 데이터들의 리스트를 가져옴 -->
 	<select id="selectAllUnitMetadatas" parameterType="hashmap" resultType="UnitVO">
 		SELECT
-		unit_num as "unitNum",
-		subject_num as "subjectNum",
-		title,
-		chapter_depth as "chapterDepth",
-		created_at as "createdAt",
-		updated_at as "updatedAt"
-		FROM unit 
+		unit.unit_num as "unitNum",
+		unit.subject_num as "subjectNum",
+		unit.title,
+		unit.chapter_depth as "chapterDepth",
+		<if test="userNum != null and userNum > 0">
+			"passesUnit",
+			"totalQuiz", 
+			"passedQuiz",
+		</if>
+		unit.created_at as "createdAt",
+		unit.updated_at as "updatedAt"
+		FROM unit
+			<if test="userNum != null and userNum > 0">
+			,(
+				SELECT CASE WHEN "totalQuiz" = "passedQuiz" THEN 'T' ELSE 'F' END AS "passesUnit", "quizStatus".*
+				FROM (
+				SELECT unit.unit_num AS "unitNum", count(distinct quiz.quiz_num) AS "totalQuiz",  
+				count(DISTINCT case when quiz_result.status='t' and quiz_result.user_num = #{userNum}  then quiz.quiz_num else null end) AS "passedQuiz"
+				FROM UNIT, QUIZ, quiz_result
+				WHERE UNIT.unit_num = quiz.unit_num(+)
+				AND quiz.quiz_num = quiz_result.quiz_num (+)
+				GROUP BY unit.unit_num , unit.title
+				) "quizStatus"
+			) "unitProgress"
+			</if> 
 		WHERE subject_num = #{subjectNum}
+		<if test="userNum != null and userNum > 0">
+			AND unit.unit_num = "unitProgress"."unitNum"
+		</if>
 		ORDER BY chapter_depth ASC
 	</select>
 
 	<select id="selectOneUnit" resultType="UnitVO">
-		select
-		Unit_num as	"unitNum",
-		subject_num as "subjectNum",
-		content,
-		title,
-		chapter_depth as
-		"chapterDepth",
-		created_at as "createdAt",
-		updated_at
-		as "updatedAt"
-		from
-		unit where unit_num = #{unitNum}
-
+		SELECT
+		unit.Unit_num as	"unitNum",
+		unit.subject_num as "subjectNum",
+		unit.content,
+		unit.title,
+		unit.chapter_depth as "chapterDepth",
+		<if test="userNum != null and userNum > 0">
+			"passesUnit",
+			"totalQuiz", 
+			"passedQuiz",
+		</if>
+		unit.created_at as "createdAt",
+		unit.updated_at as "updatedAt"
+		FROM unit
+		<if test="userNum != null and userNum > 0">
+			,(
+				SELECT CASE WHEN "totalQuiz" = "passedQuiz" THEN 'T' ELSE 'F' END AS "passesUnit", "quizStatus".*
+				FROM (
+				SELECT unit.unit_num AS "unitNum", count(distinct quiz.quiz_num) AS "totalQuiz",  
+				count(DISTINCT case when quiz_result.status='t' and quiz_result.user_num = #{userNum}  then quiz.quiz_num else null end) AS "passedQuiz"
+				FROM UNIT, QUIZ, quiz_result
+				WHERE UNIT.unit_num = quiz.unit_num(+)
+				AND quiz.quiz_num = quiz_result.quiz_num (+)
+				AND UNIT.unit_num = #{unitNum}
+				GROUP BY unit.unit_num , unit.title
+				) "quizStatus"
+			) "unitProgress"
+			</if> 		 
+		where unit_num = #{unitNum}
+		<if test="userNum != null and userNum > 0">
+			AND unit.unit_num = "unitProgress"."unitNum"
+		</if>
 
 	</select>
 
@@ -306,9 +381,9 @@
 		from quiz t1 left
 		join quiz_answer t2
 		on t1.quiz_num = t2.quiz_num
-		where t1.unit_num like
-		#{unitNum}
-
+<!-- 		where t1.unit_num like 	#{unitNum} -->
+		where t1.unit_num =	#{unitNum}
+		order by t1.quiz_num asc, answer_num asc
 	</select>
 	
 	<resultMap type="QuizAnswerVO" id="QuizAnswerVO">
@@ -370,6 +445,47 @@
 		WHERE ANSWER_NUM = #{answerNum}
 	</select>
 	
+	<!-- 단원의 진행정도를 조회	 -->
+	<select id="selectUnitProgress" resultType="hashmap" parameterType="hashmap">
+	SELECT CASE WHEN "totalQuiz" = "passedQuiz" THEN 'T' ELSE 'F' END AS "passesUnit", "quizStatus".*
+	FROM (
+		SELECT 
+		unit.unit_num AS "unitNum", 
+		count(distinct quiz.quiz_num) AS "totalQuiz",  
+		count(DISTINCT case when quiz_result.status='t' and quiz_result.user_num = #{userNum}  then quiz.quiz_num else null end) AS "passedQuiz"
+		FROM UNIT, QUIZ, quiz_result
+		WHERE UNIT.unit_num = quiz.unit_num(+)
+		AND quiz.quiz_num = quiz_result.quiz_num (+)
+		AND unit.unit_num = #{unitNum}
+		GROUP BY unit.unit_num
+	) "quizStatus"
+	</select>
+	
+	<!-- 문제 별 통과여부 조회 -->
+	<select id="selectAllPassFailOfQuiz" resultType="hashmap" parameterType="hashmap">
+		SELECT CASE WHEN "passedResult" > 0 THEN 'T' ELSE 'F' END AS "passesQuiz", "quizStatus".*
+		FROM (
+			SELECT distinct unit.unit_num AS "unitNum", quiz.quiz_num AS "quizNum", count( case when quiz_result.status='t' and quiz_result.user_num =#{userNum}  then quiz.quiz_num else null end )AS "passedResult"
+			FROM UNIT, QUIZ, quiz_result
+			WHERE UNIT.unit_num = quiz.unit_num
+			AND quiz.quiz_num = quiz_result.quiz_num (+)
+			AND unit.unit_num = #{unitNum}
+			GROUP BY unit.unit_num, quiz.quiz_num
+			order by quiz.quiz_num
+		)"quizStatus"
+	</select>
+	
+	
+<!-- 다음 unit번호 가져오기	 -->
+	<select id="getNextUnitNum" resultType="long" parameterType="long">
+		SELECT  nvl(min(unit_num),0 )as "unitNum" 
+		FROM unit 
+		WHERE unit_num > #{unitNum}
+		and subject_num = (SELECT subject_num 
+		FROM unit WHERE unit_num = #{unitNum}) 	
+	</select>
+	
+	
 <!--  Update  -->
 	<!-- 과목 내용 변경 -->
 	<update id="updateSubject" parameterType="SubjectVO">
@@ -389,9 +505,9 @@
 		UPDATE Unit
 		SET      
 		    SUBJECT_NUM = #{subjectNum}, 
-		    CONTENT = #{content}, 
+		    content = #{content,jdbcType=VARCHAR}, 
 		    TITLE = #{title}, 
-		    CHAPTER_DEPTH = #{chapterDepth},
+		    CHAPTER_DEPTH = #{chapterDepth,jdbcType=VARCHAR},
 		    UPDATED_AT = SYSTIMESTAMP
 		WHERE UNIT_NUM = #{unitNum}	
 	</update>

@@ -12,6 +12,7 @@
 <script type="text/javascript" src="<c:url value="/resources/common/js/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/js/slick.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common/js/common.js"/>"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script>
 <script type="text/javascript" src="<c:url value="/resources/codemirror/lib/codemirror.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/codemirror/addon/edit/matchbrackets.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/codemirror/addon/hint/show-hint.js"/>"></script>

@@ -30,7 +30,7 @@ public class LearningDAOImpl implements LearningDAO {
 
 	// 과목리스트, 과목 조회(검색)
 	@Override
-	public List<SubjectVO> selectAllSubjects(long pageNum, String searchType, String keyword) {
+	public List<SubjectVO> selectAllSubjects(long pageNum, String searchType, String keyword, long userNum) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pageNum", pageNum);
 		map.put("searchType", searchType);
@@ -39,11 +39,42 @@ public class LearningDAOImpl implements LearningDAO {
 		if (keyword != null) {
 			map.put("keywords", Arrays.asList(keyword.split("\\s+")));
 		}
+		if( userNum > 0) {
+			map.put("userNum", userNum);
+		}
 		return sqlSession.selectList("mappers.learningDAO-mapper.selectSubjectList", map);
 
 	}
+	
 
 	
+	@Override
+	public List<SubjectVO> selectAllSubjects(long pageNum, String searchType, String keyword) {
+		
+		return selectAllSubjects(pageNum,searchType,keyword,0);
+	}
+
+
+
+	@Override
+	public List<SubjectVO> selectAllSubjects(long startRowNum, long endRowNum, String searchType, String keyword,
+			long userNum) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("startRowNum", startRowNum);
+		params.put("endRowNum", endRowNum);
+		if(searchType!=null && keyword != null) {
+			params.put("searchType", searchType);
+			params.put("keywords",  Arrays.asList(keyword.split("\\s+")));			
+		}
+		if(userNum>0) {
+			params.put("userNum", userNum);
+			logger.info("selectAllSubjects userNum:"+userNum);
+		}
+		return sqlSession.selectList("mappers.learningDAO-mapper.selectSubjectList",params);
+	}
+
+
+
 	/**
 	 *  단원 생성
 	 * @param unit 새로운 데이터의 VO
@@ -86,15 +117,18 @@ public class LearningDAOImpl implements LearningDAO {
 
 	@Override
 	public int insertUnitCompletion(UnitCompletionVO unitCompletion) {
-		// TODO Auto-generated method stub
-		return 0;
+		logger.info("insertUnitCompletion(UnitCompletionVO unitCompletion)");
+		return sqlSession.insert("mappers.learningDAO-mapper.insertUnitCompletion",unitCompletion);
 	}
 	/* Read */
 	@Override
-	public UnitVO selectOneUnit(long unitNum) {
+	public UnitVO selectOneUnit(long unitNum, long userNum) {
 		logger.info("selectOneUnit(long unitNum)");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("unitNum", unitNum);
+		if(userNum>0) {
+			map.put("userNum", userNum);			
+		}
 		return sqlSession.selectOne("mappers.learningDAO-mapper.selectOneUnit", map);
 	}
 
@@ -143,10 +177,13 @@ public class LearningDAOImpl implements LearningDAO {
 	 * @return unit vo의 리스트 객체
 	 */
 	@Override
-	public List<UnitVO> selectAllUnitMetadatas(long subjectNum){
+	public List<UnitVO> selectAllUnitMetadatas(long subjectNum, long userNum){
 		logger.info("selectAllUnitMetadatas(long subjectNum)");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("subjectNum", subjectNum);
+		if(userNum>0) {
+			map.put("userNum", userNum);			
+		}
 		List<UnitVO> unitList = sqlSession.selectList("mappers.learningDAO-mapper.selectAllUnitMetadatas", map);
 		unitList.sort( new Comparator<UnitVO>() {
 
@@ -352,6 +389,53 @@ public class LearningDAOImpl implements LearningDAO {
 		logger.info("insertQuisResult(QuizResultVO quizResult)");
 		return sqlSession.insert("mappers.learningDAO-mapper.insertQuisResult",quizResult);
 	}
+
+
+	/**
+	 * 단원의 마무리문제 전체 통과 여부 조회
+	 * @param unitNum 단원 번호
+	 * @param userNum 사용자 번호 
+	 * @return 통과여부,총문제 수, 통과문제 수 등
+	 */
+	@Override
+	public Map<String, Object> selectUnitProgress(long unitNum, long userNum) {
+		logger.info("selectUnitProgress(long unitNum, long userNum)");
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("unitNum", unitNum);
+		params.put("userNum", userNum);
+		return sqlSession.selectOne("mappers.learningDAO-mapper.selectUnitProgress",params);
+	}
+
+
+	/**
+	 * 각 마무리문제의 통과여부 조회
+	 * @param unitNum 단원 번호
+	 * @param userNum 사용자 번호
+	 * @return Map단위의 리스트객체(row는 통과여부, 퀴즈번호, 통과결과 개수)
+	 */
+	@Override
+	public List<Map<String, Object>> selectAllPassFailOfQuiz(long unitNum, long userNum) {
+		logger.info("selectAllPassFailOfQuiz(long unitNum, long userNum)");
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("unitNum", unitNum);
+		params.put("userNum", userNum);
+		return sqlSession.selectList("mappers.learningDAO-mapper.selectAllPassFailOfQuiz",params);
+	}
+
+
+	/**
+	 * 다음 unitNum을 가져온다.
+	 * @param unitNum 현재 단원번호
+	 * @return 다음 unit 번호
+	 */
+	@Override
+	public long getNextUnitNum(long unitNum) {
+		logger.info("getNextUnitNum(long unitNum)");
+		return sqlSession.selectOne("mappers.learningDAO-mapper.getNextUnitNum",unitNum);
+	}
+	
+	
+	
 	
 	
 }

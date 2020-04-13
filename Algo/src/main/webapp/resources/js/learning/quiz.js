@@ -3,6 +3,8 @@
  */
 window.addEventListener('load',e=>{
 	const quizList = document.getElementById('quiz-list');
+	const mainEle = document.querySelector('main');
+	
 	if(quizList){
 		quizList.addEventListener('click',e=>{
 			const contextPath = getContextRootPath(); // context path
@@ -28,6 +30,29 @@ window.addEventListener('load',e=>{
 		                	if(li.querySelector('.btn-submit-answer')){ // 버튼 없애기
 			                	li.querySelector('.btn-submit-answer').remove();
 			                	// checkbox 비활성화
+			                	const nextBtn = document.createElement('button');
+			                	if(li.nextElementSibling){
+			                		nextBtn.innerText="다음문제풀기";
+			                		nextBtn.addEventListener('click',
+			                				e=>{
+			                					// selected 삭제
+			                					const quizList = document.querySelector('#quiz-list');
+			                					console.log("li.nextSibling:"+li.nextSibling);
+			                					console.log("li.nextElementSibling:"+li.nextElementSibling);
+			                					removeSelectedFromListItems(quizList);
+			                					li.nextElementSibling.classList.add('selected');
+			                					// 다음요소 selected; 
+			                				});
+			                		li.appendChild(nextBtn);			                		
+			                	}else {
+			                		nextBtn.innerText="다음단원가기";
+			                		nextBtn.addEventListener('click',
+			                				e=>{			                					
+			                					const unitNum = mainEle.getAttribute('data-num');
+			                					location.href="${contextPath}/learning/unit/${}?unitNum=${prevUnitNum}"; 
+			                				});
+			                		li.appendChild(nextBtn);
+			                	}
 			                }
 		                }else if(responseData.quizResult.status==='f'){		                	
 		                	li.classList.add('failed')
@@ -57,3 +82,11 @@ window.addEventListener('load',e=>{
 	}
 	
 });
+// selected 삭제
+function removeSelectedFromListItems(listEle){
+	if(listEle && listEle.children){
+		for(let i = 0;i<listEle.children.length;i++){
+			listEle.children[i].classList.remove('selected');			
+		}
+	}	
+}

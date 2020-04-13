@@ -31,10 +31,11 @@
 	<div class="container">
 		<!-- 과목 리스트가 표시 됨 -->
 		<div class="subject_wrap">
-			
-			<c:forEach var="subject" items="${subjectList }">
+<%-- 			${datas } --%>
+			<c:forEach var="subject" items="${datas.list }">
 				<fmt:formatDate value="${subject.createdAt }"
 					pattern="yyyy/MM/dd HH:mm" var="cdate" />
+				<fmt:formatNumber var="progressRate" value="${subject.progressRate}" type="NUMBER" maxFractionDigits="1"/>
 				<div class="subject_cont">
 					<div>
 						<a
@@ -44,7 +45,7 @@
 							<!-- 과목 제목-->
 							<span class="title"><strong class="title">${subject.title }</strong></span>
 							<c:if test="${!empty userInfo }">
-								<span class="progress-rate">${subject.progressRate }%</span>
+								<span class="progress-rate">${progressRate }%</span>
 							</c:if>
 						</a>
 					</div>

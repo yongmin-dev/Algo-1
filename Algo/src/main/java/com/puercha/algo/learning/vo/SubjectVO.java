@@ -39,7 +39,7 @@ public class SubjectVO {
 	@Override
 	public String toString() {
 		return "SubjectVO [subjectNum=" + subjectNum + ", title=" + title + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + ", userNum=" + userNum + ", imageSize=" + imageSize + ", imageType=" + imageType
+				+ updatedAt + ", userNum=" + userNum + ", imageSize=" + imageSize + ", imageType=" + imageType + ", progressRate="+ progressRate
 				+ ", imageName=" + imageName + "]";
 	}
 	

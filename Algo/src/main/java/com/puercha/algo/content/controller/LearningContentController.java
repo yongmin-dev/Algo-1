@@ -292,9 +292,10 @@ public class LearningContentController {
 			@ModelAttribute("unit") UnitVO unit, 
 			HttpSession session) {
 		ResponseEntity<Map<String, Object>> res = null;
+		logger.info("unit:"+unit);
 		// 나중에 오류여부 체크
 		int result = contentManager.updateUnit(unit);
-		return "redirect:/content/subject";
+		return "redirect:/content/learning";
 	}
 
 	// 마무리문제 리스트

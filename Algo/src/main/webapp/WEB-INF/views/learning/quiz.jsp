@@ -22,7 +22,17 @@
 	ul.answer-list > li.correct-answer{
 		background:#11ffbb;
 	}
-	
+	#quiz-nav-list{
+		display:flex;
+		justify-content: center;
+	}
+	#quiz-nav-list > li.quiz-nav{
+		width:auto;
+		padding:1em;
+	}
+ 	#quiz-nav-list > li.passed{
+ 		background:#11ffbb;
+ 	}
 	
 	main{width:980px;margin:0 auto;}
 	main h2{padding:15px 0;}
@@ -30,29 +40,48 @@
 	.quiz-list{overflow:hidden;}
 	.quiz-item{width:50%;float:left;border:1px solid #ededed;box-sizing:border-box;padding:10px;}
 	
+	#quiz-nav-list{
+		padding:1em;
+	}
+	#quiz-list li.quiz-item{
+		display:none;
+	}
+	#quiz-list li.quiz-item.selected{
+		display:block;
+	}
 	
 </style>
 <script type="text/javascript" src="<c:url value="/resources/js/learning/quiz.js"/>"></script>
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
-	<main>
+	<main data-num="${unit.unitNum}" data-next="${nextUnitNum}">
 		<div>
 			<h2 id="unit-title"><span class="unit-depth">${unit.chapterDepth}</span>${unit.title} 의 마무리문제</h2>
 		</div>
 		<!-- 퀴즈가 표시됨 -->
+<%-- 		${quizMetas} --%>
+		<nav id="quiz-nav">
+			<ul id="quiz-nav-list">
+				<c:forEach items="${quizMetas}" var="meta" varStatus="status">						
+					<li id="quiz-nav-${meta.quizNum}" class="quiz-nav ${(meta.passesQuiz eq 'T') ? 'passed':' ' }" data-num="${meta.quizNum}">
+						<span  >${status.count}</span>
+					</li>															
+				</c:forEach>
+			</ul>
+		</nav>
 		<div>
 			<ul id="quiz-list">
 				<c:forEach var="quiz" items="${quizList }" varStatus="status">
 				<!-- 문제 제목-->
-				<li class="quiz-item" data-num="${quiz.quizNum}">
+				<li id="quiz-item-${quiz.quizNum}" class="quiz-item ${status.count eq 1 ? 'selected' : ''  }" data-num="${quiz.quizNum}">
 				<form id="quiz-${quiz.quizNum}">
 				<h4 class="quiz-title">${quiz.title }</h4>		
 				<div class="quiz-content">${quiz.content }</div>
 				<ul class="answer-list">
 				<!-- 구분선 : 답안 내용-->
-					<c:forEach var="answer" items="${quiz.answerList }">
-						<li id="answer-${answer.answerNum}"><label>${answer.content} <input type="checkbox" name="quiz-answers" value="${answer.answerNum}"> </label></li>
+					<c:forEach var="answer" items="${quiz.answerList }" varStatus="status">
+						<li id="answer-${answer.answerNum}"><span>${status.count}</span><label>${answer.content} <input type="checkbox" name="quiz-answers" value="${answer.answerNum}"> </label></li>
 					</c:forEach>
 				</ul>
 				

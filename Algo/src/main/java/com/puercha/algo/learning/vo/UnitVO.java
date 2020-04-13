@@ -32,5 +32,9 @@ public class UnitVO {
 	
 	//수정 일시
 	private Date updatedAt;
+	
+	private boolean passesUnit;// 통과여부
+	private int totalQuiz; // 총 퀴즈 개수 
+	private int passedQuiz; // 통과한 퀴즈 개수
 
 }

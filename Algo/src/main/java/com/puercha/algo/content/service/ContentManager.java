@@ -265,7 +265,7 @@ public class ContentManager implements ContentManagingService {
 	@Override
 	public UnitVO getUnitContent(long unitNum) {
 		logger.info("getUnitContent(long unitNum)");
-		return learningDAO.selectOneUnit(unitNum);
+		return learningDAO.selectOneUnit(unitNum,0);
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class ContentManager implements ContentManagingService {
 	@Override
 	public List<UnitVO> getUnitList(long subjectNum) {
 		logger.info("getUnitList(long subjectNum)");
-		return learningDAO.selectAllUnitMetadatas(subjectNum);
+		return learningDAO.selectAllUnitMetadatas(subjectNum,0);
 	}
 
 	/**
@@ -323,7 +323,7 @@ public class ContentManager implements ContentManagingService {
 	public int deleteUnit(long unitNum, long userNum) {
 		logger.info("deleteUnit(long unitNum, long userNum)");
 		logger.info(String.format("unitNum: %d, userNum %d", unitNum, userNum));
-		UnitVO deletionTarget = learningDAO.selectOneUnit(unitNum);
+		UnitVO deletionTarget = learningDAO.selectOneUnit(unitNum,0);
 		if(deletionTarget ==null)
 			return -1;
 		SubjectVO subject = learningDAO.selectOneSubject(deletionTarget.getSubjectNum());
@@ -345,7 +345,7 @@ public class ContentManager implements ContentManagingService {
 	 */
 	@Override
 	public int updateUnitTitle(long unitNum, String title, long userNum) {
-		UnitVO modifyingTarget = learningDAO.selectOneUnit(unitNum);
+		UnitVO modifyingTarget = learningDAO.selectOneUnit(unitNum,userNum);
 		modifyingTarget.setTitle(title);
 		SubjectVO subject = learningDAO.selectOneSubject(modifyingTarget.getSubjectNum());
 		if (modifyingTarget != null) {
@@ -367,7 +367,7 @@ public class ContentManager implements ContentManagingService {
 	@Override
 	public int updateUnitDepth(long unitNum, String depth, long userNum) {
 		logger.info(String.format("unitNum: %d, depth: %s, userNum %d", unitNum, depth, userNum));
-		UnitVO modifyingTarget = learningDAO.selectOneUnit(unitNum);
+		UnitVO modifyingTarget = learningDAO.selectOneUnit(unitNum,userNum);
 		modifyingTarget.setChapterDepth(depth);
 		SubjectVO subject = learningDAO.selectOneSubject(modifyingTarget.getSubjectNum());
 		if (modifyingTarget != null) {

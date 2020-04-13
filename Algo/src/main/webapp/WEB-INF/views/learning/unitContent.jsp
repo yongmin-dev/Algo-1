@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title> ${unit.title} </title>
 <%@include file="/WEB-INF/views/include/meta.jsp"%>
 <link rel="stylesheet" type="text/css"
 	href="<c:url value="/resources/css/unit-content.css"/>" />
@@ -22,7 +22,9 @@
 	nav h1:hover{font-weight:bold;}
 	.unitContent_wrap{width:75%;float:left;}
 	.unitContent_wrap h1{text-align:center;padding:20px 0;}
-	.content_text{height:500px;border:2px solid #eaeaea;}
+	.content_text{
+/* 	height:500px; */
+	border:2px solid #eaeaea;}
 	.final{background: #555273;}
 	.final a{color:#fff;font-size:18px;}
 	
@@ -36,11 +38,19 @@
 		
 		<!-- 다른 단원의 목록		 -->
 		<nav>
-			<c:forEach var="unit" items="${unitList }">
-				<h1>
-					<a
-						href="${pageContext.request.contextPath }/learning/unit/${subjectNum}/${unit.unitNum }"><span>${unit.chapterDepth}</span>${unit.title }</a>
-				</h1>
+			<c:forEach var="unitItem" items="${unitList }">
+<%-- 				${unitItem}${unit} --%>
+				<h2>
+					<a href="${pageContext.request.contextPath }/learning/unit/${unitItem.unitNum }">
+						<c:if test="${unit.unitNum eq unitItem.unitNum }">
+							<strong>
+						</c:if>
+						<span>${unitItem.chapterDepth}</span>${unitItem.title }
+						<c:if test="${unit.unitNum eq unitItem.unitNum }">
+							</strong>
+						</c:if>
+					</a>
+				</h2>
 			</c:forEach>
 		</nav>
 		
@@ -53,15 +63,15 @@
 		<div class="unitContent_wrap">
 			<div id="unitContent">
 			<!-- 단원 제목-->
-				<h1 id="unit-title"><span class="depth">${unitVO.chapterDepth} </span>${unitVO.title}</h1>
+				<h1 id="unit-title"><span class="depth">${unit.chapterDepth} </span>${unit.title}</h1>
 			</div>
 			<!-- 단원 내용-->
 			<div class="content_text">
-				${unitVO.content}
+				${unit.content}
 			</div>
 			<!-- 마무리 문제 풀기-->
 			<div class="final">
-				<h1><a href="${pageContext.request.contextPath }/learning/quiz/${unitVO.unitNum }">
+				<h1><a href="${pageContext.request.contextPath }/learning/quiz/${unit.unitNum }">
 					마무리 문제 풀기</a></h1>
 			</div>
 		</div>
