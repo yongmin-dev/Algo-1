@@ -50,12 +50,35 @@
 		display:block;
 	}
 	
+	
+	/* 
+	#quiz-nav-list{position:absolute;width:100%;}
+	#quiz-list{overflow:hidden;}
+	#quiz-list li{width:100%;height:500px;}
+	.quiz_container{position:relative;} */
+	
+	#quiz-nav-list li{width: 25%!important;text-align: center;border-right:1px solid #ededed;}
+	#quiz-nav-list li:first-child{border-left:1px solid #ededed;}
+	
+	#quiz-list{overflow: hidden;}
+	#quiz-list span{display:inline-block;padding: 0 2px;}    
+	#quiz-list li{width:100%;}
+	#quiz-list li h4{font-size:20px;}
+	
+	
+	.quiz-content{padding:10px;}
+	
+	.answer-list li{padding:10px;}
+	.answer-list li span{vertical-align: middle;padding:0 2px;}
+	
+	
 </style>
 <script type="text/javascript" src="<c:url value="/resources/js/learning/quiz.js"/>"></script>
 </head>
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp"%>
 	<main data-num="${unit.unitNum}" data-next="${nextUnitNum}">
+	<div class="quiz_container">
 		<div>
 			<h2 id="unit-title"><span class="unit-depth">${unit.chapterDepth}</span>${unit.title} 의 마무리문제</h2>
 		</div>
@@ -103,7 +126,7 @@
 
 
 
-
+</div>
 
 
 

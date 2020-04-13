@@ -18,6 +18,7 @@
 	main{width:980px;margin:0 auto;overflow:hidden;}
 	
 	nav{width:25%;float:left;}
+	nav h2{padding:5px 0;}
 	nav h1{padding:5px;font-weight:500;padding:20px 0 0 0;}
 	nav h1:hover{font-weight:bold;}
 	.unitContent_wrap{width:75%;float:left;}
