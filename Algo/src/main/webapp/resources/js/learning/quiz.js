@@ -49,7 +49,7 @@ window.addEventListener('load',e=>{
 			                		nextBtn.addEventListener('click',
 			                				e=>{			                					
 			                					const unitNum = mainEle.getAttribute('data-num');
-			                					location.href="${contextPath}/learning/unit/${}?unitNum=${prevUnitNum}"; 
+			                					location.href=`${contextPath}/learning/unit/${unitNum+1}?unitNum=${unitNum}`; 
 			                				});
 			                		li.appendChild(nextBtn);
 			                	}
