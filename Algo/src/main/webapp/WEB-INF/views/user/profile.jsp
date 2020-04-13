@@ -33,7 +33,7 @@
 <body>
 	<%@include file="/WEB-INF/views/include/header.jsp" %>
 	<main>
-		<form:form modelAttribute="uvo"  action="${pageContext.request.contextPath }/user/profile" method="post" >    
+		<form:form modelAttribute="uvo"  action="${pageContext.request.contextPath }/user/update" method="post" >    
 			<!-- 이곳에 페이지의 컨텐츠가 담김 -->
 			<h2>회원정보 수정</h2>
 			<form:label path="email">이메일</form:label>
