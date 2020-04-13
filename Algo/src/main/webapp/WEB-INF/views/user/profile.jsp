@@ -9,8 +9,8 @@
 	<meta charset="UTF-8">
 	<title>회 원 정 보 수 정</title>
 	<%@include file="/WEB-INF/views/include/meta.jsp" %>
-<%-- 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/profile.css"/>" />	 --%>
-<%-- 	<script type="text/javascript" src="<c:url value="/resources/js/profile.js"/>"></script> --%>
+	<%-- <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/profile.css"/>" /> --%>	
+	<%-- <script type="text/javascript" src="<c:url value="/resources/js/profile.js"/>"></script> --%> 
 	<style>
 	h2{text-align:center;padding:100px 0 0 0;}
 	main{width:480px;margin:0 auto;}
@@ -19,12 +19,14 @@
 	#applyTutor{padding:10px 20px; cursor:pointer;float:right;margin:10px 0 0 0;}
 	
 	</style>
-	<script type="text/javascript">
+		<script type="text/javascript">
 	window.addEventListener('load',e=>{
 		const applyTutorBtn = document.getElementById('applyTutor');
 		if(applyTutorBtn){
 			applyTutorBtn.addEventListener('load',e=>{
-				location.href = '${pageContext.request.contextPath }/user/applying'
+				
+				location.href = '${pageContext.request.contextPath }/user/applying';
+				
 			});
 		}
 	})
@@ -73,9 +75,16 @@
 			<form:errors path="birth" cssClass="errmsg"></form:errors>
 			
 			<button type="submit" id="modifyBtn">수 정 하 기</button>
-			<button type="button" id="applyTutor">튜터 신청하기</button>
+			<a href="${pageContext.request.contextPath }/user/applying" class="btn_tutor" style="display: inline-block;
+    padding: 10px 20px;
+    background: #ededed;
+    float: right;
+    margin: 5px 0 0 0;">튜터 신청하기</a>
 		</form:form>
 	</main>	
 	<%@include file="/WEB-INF/views/include/footer.jsp" %>
+	
+
+	
 </body>
 </html>
