@@ -313,7 +313,7 @@ function subjectListHandler(e){
 		xhr.open('DELETE',`${contextPath}/content/learning/subject/${num}`)
 		xhr.addEventListener('load',
             e=>{
-                
+                console.log("response:"+e.target.response);
             });
         xhr.send();
         li.parentElement.removeChild(li);
