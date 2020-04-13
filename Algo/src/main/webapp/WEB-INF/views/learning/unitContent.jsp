@@ -9,10 +9,8 @@
 <meta charset="UTF-8">
 <title> ${unit.title} </title>
 <%@include file="/WEB-INF/views/include/meta.jsp"%>
-<link rel="stylesheet" type="text/css"
-	href="<c:url value="/resources/css/unit-content.css"/>" />
-<script type="text/javascript"
-	src="<c:url value="/resources/js/unit-content.js"/>"></script>
+<%-- <link rel="stylesheet" type="text/css"	href="<c:url value="/resources/css/unit-content.css"/>" /> --%>
+<script type="text/javascript"	src="<c:url value="/resources/js/learning/unit-content.js"/>"></script>
 	
 	<style>
 	main{width:980px;margin:0 auto;overflow:hidden;}

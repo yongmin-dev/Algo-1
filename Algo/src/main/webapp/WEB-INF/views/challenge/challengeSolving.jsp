@@ -18,7 +18,7 @@
 	
 	.cont01 ul li{padding:10px 0;font-size:16px;}
 	.cont01 .content{height:300px;}
-	.cont01 .result_cg{font-size:20px;}
+	.cont01 .result_cg{font-size:40px;}
 	
 	#after-submit button{padding:10px 30px;cursor:pointer;}
 	
