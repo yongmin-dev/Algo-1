@@ -126,8 +126,9 @@ public class UserController {
 			logger.info("수정처리결과 :"+ cnt);
 			
 			//세션정보 수정
-			session.removeAttribute("user");
-			session.setAttribute("user",userVO);
+//			session.removeAttribute("user");
+//			session.setAttribute("user",userVO);
+			loginService.loginUser(userVO.getEmail(), userVO.getPw(), session);
 			return "redirect:/user/updating";			
 		}else {
 			model.addAttribute("svr_msg", "다른 사용자는 수정할 수 없습니다!");
